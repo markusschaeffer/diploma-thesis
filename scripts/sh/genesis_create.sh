@@ -1,8 +1,8 @@
 #!/bin/bash
 #create a genesis.json via puppeth
 
-set -x #echo on
 . env.sh
+set -x #echo on
 
 cd $ETH_DIR 
 puppeth

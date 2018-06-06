@@ -4,8 +4,8 @@
 
 #https://github.com/ethereum/go-ethereum/wiki/Managing-your-accounts
 
-set -x #echo on
 . env.sh
+set -x #echo on
 
 node_number=$1
 
@@ -20,6 +20,6 @@ geth --datadir $ETH_DIR/node-$node_number/ --password $ETH_DIR/node-$node_number
 
 #store account address to node_account_address.txt
 cd $SHFOLDER
-bash account_getaddress.sh 
+bash account_getaddress.sh $node_number
 
 

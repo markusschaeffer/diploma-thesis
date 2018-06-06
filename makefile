@@ -4,7 +4,6 @@
 
 run_full: init_folders netstats bootnode nodes_startup_full
 	  
-
 ####################INITIAL INSTALLATION####################
 install_packages:
 	cd scripts/sh; ./install.sh

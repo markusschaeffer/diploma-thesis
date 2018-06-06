@@ -1,7 +1,8 @@
 #!/bin/bash
 # installing ethereum, nodejs and docker(for puppeth)
-set -x #echo on
+
 . env.sh
+set -x #echo on
 
 #Ethereum(Geth-Client)
 sudo apt-get install software-properties-common

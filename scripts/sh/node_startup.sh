@@ -1,8 +1,8 @@
 #!/bin/bash
 #node startup incl. mining
 
-set -x #echo on
 . env.sh
+set -x #echo on
 
 node_index=$1
 netstats_ip=$2
@@ -88,14 +88,12 @@ sudo chmod 777 $logfile
 
 sudo fuser -k $node_port/tcp #kill a possibly running process on the tcp geth port
 
-#without included ethstats (with eth-net-intelligence-api)
-#geth --datadir $ETH_DIR/node-$node_index/ --identity 'node-'$node_index --networkid "$NETWORK_ID" --ipcpath $node_ipcpath --syncmode 'full' --port $node_port --rpc --rpcaddr $node_rpcaddr --rpcport $node_rpcport --rpcapi $RPCAPI --rpccorsdomain "*" --bootnodes $bootnode_address --gasprice $GAS_PRICE --unlock 0 --password $ETH_DIR/node-$node_index/password.txt --etherbase 0 --mine --minerthreads 1 &
-#todo: decide if > $logfile 2>&1 &
-
 #with inlcuded ethstats (without eth-net-intelligence-api)
 geth --datadir $ETH_DIR/node-$node_index/ --identity 'node-'$node_index --networkid "$NETWORK_ID" --ipcpath $node_ipcpath --syncmode 'full' --port $node_port --rpc --rpcaddr $node_rpcaddr --rpcport $node_rpcport --rpcapi $RPCAPI --rpccorsdomain "*" --bootnodes $bootnode_address --ethstats $netstats_address --gasprice $GAS_PRICE --unlock 0 --password $ETH_DIR/node-$node_index/password.txt --etherbase 0 --mine --minerthreads 1 &
 #todo: decide if > $logfile 2>&1 &
 
 
-
+#without included ethstats (with eth-net-intelligence-api)
+#geth --datadir $ETH_DIR/node-$node_index/ --identity 'node-'$node_index --networkid "$NETWORK_ID" --ipcpath $node_ipcpath --syncmode 'full' --port $node_port --rpc --rpcaddr $node_rpcaddr --rpcport $node_rpcport --rpcapi $RPCAPI --rpccorsdomain "*" --bootnodes $bootnode_address --gasprice $GAS_PRICE --unlock 0 --password $ETH_DIR/node-$node_index/password.txt --etherbase 0 --mine --minerthreads 1 &
+#todo: decide if > $logfile 2>&1 &
 

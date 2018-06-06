@@ -1,7 +1,8 @@
 #!/bin/bash
 #creating folders for nodes
-set -x #echo on
+
 . env.sh
+set -x #echo on
 
 node_index=$1
 

@@ -1,8 +1,8 @@
 #!/bin/bash
 #initialize node with genesis block
 
-set -x #echo on
 . env.sh
+set -x #echo on
 
 node_index=$1
 path_to_genesis_file=$2

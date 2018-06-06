@@ -2,8 +2,8 @@
 #get the account address (inlcuding other data) from node_account_address_temp.txt and extract it to node_account_address.txt for later use
 # $1: node index
 
-set -x #echo on
 . env.sh
+set -x #echo on
 
 node_number=$1
 

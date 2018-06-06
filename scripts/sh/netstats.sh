@@ -12,8 +12,8 @@
 
 #WARNING: USE EITHER eth-net-intelligence-api or --netstats of geth
 
-set -x #echo on
 . env.sh
+set -x #echo on
 
 cd $ETH_DIR
 

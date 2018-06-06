@@ -1,8 +1,8 @@
 #!/bin/bash
 #setup a bootnode for node discovery
 
-set -x #echo on
 . env.sh
+set -x #echo on
 
 cd $ETH_DIR
 sudo bootnode -genkey boot.key #generate key (enode) for bootnode

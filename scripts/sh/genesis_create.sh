@@ -1,5 +1,6 @@
 #!/bin/bash
-#creating folders for nodes
+#create a genesis.json via puppeth
+
 set -x #echo on
 . env.sh
 

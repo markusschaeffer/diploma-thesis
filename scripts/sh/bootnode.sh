@@ -1,5 +1,5 @@
 #!/bin/bash
-#setup a bootnode
+#setup a bootnode for node discovery
 
 set -x #echo on
 . env.sh
@@ -16,7 +16,6 @@ sudo fuser -k $BOOTNODE_PORT/udp #kill a running process on the bootnode port
 bootnode -nodekey boot.key -verbosity $BOOTNODE_VERBOSITY -addr :$BOOTNODE_PORT 2> bootnode.txt &
 echo "##########BOOTNODE STARTED##########"
 
-#get bootnode address
-cd $ETH_DIR; cd ../scripts
-bash bootnode_getaddress.sh 
-
+#get bootnode address to bootnode_enode_address.txt
+cd $SHFOLDER
+bash bootnode_getaddress.sh

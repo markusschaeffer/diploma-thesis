@@ -17,10 +17,12 @@ ws_server=$3
 ws_secret=$4
 
 #app.json format
+#https://medium.com/@jake.henningsgaard/monitoring-the-ethereum-blockchain-24384064fad3
+
 #"env":
 #	{
 #		"NODE_ENV"        : "production", // tell the client we're in production environment
-#		"RPC_HOST"        : "localhost", // eth JSON-RPC host the default is 8545
+#		"RPC_HOST"        : "localhost", // eth JSON-RPC host
 #		"RPC_PORT"        : "8545", // eth JSON-RPC port
 #		"LISTENING_PORT"  : "30303", // eth listening port (only used for display)
 #		"INSTANCE_NAME"   : "", // whatever you wish to name your node
@@ -32,9 +34,9 @@ ws_secret=$4
 echo -e "["
 
 #################################TODO#########################################
-#change RPC_HOST
-#change RPC_PORT
-#change WS_SERVER
+#GET VALUES FROM IPS.txt
+#change RPC_HOST -> IP of AWS instance
+#change RPC_PORT -> Port of node on instance
 
 for ((i=0;i<N;++i)); do
     id=`printf "%02d" $i`

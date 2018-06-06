@@ -1,5 +1,5 @@
 #!/bin/bash
-#get the account address(inlcuding other data) from node_account_address_temp.txt and extract it to node_account_address.txt for later use
+#get the account address (inlcuding other data) from node_account_address_temp.txt and extract it to node_account_address.txt for later use
 # $1: node index
 
 set -x #echo on
@@ -7,7 +7,7 @@ set -x #echo on
 
 node_number=$1
 
-cd $ETH_DIR/node$node_number/
+cd $ETH_DIR/node-$node_number/
 chmod 777 keystore
 (cut -d '{' -f2 node_account_address_temp.txt) > node_account_address_temp2.txt
 sleep 1

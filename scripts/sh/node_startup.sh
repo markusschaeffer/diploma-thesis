@@ -1,5 +1,6 @@
 #!/bin/bash
 #node startup incl. mining
+
 set -x #echo on
 . env.sh
 
@@ -9,14 +10,14 @@ bootnode_ip=$3
 path_to_genesis_file=$4
 
 ##########1) create account for node##########
-cd $ETH_DIR; cd ../scripts
+cd $SHFOLDER
 bash ./create_account.sh $node_index
 
 ###########2) init node with genesis.json##########
-cd $ETH_DIR; cd ../scripts
+cd $SHFOLDER
 bash ./genesis_init.sh $node_index $path_to_genesis_file
 
-##########3)GETH startup incl. mine##########
+##########3) GETH startup incl. mine##########
 cd $ETH_DIR
 
 #NETSTATS
@@ -26,13 +27,13 @@ netstats_address='node-'$node_index:$WSSECRET@$netstats_ip:$NETSTATS_PORT
 bootnode_address=`cat $BOOTNODE_ENODE_ADDRESS_FILE`@$bootnode_ip:$BOOTNODE_PORT
 
 #IPC-Path
-node_ipcpath=$ETH_DIR/node$node_index/geth.ipc
+node_ipcpath=$ETH_DIR/node-$node_index/geth.ipc
 
 #GETH PORT
 #--port Network listening port (default: 30303)
 #node 0-9 at port 30310-30319
 #start 10th node at 30320
-if [$node_index<10]
+if (($node_index<10))
 then
     node_port=3031$node_index
 else
@@ -47,7 +48,7 @@ node_rpcaddr='localhost'
 
 #node 0-9 at RPC port 8100-8109
 #start 10th node at RPC port 8110
-if [$node_index<10]
+if (($node_index<10))
 then
     node_rpcport=810$node_index
 else
@@ -55,7 +56,7 @@ else
 fi
 
 #Logfile
-log_addr=$ETH_DIR/node$node_index
+log_addr=$ETH_DIR/node-$node_index
 logfile=$log_addr/log_node$node_index.txt
 if [ ! -e "$logfile" ] ; then
     touch "$logfile"
@@ -85,7 +86,15 @@ sudo chmod 777 $logfile
 #--mine 		Enable mining
 #--minerthreads 	Number of CPU threads to use for mining (default: 8)
 
-geth --datadir $ETH_DIR/node$node_index/ --identity 'node-'$node_index --networkid $NETWORK_ID --nodiscover --ipcpath $node_ipcpath --syncmode 'full' --port $node_port --rpc --rpcaddr $node_rpcaddr --rpcport $node_rpcport --rpcapi $RPCAPI --rpccorsdomain "*" --bootnodes $bootnode_address --ethstats $netstats_address --gasprice $GAS_PRICE --unlock 0 --password <(echo -n "") --etherbase 0 --mine --minerthreads 1 2>&1 $logfile &
+sudo fuser -k $node_port/tcp #kill a possibly running process on the tcp geth port
+
+#without included ethstats (with eth-net-intelligence-api)
+#geth --datadir $ETH_DIR/node-$node_index/ --identity 'node-'$node_index --networkid "$NETWORK_ID" --ipcpath $node_ipcpath --syncmode 'full' --port $node_port --rpc --rpcaddr $node_rpcaddr --rpcport $node_rpcport --rpcapi $RPCAPI --rpccorsdomain "*" --bootnodes $bootnode_address --gasprice $GAS_PRICE --unlock 0 --password $ETH_DIR/node-$node_index/password.txt --etherbase 0 --mine --minerthreads 1 &
+#todo: decide if > $logfile 2>&1 &
+
+#with inlcuded ethstats (without eth-net-intelligence-api)
+geth --datadir $ETH_DIR/node-$node_index/ --identity 'node-'$node_index --networkid "$NETWORK_ID" --ipcpath $node_ipcpath --syncmode 'full' --port $node_port --rpc --rpcaddr $node_rpcaddr --rpcport $node_rpcport --rpcapi $RPCAPI --rpccorsdomain "*" --bootnodes $bootnode_address --ethstats $netstats_address --gasprice $GAS_PRICE --unlock 0 --password $ETH_DIR/node-$node_index/password.txt --etherbase 0 --mine --minerthreads 1 &
+#todo: decide if > $logfile 2>&1 &
 
 
 

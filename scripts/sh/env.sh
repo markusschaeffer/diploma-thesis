@@ -3,6 +3,8 @@
 
 #FOLDER STRUCTURE
 ROOT_DIR=~/Dropbox/UbuntuVM/DropboxShared/diploma-thesis #change
+SHFOLDER=$ROOT_DIR/scripts/sh
+JSFOLDER=$ROOT_DIR/scripts/js
 FOLDERNAME=testnet
 ETH_DIR=$ROOT_DIR/$FOLDERNAME
 DATA_DIR=$ETH_DIR/datadir

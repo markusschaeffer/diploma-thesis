@@ -21,3 +21,9 @@ sudo apt-get install -y nodejs
 sudo apt-get install docker
 sudo apt-get install docker-compose
 
+#Solidity Compiler
+#sudo add-apt-repository ppa:ethereum/ethereum
+#sudo apt-get update
+#sudo apt-get install solc
+#which solc #/usr/bin/solc
+

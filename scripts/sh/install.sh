@@ -27,3 +27,5 @@ sudo apt-get install docker-compose
 #sudo apt-get install solc
 #which solc #/usr/bin/solc
 
+#web3
+sudo npm install web3

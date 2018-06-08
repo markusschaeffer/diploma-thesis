@@ -12,7 +12,7 @@ GENSISFILE=ETH_DIR/genesis.json
 
 #GETH
 NETWORK_ID=1515
-GAS_PRICE=0
+GAS_PRICE=1
 RPCAPI='personal,db,eth,net,web3,txpool,miner'
 
 #ETH-NETSTATS

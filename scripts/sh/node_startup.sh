@@ -80,16 +80,19 @@ sudo chmod 777 $logfile
 #--bootnodes value     	Comma separated enode URLs for P2P discovery bootstrap (set v4+v5 instead for light servers)
 #--ethstats value      	Reporting URL of a ethstats service (nodename:secret@host:port)
 #--gasprice 		Minimal gas price to accept for mining a transactions
+#targetgaslimit  	Target gas limit sets the artificial target gas floor for the blocks to mine (default: 4712388)
 #--unlock value    	Comma separated list of accounts to unlock
 #--password value  	Password file to use for non-interactive password input
 #--etherbase 		Public address for block mining rewards (default = first account created) (default: "0")
 #--mine 		Enable mining
 #--minerthreads 	Number of CPU threads to use for mining (default: 8)
 
+#TODO decide if targetgaslimit should be used/increased (targetgaslimit is decreased over time until contracts can't be deployed any more)
+
 sudo fuser -k $node_port/tcp #kill a possibly running process on the tcp geth port
 
 #with inlcuded ethstats (without eth-net-intelligence-api)
-geth --datadir $ETH_DIR/node-$node_index/ --identity 'node-'$node_index --networkid "$NETWORK_ID" --ipcpath $node_ipcpath --syncmode 'full' --port $node_port --rpc --rpcaddr $node_rpcaddr --rpcport $node_rpcport --rpcapi $RPCAPI --rpccorsdomain "*" --bootnodes $bootnode_address --ethstats $netstats_address --gasprice $GAS_PRICE --unlock 0 --password $ETH_DIR/node-$node_index/password.txt --etherbase 0 --mine --minerthreads 1 &
+geth --datadir $ETH_DIR/node-$node_index/ --identity 'node-'$node_index --networkid "$NETWORK_ID" --ipcpath $node_ipcpath --syncmode 'full' --port $node_port --rpc --rpcaddr $node_rpcaddr --rpcport $node_rpcport --rpcapi $RPCAPI --rpccorsdomain "*" --bootnodes $bootnode_address --ethstats $netstats_address --gasprice $GAS_PRICE --unlock 0 --password $ETH_DIR/node-$node_index/password.txt --etherbase 0 --mine --minerthreads 8 &
 #todo: decide if > $logfile 2>&1 &
 
 

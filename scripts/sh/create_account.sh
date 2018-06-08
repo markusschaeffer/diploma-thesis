@@ -24,8 +24,7 @@ echo "iloveethereum" > password.txt
 #copy already existing private keys (keystore folder)
 cd $ETH_DIR
 cd ..
-cd scripts
-cd staticAccounts
+cd staticAccount_keystore
 cp -r keystore $ETH_DIR/node-$node_number/
 cd $ETH_DIR/node-$node_number/
 chmod 777 keystore

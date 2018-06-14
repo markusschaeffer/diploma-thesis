@@ -47,16 +47,12 @@ myContract.deploy({
   from: accountAddress,
   gas: 1500000,
   gasPrice: '30000000000000'
-}, function(error, transactionHash){ })
-.on('error', function(error){
-  console.error(error)})
-.on('transactionHash', function(transactionHash){
- })
+}, function(error, transactionHash){})
+.on('error', function(error){console.error(error)})
+.on('transactionHash', function(transactionHash){})
 .on('receipt', function(receipt){
- console.log("receipt - contract address is " + receipt.contractAddress) // contains the new contract address
-})
-.on('confirmation', function(confirmationNumber, receipt){
- })
+console.log("receipt - contract address is " + receipt.contractAddress) // contains the new contract address})
+//.on('confirmation', function(confirmationNumber, receipt){})
 .then(function(newContractInstance){
   console.log("confirmation - contract address is: " + newContractInstance.options.address) // instance with the new contract address
 
@@ -68,25 +64,4 @@ myContract.deploy({
     console.log(result);
   });
   
-  /*
-  //change greeting string
-  _greeting = "changed greeting";
-  myContract.methods.setGreeting(_greeting).send({from: accountAddress})
-  .on('transactionHash', function(hash){
-  })
-  .on('receipt', function(receipt){
-    // receipt example
-    console.log(receipt);
-  })
-  .on('confirmation', function(confirmationNumber, receipt){
-
-    //verify greeting has been changed
-    //invoke greet method of the Greeter contract via a call (for constant mehthods such as greet())
-    myContract.methods.greet().call(function(error, result){
-      console.log(result);
-    });
-
-  })
-  .on('error', console.error); // If there's an out of gas error the second parameter is the receipt.
-  */
 });

@@ -1,5 +1,5 @@
 /*
-* Deployment ot the ReadWrite Contract 
+* Deployment of the ReadWrite Contract 
 * https://web3js.readthedocs.io/en/1.0/web3-eth-contract.html#
 */
 

@@ -27,7 +27,7 @@ grunt
 WS_SECRET=$WSSECRET npm start &
 echo "##########ETH-NETSTATS FRONTEND STARTED##########"
 
-#2	BACKEND ( eth-net-intelligence-api)
+#2	BACKEND ( eth-net-intelligence-api) or --netstats option of geth client
 #git clone https://github.com/cubedro/eth-net-intelligence-api $ETH_DIR/eth-net-intelligence-api
 #cd $ETH_DIR/eth-net-intelligence-api;
 #npm install;

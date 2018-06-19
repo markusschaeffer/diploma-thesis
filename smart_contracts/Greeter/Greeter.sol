@@ -10,7 +10,7 @@ contract greeter{
     }
 
     /* main function */
-    function greet() constant returns (string) {
+    function greet() view returns (string) {
         return greeting;
     }
 }

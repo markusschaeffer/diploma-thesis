@@ -95,8 +95,7 @@ sudo fuser -k $node_port/tcp #kill a possibly running process on the tcp geth po
 geth --datadir $ETH_DIR/node-$node_index/ --identity 'node-'$node_index --networkid "$NETWORK_ID" --ipcpath $node_ipcpath --syncmode 'full' --port $node_port --rpc --rpcaddr $node_rpcaddr --rpcport $node_rpcport --rpcapi $RPCAPI --rpccorsdomain "*" --bootnodes $bootnode_address --ethstats $netstats_address --gasprice $GAS_PRICE --unlock 0 --password $ETH_DIR/node-$node_index/password.txt --etherbase 0 --mine --minerthreads 8 &
 #todo: decide if > $logfile 2>&1 &
 
-
 #without included ethstats (with eth-net-intelligence-api)
-#geth --datadir $ETH_DIR/node-$node_index/ --identity 'node-'$node_index --networkid "$NETWORK_ID" --ipcpath $node_ipcpath --syncmode 'full' --port $node_port --rpc --rpcaddr $node_rpcaddr --rpcport $node_rpcport --rpcapi $RPCAPI --rpccorsdomain "*" --bootnodes $bootnode_address --gasprice $GAS_PRICE --unlock 0 --password $ETH_DIR/node-$node_index/password.txt --etherbase 0 --mine --minerthreads 1 &
+#geth --datadir $ETH_DIR/node-$node_index/ --identity 'node-'$node_index --networkid "$NETWORK_ID" --ipcpath $node_ipcpath --syncmode 'full' --port $node_port --rpc --rpcaddr $node_rpcaddr --rpcport $node_rpcport --rpcapi $RPCAPI --rpccorsdomain "*" --bootnodes $bootnode_address --gasprice $GAS_PRICE --unlock 0 --password $ETH_DIR/node-$node_index/password.txt --etherbase 0 --mine --minerthreads 8 &
 #todo: decide if > $logfile 2>&1 &
 

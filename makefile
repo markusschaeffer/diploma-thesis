@@ -20,6 +20,8 @@ time_sync_install_and_run:
 init_folders:
 	cd scripts/sh; sudo ./init_folders.sh 0
 	cd scripts/sh; sudo ./init_folders.sh 1
+	rm -rf storage/contract_addresses
+	cd storage; mkdir contract_addresses
 
 ####################ETH-NETSTATS AND ETH-NETSTATS-INTELLIGENCE-API####################
 netstats:

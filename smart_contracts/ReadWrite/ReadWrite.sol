@@ -12,11 +12,11 @@ contract readwrite{
     }
 
     /* getters */
-    function getVarString() public constant returns (string) {
+    function getVarString() public view returns (string) {
         return varString;
     }
     
-    function getCounter() public constant returns (uint256) {
+    function getCounter() public view returns (uint256) {
         return varCounter;
     }
     

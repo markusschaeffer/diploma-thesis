@@ -6,7 +6,7 @@
 */
 
 //require util functions
-var util = require('./../utils/util.js');
+var util = require('./../util/util.js');
 
 // instantiate web3
 var Web3 = require('web3');
@@ -52,7 +52,7 @@ myContract.deploy({
 .then(function(newContractInstance){
   //set the address of the mined contract
   myContract.options.address = newContractInstance.options.address;
-  var filePath = "./../../../../storage/contract_addresses/ballot.txt";
+  var filePath = "./../../../storage/contract_addresses/ballot.txt";
   //store deployed contract address to file
   util.saveContractAddress(filePath, myContract.options.address);
 });

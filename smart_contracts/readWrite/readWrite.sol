@@ -1,6 +1,6 @@
 pragma solidity ^0.4.0;
 
-contract readwrite{
+contract ReadWrite{
     
     string varString;
     uint256 varCounter;

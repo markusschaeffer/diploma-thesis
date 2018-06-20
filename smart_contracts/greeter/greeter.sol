@@ -1,6 +1,6 @@
 pragma solidity ^0.4.0;
 
-contract greeter{
+contract Greeter{
     /* define variable greeting of the type string */
     string greeting;
     
@@ -10,7 +10,7 @@ contract greeter{
     }
 
     /* main function */
-    function greet() view returns (string) {
+    function greet() public view returns (string) {
         return greeting;
     }
 }

@@ -23,10 +23,14 @@ web3.eth.personal.unlockAccount(accountAddress, "iloveethereum").
     catch(console.error);
 
 // contract ABI
-var abiArray = [{"constant":true,"inputs":[],"name":"getBalance","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"amount","type":"uint256"}],"name":"withdrawEther","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"amount","type":"uint256"}],"name":"deposit","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"inputs":[],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"payable":true,"stateMutability":"payable","type":"fallback"}];
+var filePath_abi = "./../../../smart_contracts/account/target/Account.abi";
+var abiArrayString = util.readFileSync_full(filePath_abi);
+var abiArray = JSON.parse(abiArrayString);
 
 // contract Bytecode
-var contractBytecode = "0x" + "608060405234801561001057600080fd5b50336000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055506102ca806100606000396000f300608060405260043610610062576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff16806312065fe0146100645780633bed33ce1461008f5780638da5cb5b146100bc578063b6b55f2514610113575b005b34801561007057600080fd5b50610079610133565b6040518082815260200191505060405180910390f35b34801561009b57600080fd5b506100ba600480360381019080803590602001909291905050506101ad565b005b3480156100c857600080fd5b506100d1610268565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b6101316004803603810190808035906020019092919050505061028d565b005b60008060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff1614151561019057600080fd5b3073ffffffffffffffffffffffffffffffffffffffff1631905090565b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff1614151561020857600080fd5b610210610133565b811115151561021e57600080fd5b3373ffffffffffffffffffffffffffffffffffffffff166108fc829081150290604051600060405180830381858888f19350505050158015610264573d6000803e3d6000fd5b5050565b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b803414151561029b57600080fd5b505600a165627a7a72305820a666b450c29c602ecaa79d5263c6d167c34ad4ad49d054752540b11b0543ff590029";
+var filePath_bin= "./../../../smart_contracts/account/target/Account.bin";
+var bytecode = util.readFileSync_full(filePath_bin);
+var contractBytecode = "0x" + bytecode;
 
 // contract
 var myContract = new web3.eth.Contract(abiArray);
@@ -66,7 +70,7 @@ myContract.deploy({
       value: amount
     })
     .then(function(receipt){
-      console.log(receipt)
+      //console.log(receipt)
     })
     .then(function(){
       //check again the balance of the Smart Contract
@@ -76,4 +80,3 @@ myContract.deploy({
     })
   })
 });
-

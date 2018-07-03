@@ -6,7 +6,7 @@ module.exports = {
     
     //save a smart contract's address to a file
     saveContractAddress: function (filePath, address) {
-        var fs = require('fs');
+        const fs = require('fs');
         var appendString = address + "\n";
         fs.appendFile(filePath, appendString, function(err) {
             if(err) {
@@ -14,5 +14,43 @@ module.exports = {
             }
             console.log("Contract address was saved to file");
         }); 
+    },
+
+    readLineFromFile: function (filePath){
+        const readline = require('readline');
+        const fs = require('fs');
+     
+        const rl = readline.createInterface({
+            input: fs.createReadStream(filePath),
+            crlfDelay: Infinity
+        });
+        
+        rl.on('line', (line) => {
+        console.log(`Line from file: ${line}`);
+        });
+    },
+
+    readFileSync_lines: function (filePath){
+        try{
+            const fs = require('fs');
+            const os = require("os");
+    
+            var text =  fs.readFileSync(filePath,'utf8');
+            return text.split(os.EOL); //Will return an array of lines on every OS node works on
+        }catch(e){
+            throw new Error("Error at reading file " + filePath + "\n " + e);
+        }
+    },
+
+    readFileSync_full: function (filePath){
+        try{
+            const fs = require('fs');
+            const os = require("os");
+    
+            var text =  fs.readFileSync(filePath,'utf8');
+            return text;
+        }catch(e){
+            throw new Error("Error at reading file " + filePath + "\n " + e);
+        }
     }
 };

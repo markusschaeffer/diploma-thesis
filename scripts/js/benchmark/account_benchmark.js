@@ -5,6 +5,7 @@
 
 //require util functions
 var util = require('./../util/util.js');
+var benchmarkLib = require('./../benchmark-lib/benchmark-lib.js');
 var timestamp = require('time-stamp');
 
 // instantiate web3
@@ -14,6 +15,13 @@ var web3 = new Web3();
 // set the provider you want from Web3.providers
 // provider = node-0 RPC PORT 8100
 web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8100"));
+
+const transactionBatches = 1;
+const transactionsPerBatch = 500;
+
+var timestampMapStart = new Map();
+var timestampMapEnd = new Map();
+var successfullTransactionCounter = 0;
 
 //specify which account to use for gas costs
 var accountAddress = "0x5dfe021f45f00ae83b0aa963be44a1310a782fcc";
@@ -47,29 +55,53 @@ contract2.options.address = contract2Address;
 
 var amountTobeSent = web3.utils.toWei('1', "ether");
 
-var setTimestapMap = new Map();
-
-for (var i = 1; i<=1000; i++){
-    sendTransaction(i);
+var i = 1;
+var promises = [];
+var startDate = new Date();
+while(i <= transactionBatches)
+{
+  for (var j = 1; j <= transactionsPerBatch; j++){
+    promises.push(handleTransaction(j)); //TODO clarif why benchmarkLib.handleTransaction(j) does not work!
+  }
+  i++;
 }
 
-function sendTransaction(transactionNumber){
-  //setTimestapMap.set(i,timestamp('HH:mm:ss:ms'));
-  console.log("started " + transactionNumber + " at " + timestamp('HH:mm:ss:ms'));
-  
-  contract1.methods.transferEther(contract2.options.address, amountTobeSent).send({from: accountAddress})
-  .on('transactionhash', function (hash){
-    console.log(hash);
-  })
-  .on('receipt', function(receipt){
-    //receipt = mined
-    console.log("finished " + transactionNumber + " at " + timestamp('HH:mm:ss:ms'));
-  })
-  .on('error', function (error){
-    console.error(error);
-    // lookup "Error: Failed to check for transaction receipt:"
-  })
-  .catch((error) => {
-    console.error(error);
+//wait for all promises to be resolved, then print statistic
+Promise.all(promises).then(function() {
+    // returned data is in arguments[0], arguments[1], ... arguments[n]
+    // you can process it here
+    var timeDifference = Math.abs((new Date() - startDate) / 1000);
+    util.printStatistics(timeDifference, successfullTransactionCounter, successfullTransactionCounter/timeDifference);
+
+    contract2.methods.getBalance().call(function(error, result){
+      console.log("Receiver contract balance is: " + web3.utils.fromWei(result, 'ether') + " ether");
+    })
+    
+  }, function(err) {
+    // error occurred
+});
+
+
+function handleTransaction (transactionNumber){
+  return new Promise(function(resolve, reject) {
+    //setTimestapMap.set(i,timestamp('HH:mm:ss:ms'));
+    console.log("started " + transactionNumber + " at " + timestamp('HH:mm:ss:ms'));
+    timestampMapStart.set(transactionNumber, new Date());
+    
+    contract1.methods.transferEther(contract2.options.address, amountTobeSent).send({from: accountAddress})
+    .on('transactionhash', function (hash){
+      console.log(hash);
+    })
+    .on('receipt', function(receipt){
+      //receipt = mined
+      successfullTransactionCounter++;
+      timestampMapStart.set(transactionNumber, new Date());
+      console.log("finished " + transactionNumber + " at " + timestamp('HH:mm:ss:ms'));
+      resolve(receipt);
+    })
+    .on('error', function (error){
+      console.error(error);
+      return reject(error);
+    })
   });
 }

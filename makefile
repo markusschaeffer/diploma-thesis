@@ -77,5 +77,8 @@ sc_deploy_accounts: delete_contract_addresses;
 
 ####################SMART CONTRACTS BENCHMARK####################
 
-sc_run_with_deploy: sc_deploy_accounts
+sc_run_accounts_with_deploy: sc_deploy_accounts
+	cd scripts/js/benchmark; node account_benchmark.js;
+
+sc_run_accounts_without_deploy:
 	cd scripts/js/benchmark; node account_benchmark.js;

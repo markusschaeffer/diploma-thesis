@@ -1,5 +1,5 @@
 /*
-* Helper functions
+* Util functions
 */
 
 module.exports = {
@@ -52,5 +52,20 @@ module.exports = {
         }catch(e){
             throw new Error("Error at reading file " + filePath + "\n " + e);
         }
+    },
+
+    sleep: function (milliSeconds) {
+        var startTime = new Date().getTime();
+        while (new Date().getTime() < startTime + milliSeconds);
+    },
+
+    printStatistics: function(timepassed, successfullTransactionCounter, txPerSecond){
+        console.log("\n");
+        console.log("----------STATISTICS----------");
+        console.log("Time passed in seconds: " + timepassed);
+        console.log("# successfull transactions: " + successfullTransactionCounter);
+        console.log("Transactions per second: " + txPerSecond);
+        console.log("-----------------------------");
+        console.log("\n");
     }
 };

@@ -5,6 +5,7 @@
 
 //require util functions
 var util = require('./../util/util.js');
+var timestamp = require('time-stamp');
 
 // instantiate web3
 var Web3 = require('web3');
@@ -39,28 +40,36 @@ var contract1 = new web3.eth.Contract(abiArray, contract1Address, {
 contract1.options.address = contract1Address;
 
 var contract2 = new web3.eth.Contract(abiArray, contract2Address, {
+  //contract options
   gasPrice: '20000000000' // default gas price in wei, 20 gwei in this case
 });
 contract2.options.address = contract2Address;
 
 var amountTobeSent = web3.utils.toWei('1', "ether");
 
-contract1.methods.transferEther(contract2.options.address, amountTobeSent).send({from: accountAddress})
-.then(function(receipt){
-  console.log("Successfully sent");
-  console.log(receipt);
+var setTimestapMap = new Map();
 
-  //check again the balance of the Smart Contract
-  contract1.methods.getBalance().call(function(error, result){
-    console.log("Contract 1 Balance is: " + web3.utils.fromWei(result, 'ether') + " ether");
+for (var i = 1; i<=1000; i++){
+    sendTransaction(i);
+}
+
+function sendTransaction(transactionNumber){
+  //setTimestapMap.set(i,timestamp('HH:mm:ss:ms'));
+  console.log("started " + transactionNumber + " at " + timestamp('HH:mm:ss:ms'));
+  
+  contract1.methods.transferEther(contract2.options.address, amountTobeSent).send({from: accountAddress})
+  .on('transactionhash', function (hash){
+    console.log(hash);
   })
-
-  //check again the balance of the Smart Contract
-  contract2.methods.getBalance().call(function(error, result){
-    console.log("Contract 2 Balance is: " + web3.utils.fromWei(result, 'ether') + " ether");
+  .on('receipt', function(receipt){
+    //receipt = mined
+    console.log("finished " + transactionNumber + " at " + timestamp('HH:mm:ss:ms'));
   })
-
-})
-.catch((error) => {
-  console.error(error);
-});;
+  .on('error', function (error){
+    console.error(error);
+    // lookup "Error: Failed to check for transaction receipt:"
+  })
+  .catch((error) => {
+    console.error(error);
+  });
+}

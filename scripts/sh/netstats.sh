@@ -17,13 +17,16 @@ set -x #echo on
 
 cd $ETH_DIR
 
+#TOTO change this for live version
 #1	FRONTEND (eth-netstats)
-git clone https://github.com/cubedro/eth-netstats $ETH_DIR/eth-netstats	
-cd eth-netstats;
-npm install;
-sudo npm install -g grunt-cli
-echo "##########ETH-NETSTATS FRONTEND INSTALLED##########"
-grunt
+#git clone https://github.com/cubedro/eth-netstats $ETH_DIR/eth-netstats	
+#cd eth-netstats;
+#npm install;
+#sudo npm install -g grunt-cli
+#grunt
+#echo "##########ETH-NETSTATS FRONTEND INSTALLED##########"
+sudo cp -a $ETH_DIR/../storage/eth-netstats $ETH_DIR # TODO REMOVE FOR LIVE VERSION
+cd $ETH_DIR/eth-netstats
 WS_SECRET=$WSSECRET npm start &
 echo "##########ETH-NETSTATS FRONTEND STARTED##########"
 

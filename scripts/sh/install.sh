@@ -29,3 +29,6 @@ sudo apt-get install docker-compose
 
 #web3
 sudo npm install web3
+
+#time-stamp
+sudo npm install --save time-stamp

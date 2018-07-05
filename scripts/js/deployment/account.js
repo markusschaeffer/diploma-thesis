@@ -36,7 +36,7 @@ var contractBytecode = "0x" + bytecode;
 var myContract = new web3.eth.Contract(abiArray);
 
 //deploy the contract to the blockchain and send some ether from account[0] to the smart contract
-var amount = web3.utils.toWei('100', "ether");
+var amount = web3.utils.toWei('1000000', "ether");
 myContract.deploy({
   data: contractBytecode,
   arguments: []

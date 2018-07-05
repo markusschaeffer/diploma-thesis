@@ -68,7 +68,6 @@ nodes_stop: node0_stop node1_stop
 
 nodes_resume: node0_resume node1_resume
 
-
 ####################SMART CONTRACTS DEPLOYMENT####################
 
 sc_deploy_accounts: delete_contract_addresses;
@@ -78,5 +77,5 @@ sc_deploy_accounts: delete_contract_addresses;
 
 ####################SMART CONTRACTS BENCHMARK####################
 
-sc_benchmark_accounts:
+sc_run_with_deploy: sc_deploy_accounts
 	cd scripts/js/benchmark; node account_benchmark.js;

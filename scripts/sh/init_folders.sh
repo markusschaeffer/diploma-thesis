@@ -13,5 +13,3 @@ chmod 777 $FOLDERNAME
 cd $FOLDERNAME
 mkdir -p node-$node_index
 chmod 777 node-$node$node_index
-
-

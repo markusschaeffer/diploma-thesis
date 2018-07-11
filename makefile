@@ -88,7 +88,7 @@ sc_run_accounts_with_deploy: sc_deploy_accounts
 	cd scripts/js/benchmark; node account_benchmark.js 8101
 
 sc_run_accounts_without_deploy_node0:
-	cd scripts/js/benchmark; node account_benchmark.js 8100
+	cd scripts/js/benchmark; sudo node account_benchmark.js 8100
 
 sc_run_accounts_without_deploy_node1:
 	cd scripts/js/benchmark; node account_benchmark.js 8101

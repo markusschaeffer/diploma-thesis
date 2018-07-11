@@ -9,6 +9,8 @@ var util = require('./../util/util.js');
 var benchmarkLib = require('./../benchmark-lib/benchmark-lib.js');
 var timestamp = require('time-stamp');
 
+var exec = require('child_process').exec;
+
 //instantiate web3
 var Web3 = require('web3');
 var web3 = new Web3();
@@ -19,7 +21,7 @@ var httpProviderString = "http://localhost:" + httpPort;
 //http provider (node-0 PORT 8100, node-1 PORT 8101)
 web3 = new Web3(new Web3.providers.HttpProvider(httpProviderString));
 
-const maxTransactions = 500;
+const maxTransactions = 10000;
 
 var timestampMapStart = new Map();
 var timestampMapEnd = new Map();
@@ -62,6 +64,12 @@ var promises = [];
 var startDate = new Date();
 
 for (var i = 1; i <= maxTransactions; i++){
+  //check if the number of transactions in the pending queue is small enough to send a new transaction
+
+  /*exec ("cd ../../sh/; ./getPendingTransactions.sh", function(err, stdout, stderr) {
+    console.log(stdout);
+  });
+*/
   promises.push(handleTransaction(i)); //TODO clarif why benchmarkLib.handleTransaction(j) does not work!
 }
  
@@ -82,8 +90,6 @@ function handleTransaction (transactionNumber){
     //setTimestapMap.set(i,timestamp('HH:mm:ss:ms'));
     console.log(httpProviderString + ": started " + transactionNumber + " at " + timestamp('HH:mm:ss:ms'));
     
-    console.log("pending transactions: " + web3.eth.getBlock("pending").transactions.length);
-
     timestampMapStart.set(transactionNumber, new Date());
     contract1.methods.transferEther(contract2.options.address, amountTobeSent).send({from: accountAddress})
     .on('transactionhash', function (hash){

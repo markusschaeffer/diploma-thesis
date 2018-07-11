@@ -1,6 +1,6 @@
 #RUN THIS FILE WITH "sudo make ...."
 
-test: kill_running delete_root_folder
+benchmark_full: run_full sc_deploy_accounts sc_run_accounts_without_deploy_node0
 
 run_full: kill_running delete_root_folder init_folders delete_contract_addresses netstats bootnode nodes_startup_full
 	 

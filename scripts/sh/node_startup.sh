@@ -98,5 +98,29 @@ sudo chmod 777 $logfile
 sudo fuser -k $portValue/tcp #kill a possibly running process on the tcp geth port
 
 #with inlcuded ethstats (without eth-net-intelligence-api)
-geth --datadir $ETH_DIR/node-$nodeIndex/ --identity 'node-'$nodeIndex --networkid "$NETWORK_ID" --ipcpath $node_ipcpath --syncmode 'full' --port $portValue --rpc --rpcaddr $rpcaddrValue --rpcport $rpcportValue --rpcapi $RPCAPI --rpccorsdomain "*" --ws --wsaddr $wsaddrValue --wsport $wsportValue --wsapi $WSAPI --wsorigins "*" --bootnodes $bootnode_address --ethstats $netstats_address --gasprice $GAS_PRICE --unlock 0 --password $ETH_DIR/node-$nodeIndex/password.txt --etherbase 0 --mine --minerthreads 8 &
+geth \
+    --datadir $ETH_DIR/node-$nodeIndex/ \
+    --identity 'node-'$nodeIndex \
+    --networkid "$NETWORK_ID" \
+    --ipcpath $node_ipcpath \
+    --syncmode 'full' \
+    --port $portValue \
+    --rpc \
+    --rpcaddr $rpcaddrValue \
+    --rpcport $rpcportValue \
+    --rpcapi $RPCAPI \
+    --rpccorsdomain "*" \
+    --ws \
+    --wsaddr $wsaddrValue \
+    --wsport $wsportValue \
+    --wsapi $WSAPI \
+    --wsorigins "*" \
+    --bootnodes $bootnode_address \
+    --ethstats $netstats_address \
+    --gasprice $GAS_PRICE \
+    --unlock 0 \
+    --password $ETH_DIR/node-$nodeIndex/password.txt \
+    --etherbase 0 \
+    --mine \
+    --minerthreads 8 &
 #todo: decide if > $logfile 2>&1 &

@@ -13,7 +13,10 @@ sudo fuser -k $BOOTNODE_PORT/udp #kill a running process on the bootnode port
 
 #startup a bootnode using the generated key
 #redirect stderr to bootnode.txt (which will later be used to catch the bootnode address)
-bootnode -nodekey boot.key -verbosity $BOOTNODE_VERBOSITY -addr :$BOOTNODE_PORT 2> bootnode.txt &
+bootnode \
+    -nodekey boot.key \
+    -verbosity $BOOTNODE_VERBOSITY \
+    -addr :$BOOTNODE_PORT 2> bootnode.txt &
 echo "##########BOOTNODE STARTED##########"
 
 #get bootnode address to bootnode_enode_address.txt

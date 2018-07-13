@@ -67,5 +67,9 @@ module.exports = {
         console.log("Transactions per second: " + txPerSecond);
         console.log("-----------------------------");
         console.log("\n");
+    },
+
+    sleep: function(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
     }
 };

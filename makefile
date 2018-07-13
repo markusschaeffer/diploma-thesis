@@ -83,8 +83,12 @@ sc_deploy_accounts: delete_contract_addresses
 	cd scripts/js/deployment; node account.js
 	cd scripts/js/deployment; node account.js
 
-sc_run_accounts_with_deploy: sc_deploy_accounts
+sc_run_accounts_with_deploy_all_nodes: sc_deploy_accounts sc_run_accounts_without_deploy_all_nodes
+
+sc_run_accounts_with_deploy_node0: sc_deploy_accounts
 	cd scripts/js/benchmark; node account_benchmark.js 8100
+
+sc_run_accounts_with_deploy_node1: sc_deploy_accounts
 	cd scripts/js/benchmark; node account_benchmark.js 8101
 
 sc_run_accounts_without_deploy_node0:

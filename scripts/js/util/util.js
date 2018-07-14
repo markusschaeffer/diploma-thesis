@@ -1,10 +1,12 @@
-/*
+/**
  * Util functions
  */
 
 module.exports = {
 
-    //save a smart contract's address to a file
+    /**
+     * save a smart contract's address to a file
+     */
     saveContractAddress: function (filePath, address) {
         const fs = require('fs');
         var appendString = address + "\n";
@@ -36,7 +38,7 @@ module.exports = {
             const os = require("os");
 
             var text = fs.readFileSync(filePath, 'utf8');
-            return text.split(os.EOL); //Will return an array of lines on every OS node works on
+            return text.split(os.EOL);
         } catch (e) {
             throw new Error("Error at reading file " + filePath + "\n " + e);
         }
@@ -69,9 +71,9 @@ module.exports = {
         console.log("\n");
     },
 
-    printStartingBenchmarkMessage: function () {
+    printFormatedMessage: function (text) {
         console.log("\n");
-        console.log("----------BENCHMARK STARTED----------");
+        console.log("----------" + text + "----------");
         console.log("\n");
     },
 

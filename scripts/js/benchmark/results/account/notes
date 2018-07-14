@@ -1,0 +1,4 @@
+"gasLimit": "0x47b760" --> 147 transactions per block
+"gasLimit": "0x8F6EC0" --> 288 transactions per block
+
+DOUBLED GasLimit did not double transactions per block !

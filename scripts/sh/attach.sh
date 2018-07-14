@@ -4,4 +4,6 @@
 . env.sh
 set -x #echo on
 
-sudo geth attach $ETH_DIR/node-0/geth.ipc console
+nodeIndex=$1
+
+sudo geth attach $ETH_DIR/node-$nodeIndex/geth.ipc console

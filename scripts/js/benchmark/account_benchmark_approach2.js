@@ -2,8 +2,8 @@
  * Benchmark of sending Ether between Contracts (see deployment folder)
  */
 
-//require util functions
 var util = require('./../util/util.js');
+var benchmarkLib = require('./../benchmark-lib/benchmark-lib.js');
 var timestamp = require('time-stamp');
 
 //instantiate web3
@@ -16,7 +16,8 @@ var httpProviderString = "http://localhost:" + httpPort;
 //http provider (node-0 PORT 8100, node-1 PORT 8101)
 web3 = new Web3(new Web3.providers.HttpProvider(httpProviderString));
 
-const amountTransactions = 10000;
+const maxAmountTransactions = process.argv[3];
+const maxAmountOpenFileDescriptors = 100;
 
 var timestampMapStart = new Map();
 var timestampMapEnd = new Map();
@@ -55,27 +56,28 @@ contract2.options.address = contract2Address;
 var amountTobeSent = web3.utils.toWei('1', "ether"); //amount to be send for each transaction
 
 var promises = [];
-var sentTransactions = 0;
 var benchmarkStartTime;
 
-runBenchmark(amountTransactions);
+benchmarkLib.getGethProcessId()
+  .then(function (gethPID) {
+    runBenchmark(gethPID, maxAmountTransactions);
+  });
 
-async function runBenchmark(amountTransactions) {
-  util.printStartingBenchmarkMessage();
+async function runBenchmark(gethPID, maxAmountTransactions) {
+  util.printFormatedMessage("BENCHMARK STARTED");
   benchmarkStartTime = new Date();
-  for (var i = 1; i <= amountTransactions; i++) {
-    promises.push(handleTransaction(i));
-    if (sentTransactions % 100 == 0) {
-      console.log("initiateing sleep");
-      await util.sleep(1);
-    }
+  for (var i = 1; i <= maxAmountTransactions; i++) {
+    await benchmarkLib.getAmountOfOpenFileDescriptorsForPID(gethPID)
+      .then(function (amountOfOpenFileDescriptors) {
+        if (amountOfOpenFileDescriptors <= maxAmountOpenFileDescriptors)
+          promises.push(handleTransaction(i));
+      });
   }
   printResult();
 }
 
 function handleTransaction(transactionNumber) {
   return new Promise(function (resolve, reject) {
-    sentTransactions++;
     console.log(httpProviderString + ": started " + transactionNumber + " at " + timestamp('HH:mm:ss:ms'));
     contract1.methods.transferEther(contract2.options.address, amountTobeSent).send({
         from: accountAddress
@@ -97,10 +99,12 @@ function handleTransaction(transactionNumber) {
 }
 
 /**
- * wait for all promises to be resolved, then print statistic
+ * wait for all promises (resolved and rejected ones), then print statistic
  */
 function printResult() {
-  Promise.all(promises).then(function () {
+  //Promise.all(promises).
+  Promise.all(promises.map(p => p.catch(() => undefined))).
+  then(function () {
     var timeDifference = Math.abs((new Date() - benchmarkStartTime) / 1000);
     util.printStatistics(timeDifference, successfullTransactionCounter, successfullTransactionCounter / timeDifference);
 

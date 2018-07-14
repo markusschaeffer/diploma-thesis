@@ -17,6 +17,11 @@ time_sync_install_and_run:
 	@echo "Time sync started"
 
 ####################UTIL####################
+attach_cli_node0:
+	cd scripts/sh; sudo ./attach.sh 0
+
+attach_cli_node1:
+	cd scripts/sh; sudo ./attach.sh 1
 
 kill_running:
 	cd scripts/sh; sudo ./kill_running.sh
@@ -53,10 +58,10 @@ genesis_create:
 #$4 path to genesis.json file
 
 node0_startup_full:
-	cd scripts/sh; sudo ./node_startup.sh 0 127.0.0.1 127.0.0.1 ~/Dropbox/UbuntuVM/DropboxShared/diploma-thesis/genesis_json_files/pow/genesis_pow_difficulty_0x400.json
+	cd scripts/sh; sudo ./node_startup.sh 0 127.0.0.1 127.0.0.1 ~/Dropbox/UbuntuVM/DropboxShared/diploma-thesis/genesis_json_files/pow/genesis_pow_difficulty_0x400_gasLimit_double.json
 
 node1_startup_full:
-	cd scripts/sh; sudo ./node_startup.sh 1 127.0.0.1 127.0.0.1 ~/Dropbox/UbuntuVM/DropboxShared/diploma-thesis/genesis_json_files/pow/genesis_pow_difficulty_0x400.json
+	cd scripts/sh; sudo ./node_startup.sh 1 127.0.0.1 127.0.0.1 ~/Dropbox/UbuntuVM/DropboxShared/diploma-thesis/genesis_json_files/pow/genesis_pow_difficulty_0x400_gasLimit_double.json
 
 node0_stop:
 	cd scripts/sh; sudo ./node_stop.sh 0
@@ -86,15 +91,15 @@ sc_deploy_accounts: delete_contract_addresses
 sc_run_accounts_with_deploy_all_nodes: sc_deploy_accounts sc_run_accounts_without_deploy_all_nodes
 
 sc_run_accounts_with_deploy_node0: sc_deploy_accounts
-	cd scripts/js/benchmark; node account_benchmark_approach2.js 8100
+	cd scripts/js/benchmark; node account_benchmark_approach3.js 8100 1000
 
 sc_run_accounts_with_deploy_node1: sc_deploy_accounts
-	cd scripts/js/benchmark; node account_benchmark_approach2.js 8101
+	cd scripts/js/benchmark; node account_benchmark_approach3.js 8101 1000
 
 sc_run_accounts_without_deploy_node0:
-	cd scripts/js/benchmark; sudo node account_benchmark_approach1.js 8100
+	cd scripts/js/benchmark; sudo node account_benchmark_approach3.js 8100 1000
 
 sc_run_accounts_without_deploy_node1:
-	cd scripts/js/benchmark; node account_benchmark_approach2.js 8101
+	cd scripts/js/benchmark; node account_benchmark_approach3.js 8101 1000
 
 sc_run_accounts_without_deploy_all_nodes: sc_run_accounts_without_deploy_node0 sc_run_accounts_without_deploy_node1

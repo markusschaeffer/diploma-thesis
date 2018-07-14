@@ -1,13 +1,10 @@
 /*
- * Benchmark of Two Account Contracts (see deployment folder)
- * Approach: An account sends transactions to another account.
- * The payload of each transaction is one Ether
+ * Benchmark of sending Ether between Contracts (see deployment folder)
  */
 
 //require util functions
 var util = require('./../util/util.js');
 var timestamp = require('time-stamp');
-var exec = require('child_process').exec;
 
 //instantiate web3
 var Web3 = require('web3');
@@ -19,8 +16,7 @@ var httpProviderString = "http://localhost:" + httpPort;
 //http provider (node-0 PORT 8100, node-1 PORT 8101)
 web3 = new Web3(new Web3.providers.HttpProvider(httpProviderString));
 
-const amountTransactions = 1000;
-const maxAmountOpenFileDescriptors = 100;
+const amountTransactions = 10000;
 
 var timestampMapStart = new Map();
 var timestampMapEnd = new Map();
@@ -59,52 +55,27 @@ contract2.options.address = contract2Address;
 var amountTobeSent = web3.utils.toWei('1', "ether"); //amount to be send for each transaction
 
 var promises = [];
+var sentTransactions = 0;
 var benchmarkStartTime;
 
-getGethProcessId()
-  .then(function (gethPID) {
-    runBenchmark(gethPID, amountTransactions);
-  });
+runBenchmark(amountTransactions);
 
-async function runBenchmark(gethPID, amountTransactions) {
+async function runBenchmark(amountTransactions) {
   util.printStartingBenchmarkMessage();
   benchmarkStartTime = new Date();
   for (var i = 1; i <= amountTransactions; i++) {
-    await getAmountOfOpenFileDescriptorsForPID(gethPID)
-      .then(function (amountOfOpenFileDescriptors) {
-        if (amountOfOpenFileDescriptors <= maxAmountOpenFileDescriptors)
-          promises.push(handleTransaction(i));
-      });
+    promises.push(handleTransaction(i));
+    if (sentTransactions % 100 == 0) {
+      console.log("initiateing sleep");
+      await util.sleep(1);
+    }
   }
   printResult();
 }
 
-function getGethProcessId() {
-  return new Promise(function (resolve, reject) {
-    exec("pgrep geth", function (error, stdout, stderr) {
-      var pid = stdout.split('\n')[0]; //get pid of geth process started first (node-0)
-      resolve(pid);
-      if (error !== null) {
-        reject(error);
-      }
-    });
-  });
-}
-
-function getAmountOfOpenFileDescriptorsForPID(gethPID) {
-  return new Promise(function (resolve, reject) {
-    exec("sudo ls /proc/" + gethPID + "/fd | wc -l", function (error, stdout, stderr) {
-      resolve(stdout);
-      if (error !== null) {
-        reject(error);
-      }
-    });
-  });
-}
-
 function handleTransaction(transactionNumber) {
   return new Promise(function (resolve, reject) {
-
+    sentTransactions++;
     console.log(httpProviderString + ": started " + transactionNumber + " at " + timestamp('HH:mm:ss:ms'));
     contract1.methods.transferEther(contract2.options.address, amountTobeSent).send({
         from: accountAddress
@@ -125,10 +96,10 @@ function handleTransaction(transactionNumber) {
   });
 }
 
+/**
+ * wait for all promises to be resolved, then print statistic
+ */
 function printResult() {
-
-  //wait for all promises to be resolved, then print statistic
-  //Promise.all takes an array of promises and creates a promise that fulfills when all of them successfully complete
   Promise.all(promises).then(function () {
     var timeDifference = Math.abs((new Date() - benchmarkStartTime) / 1000);
     util.printStatistics(timeDifference, successfullTransactionCounter, successfullTransactionCounter / timeDifference);

@@ -61,7 +61,7 @@ module.exports = {
 
     printStatistics: function(timepassed, successfullTransactionCounter, txPerSecond){
         console.log("\n");
-        console.log("----------STATISTICS----------");
+        console.log("----------BENCHMARK RESULT----------");
         console.log("Time passed in seconds: " + timepassed);
         console.log("# successfull transactions: " + successfullTransactionCounter);
         console.log("Transactions per second: " + txPerSecond);

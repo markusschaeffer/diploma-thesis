@@ -6,7 +6,6 @@
 
 //require util functions
 var util = require('./../util/util.js');
-var benchmarkLib = require('./../benchmark-lib/benchmark-lib.js');
 var timestamp = require('time-stamp');
 
 //instantiate web3
@@ -19,16 +18,15 @@ var httpProviderString = "http://localhost:" + httpPort;
 //http provider (node-0 PORT 8100, node-1 PORT 8101)
 web3 = new Web3(new Web3.providers.HttpProvider(httpProviderString));
 
-const amountTransactions = 10000; 
+const amountTransactions = 1000; 
 
 var timestampMapStart = new Map();
 var timestampMapEnd = new Map();
 var successfullTransactionCounter = 0;
-
 var transactionHashesReceived = 0;
 
 //specify which account to use for gas costs for each transaction
-var accountAddress = "0x5dfe021f45f00ae83b0aa963be44a1310a782fcc";
+const accountAddress = "0x5dfe021f45f00ae83b0aa963be44a1310a782fcc";
 
 //get deployed smart contract addresses from a local file in folder storage
 var contract1Address = "";
@@ -61,16 +59,17 @@ var amountTobeSent = web3.utils.toWei('1', "ether"); //amount to be send for eac
 
 var promises = [];
 var sentTransactions = 0;
-var startDate = new Date();
+var benchmarkStartTime = new Date();
 
 runBenchmark(amountTransactions);
 
 async function runBenchmark(amountTransactions){
+  console.log("\nStarting benchmark\n");
   for (var i = 1; i <= amountTransactions; i++){
     
     promises.push(handleTransaction(i)); //TODO clarif why benchmarkLib.handleTransaction(j) does not work!
     
-    //TODO new approach:
+    //TODO new approach?:
     //query number of open file descriptors of the system? if over X wait
     //$processId = pgrep geth
     //sudo ls /proc/$processId/fd | wc -l
@@ -79,12 +78,11 @@ async function runBenchmark(amountTransactions){
       await util.sleep(1);
     }  
   }
+  printResult();
 }
 
-//TODO move to benchmark-lib
 function handleTransaction (transactionNumber){
   return new Promise(function(resolve, reject) {
-    
     sentTransactions++;
     console.log(httpProviderString + ": started " + transactionNumber + " at " + timestamp('HH:mm:ss:ms'));
     contract1.methods.transferEther(contract2.options.address, amountTobeSent).send({from: accountAddress})
@@ -97,7 +95,7 @@ function handleTransaction (transactionNumber){
     .on('receipt', function(receipt){
       //receipt = mined
       successfullTransactionCounter++;
-      timestampMapStart.set(transactionNumber, new Date());
+      timestampMapEnd.set(transactionNumber, new Date());
       console.log(httpProviderString + ": finished " + transactionNumber + " at " + timestamp('HH:mm:ss:ms'));
       return resolve(receipt);
     })
@@ -107,23 +105,21 @@ function handleTransaction (transactionNumber){
   });
 }
 
-//TODO
-function printStatistic(){
+function printResult(){
 
   //wait for all promises to be resolved, then print statistic
-    //Promise.all takes an array of promises and creates a promise that fulfills when all of them successfully complete
-    /*
-    Promise.all(promises).then(function() {
-      var timeDifference = Math.abs((new Date() - startDate) / 1000);
-      util.printStatistics(timeDifference, successfullTransactionCounter, successfullTransactionCounter/timeDifference);
+  //Promise.all takes an array of promises and creates a promise that fulfills when all of them successfully complete
+  Promise.all(promises).then(function() {
+    var timeDifference = Math.abs((new Date() - benchmarkStartTime) / 1000);
+    util.printStatistics(timeDifference, successfullTransactionCounter, successfullTransactionCounter/timeDifference);
 
-      contract2.methods.getBalance().call()
-      .then(function(result){
-        console.log("Receiver contract balance is: " + web3.utils.fromWei(result, 'ether') + " ether");
-      });
-
-    }, function(err) {
-      console.log(err);
+    contract2.methods.getBalance().call()
+    .then(function(result){
+      console.log("Receiver contract balance is: " + web3.utils.fromWei(result, 'ether') + " ether");
     });
-    */
+
+  }, function(err) {
+    console.log(err);
+  });
+    
 }

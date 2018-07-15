@@ -91,15 +91,15 @@ sc_deploy_accounts: delete_contract_addresses
 sc_run_accounts_with_deploy_all_nodes: sc_deploy_accounts sc_run_accounts_without_deploy_all_nodes
 
 sc_run_accounts_with_deploy_node0: sc_deploy_accounts
-	cd scripts/js/benchmark; node account_benchmark_approach3.js 8100 1000
+	cd scripts/js/benchmark; node account_benchmark_approach3.js 8100 1000 10
 
 sc_run_accounts_with_deploy_node1: sc_deploy_accounts
-	cd scripts/js/benchmark; node account_benchmark_approach3.js 8101 1000
+	cd scripts/js/benchmark; node account_benchmark_approach3.js 8101 1000 10
 
 sc_run_accounts_without_deploy_node0:
-	cd scripts/js/benchmark; sudo node account_benchmark_approach3.js 8100 1000
+	cd scripts/js/benchmark; sudo node account_benchmark_approach3.js 8100 1000 10
 
 sc_run_accounts_without_deploy_node1:
-	cd scripts/js/benchmark; node account_benchmark_approach3.js 8101 1000
+	cd scripts/js/benchmark; node account_benchmark_approach3.js 8101 1000 10
 
 sc_run_accounts_without_deploy_all_nodes: sc_run_accounts_without_deploy_node0 sc_run_accounts_without_deploy_node1

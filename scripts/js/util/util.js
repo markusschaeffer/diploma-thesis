@@ -61,16 +61,6 @@ module.exports = {
         while (new Date().getTime() < startTime + milliSeconds);
     },
 
-    printStatistics: function (timepassed, successfullTransactionCounter, txPerSecond) {
-        console.log("\n");
-        console.log("----------BENCHMARK RESULT----------");
-        console.log("Time passed in seconds: " + timepassed);
-        console.log("# successfull transactions: " + successfullTransactionCounter);
-        console.log("Transactions per second: " + txPerSecond);
-        console.log("-----------------------------");
-        console.log("\n");
-    },
-
     printFormatedMessage: function (text) {
         console.log("\n");
         console.log("----------" + text + "----------");

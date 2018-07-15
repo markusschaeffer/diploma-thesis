@@ -12,15 +12,18 @@ var web3 = new Web3();
 
 //set providers from Web3.providers
 var httpPort = process.argv[2]; //get port as cli parameter
-var httpProviderString = "http://localhost:" + httpPort;
+var httpProviderString = "http://localhost:" + httpPort; //TODO change for benchmark on ec2 instances
 //http provider (node-0 PORT 8100, node-1 PORT 8101)
 web3 = new Web3(new Web3.providers.HttpProvider(httpProviderString));
 
 const maxAmountTransactions = process.argv[3];
-
-var timestampMapStart = new Map();
-var timestampMapEnd = new Map();
+const maxMinutes = process.argv[4] * 1000 * 60;
+var transactionsTimestampMapStart = new Map();
+var transactionsTimestampMapEnd = new Map();
 var successfullTransactionCounter = 0;
+var promises = [];
+var sentTransactionsCounter = 0;
+var benchmarkStartTime;
 
 //specify which account to use for gas costs for each transaction
 const accountAddress = "0x5dfe021f45f00ae83b0aa963be44a1310a782fcc";
@@ -54,60 +57,48 @@ contract2.options.address = contract2Address;
 
 var amountTobeSent = web3.utils.toWei('1', "ether"); //amount to be send for each transaction
 
-var promises = [];
-var sentTransactions = 0;
-var benchmarkStartTime;
+runBenchmark(maxAmountTransactions, maxMinutes);
 
-runBenchmark(maxAmountTransactions);
-
-function runBenchmark(maxAmountTransactions) {
+async function runBenchmark(maxAmountTransactions, maxMinutes) {
   util.printFormatedMessage("BENCHMARK STARTED");
   benchmarkStartTime = new Date();
+
+  setTimeout(function () {
+    benchmarkLib.printResultMaxTime(benchmarkStartTime, successfullTransactionCounter, transactionsTimestampMapStart, transactionsTimestampMapEnd);
+  }, maxMinutes);
+
   for (var i = 1; i <= maxAmountTransactions; i++) {
     promises.push(handleTransaction(i));
   }
-  printResult();
+
+  Promise.all(promises.map(p => p.catch(() => undefined))).
+  then(function () {
+    benchmarkLib.printResultMaxTransactions(benchmarkStartTime, successfullTransactionCounter, transactionsTimestampMapStart, transactionsTimestampMapEnd);
+  }, function (err) {
+    console.log(err);
+  });
 }
 
 function handleTransaction(transactionNumber) {
   return new Promise(function (resolve, reject) {
-    sentTransactions++;
-    console.log(httpProviderString + ": started " + transactionNumber + " at " + timestamp('HH:mm:ss:ms'));
+    sentTransactionsCounter++;
+    console.log(httpProviderString + ": sending " + transactionNumber + " at " + timestamp('HH:mm:ss:ms'));
+
     contract1.methods.transferEther(contract2.options.address, amountTobeSent).send({
         from: accountAddress
       })
       .once('transactionHash', function (hash) {
-        timestampMapStart.set(transactionNumber, new Date());
+        transactionsTimestampMapStart.set(transactionNumber, new Date());
         console.log(httpProviderString + ": received transaction hash " + transactionNumber + " at " + timestamp('HH:mm:ss:ms'));
       })
       .on('receipt', function (receipt) {
         successfullTransactionCounter++;
-        timestampMapEnd.set(transactionNumber, new Date());
+        transactionsTimestampMapEnd.set(transactionNumber, new Date());
         console.log(httpProviderString + ": finished " + transactionNumber + " at " + timestamp('HH:mm:ss:ms'));
         return resolve(receipt);
       })
       .on('error', function (error) {
         return reject(error);
-      })
-  });
-}
-
-/**
- * wait for all promises (resolved and rejected ones), then print statistic
- */
-function printResult() {
-  //Promise.all(promises).
-  Promise.all(promises.map(p => p.catch(() => undefined))).
-  then(function () {
-    var timeDifference = Math.abs((new Date() - benchmarkStartTime) / 1000);
-    util.printStatistics(timeDifference, successfullTransactionCounter, successfullTransactionCounter / timeDifference);
-
-    contract2.methods.getBalance().call()
-      .then(function (result) {
-        console.log("Receiver contract balance is: " + web3.utils.fromWei(result, 'ether') + " ether");
       });
-
-  }, function (err) {
-    console.log(err);
   });
 }

@@ -32,3 +32,7 @@ sudo npm install web3
 
 #time-stamp
 sudo npm install --save time-stamp
+
+#request and request-promise for restful client
+npm install --save request
+npm install --save request-promise

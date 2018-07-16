@@ -3,7 +3,7 @@
  */
 
 var util = require('./../util/util.js');
-var benchmarkLib = require('./../benchmark-lib/benchmark-lib.js');
+var benchmarkLib = require('./benchmark-lib/benchmark-lib.js');
 var timestamp = require('time-stamp');
 
 //instantiate web3

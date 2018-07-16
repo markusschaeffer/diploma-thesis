@@ -58,10 +58,10 @@ genesis_create:
 #$4 path to genesis.json file
 
 node0_startup_full:
-	cd scripts/sh; sudo ./node_startup.sh 0 127.0.0.1 127.0.0.1 ~/Dropbox/UbuntuVM/DropboxShared/diploma-thesis/genesis_json_files/pow/genesis_pow_difficulty_0x400_gasLimit_double.json
+	cd scripts/sh; sudo ./node_startup.sh 0 127.0.0.1 127.0.0.1 ~/Dropbox/UbuntuVM/DropboxShared/diploma-thesis/genesis_json_files/genesis_pow_difficulty_0x400_gasLimit_double.json
 
 node1_startup_full:
-	cd scripts/sh; sudo ./node_startup.sh 1 127.0.0.1 127.0.0.1 ~/Dropbox/UbuntuVM/DropboxShared/diploma-thesis/genesis_json_files/pow/genesis_pow_difficulty_0x400_gasLimit_double.json
+	cd scripts/sh; sudo ./node_startup.sh 1 127.0.0.1 127.0.0.1 ~/Dropbox/UbuntuVM/DropboxShared/diploma-thesis/genesis_json_files/genesis_pow_difficulty_0x400_gasLimit_double.json
 
 node0_stop:
 	cd scripts/sh; sudo ./node_stop.sh 0

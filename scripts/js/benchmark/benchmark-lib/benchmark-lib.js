@@ -2,7 +2,7 @@
  * benchmark-lib funcions
  */
 
-var util = require('./../util/util.js');
+var util = require('./../../util/util.js');
 var exec = require('child_process').exec;
 
 module.exports = {

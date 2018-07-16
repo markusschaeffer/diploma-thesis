@@ -56,11 +56,6 @@ module.exports = {
         }
     },
 
-    sleep: function (milliSeconds) {
-        var startTime = new Date().getTime();
-        while (new Date().getTime() < startTime + milliSeconds);
-    },
-
     printFormatedMessage: function (text) {
         console.log("\n");
         console.log("----------" + text + "----------");

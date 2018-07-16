@@ -1,8 +1,15 @@
-# diploma-thesis
-Repository for my diploma-thesis related to Ethereum performance and scalability measurements
 
+# Framework for Benchmarking the Performance of differently configured private Ethereum networks
 
-## Open Issues/ToDO
+This is the repository for my diploma-thesis related to Ethereum performance and scalability measurements.
+The goal is to benchmark metrics such as transactions per second and delay of transactions with regards to differently configured Ethereum networks.
+Parameters of these Ethereum networks are, for example, different consensus algorithms (pow, poa) and their specific parameters (e.g. minign difficulty @ pow, number of miners etc.), the amount of Ethereum nodes participating i the network etc.
+
+# Attention: This is still WORK IN PROGRESS!
+
+### Errors/Issues
+-Communication
+-- MongoDB model
 
 - Errors
 -- UnhandledPromiseRejectionWarning: Error: Returned error: known transaction
@@ -15,4 +22,4 @@ Repository for my diploma-thesis related to Ethereum performance and scalability
 -- "Error: Failed to check for transaction receipt:
 
 - eth-netstats
--- transactions not listed
+-- transactions are not listed on the eth-netstats frontend

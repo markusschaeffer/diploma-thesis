@@ -35,8 +35,6 @@ The goal is to benchmark metrics of differently configured Ethereum networks.
 - Reading and writing from/to a simple contract holdin getter and setter methods
 
 # Errors/Issues
--Communication
--- MongoDB model
 
 - Errors
 -- UnhandledPromiseRejectionWarning: Error: Returned error: known transaction

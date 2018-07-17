@@ -8,63 +8,69 @@ var exec = require('child_process').exec;
 module.exports = {
 
     /**
-     * Print results of benchmark to stdout
+     * Print result to stdout and send result via REST
      */
-    printBenchmarkResults: function (timepassed, successfullTransactionCounter, txPerSecond, averageDelay) {
-        console.log("\n");
-        console.log("----------BENCHMARK RESULT----------");
-        console.log("Time passed in seconds: " + timepassed);
-        console.log("# successfull transactions: " + successfullTransactionCounter);
-        console.log("-----------------------------");
-        console.log("Transactions per second: " + txPerSecond);
-        console.log("Average transaction delay in seonds: " + averageDelay);
-        console.log("-----------------------------");
-        console.log("\n");
+    logBenchmarkResult: function (usedGenesisJson, startTime, maxRuntime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, transactionsTimestampMapStart, transactionsTimestampMapEnd) {
+        var runtime = Math.abs((new Date() - startTime) / 1000);
+        var averageTxDelay = module.exports.caculateAverageDelayOfTransactions(transactionsTimestampMapStart, transactionsTimestampMapEnd, successfulTransactions);
+        var txPerSecond = successfulTransactions / runtime;
+
+        module.exports.printBenchmarkResults(usedGenesisJson, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay);
+        module.exports.sendBenchmarkResults(usedGenesisJson, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay)
+
+        process.exit(0); //kill process
     },
 
     /**
-     * Print the result of the benchmark and terminate the whole process
+     * Calculate the average delay of transactions (endTimestamp - startTimestamp)
      */
-    printResultAndTerminate: function (terminationText, benchmarkStartTime, successfullTransactionCounter, transactionsTimestampMapStart, transactionsTimestampMapEnd) {
-        var timeDifference = Math.abs((new Date() - benchmarkStartTime) / 1000);
-        util.printFormatedMessage(terminationText);
-        var averageDelay = module.exports.caculateAverageDelayOfTransactions(transactionsTimestampMapStart, transactionsTimestampMapEnd, successfullTransactionCounter);
-        module.exports.printBenchmarkResults(timeDifference, successfullTransactionCounter, successfullTransactionCounter / timeDifference, averageDelay);
-        process.exit(0);
-    },
-
-    /**
-     * Print result and stop the process due to max transactions limit reached
-     */
-    printResultMaxTransactions: function (benchmarkStartTime, successfullTransactionCounter, transactionsTimestampMapStart, transactionsTimestampMapEnd) {
-        module.exports.printResultAndTerminate("MAX TRANSACTIONS REACHED: TERMINATING", benchmarkStartTime, successfullTransactionCounter, transactionsTimestampMapStart, transactionsTimestampMapEnd);
-    },
-
-    /**
-     * Print result and stop the process due to running out of time limit reached
-     */
-    printResultMaxTime: function (benchmarkStartTime, successfullTransactionCounter, transactionsTimestampMapStart, transactionsTimestampMapEnd) {
-        module.exports.printResultAndTerminate("MAX TIME REACHED: TERMINATING", benchmarkStartTime, successfullTransactionCounter, transactionsTimestampMapStart, transactionsTimestampMapEnd);
-    },
-
-    /**
-     * Calculate the avega delay of transactions (endTimestamp - startTimestamp)
-     */
-    caculateAverageDelayOfTransactions: function (transactionsTimestampMapStart, transactionsTimestampMapEnd, successfullTransactionCounter) {
-        var averageDelay = 0;
-        var summedUpDifferences = 0;
+    caculateAverageDelayOfTransactions: function (transactionsTimestampMapStart, transactionsTimestampMapEnd, successfulTransactions) {
+        var averageTxDelay = 0;
+        var summedUpTimeDifferences = 0;
         transactionsTimestampMapStart.forEach(function (value, key, map) {
             var endTimestamp = transactionsTimestampMapEnd.get(key);
             var timeDifferenceOfEndAndStart = (endTimestamp - value) / 1000;
             if (!isNaN(timeDifferenceOfEndAndStart))
-                summedUpDifferences += timeDifferenceOfEndAndStart
+                summedUpTimeDifferences += timeDifferenceOfEndAndStart
         });
-        averageDelay = summedUpDifferences / successfullTransactionCounter;
-        return averageDelay;
+        averageTxDelay = summedUpTimeDifferences / successfulTransactions;
+        return averageTxDelay;
     },
 
     /**
-     * get the geth process id (implies a running geth process)
+     * Print result of benchmark to stdout
+     */
+    printBenchmarkResults: function (usedGenesisJson, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay) {
+        console.log("\n");
+        console.log("----------BENCHMARK RESULT----------");
+        console.log("used genesis.json file: " + usedGenesisJson);
+        console.log("Starttime: " + startTime);
+        console.log("-----------------------------");
+        console.log("MaxRuntime: " + maxRuntime);
+        console.log("Runtime: " + runtime);
+        console.log("MaxRuntime reached: " + maxRuntimeReached);
+        console.log("-----------------------------");
+        console.log("MaxTransactions: " + maxTransactions);
+        console.log("#Successful transactions: " + successfulTransactions);
+        console.log("MaxTransactions reached: " + maxTransactionsReached);
+        console.log("-----------------------------");
+        console.log("Transactions per second: " + txPerSecond);
+        console.log("Average transaction delay in seconds: " + averageTxDelay);
+        console.log("-----------------------------");
+        console.log("\n");
+    },
+
+    /**
+     * Send benchmark result via REST interface
+     */
+    sendBenchmarkResults: function (usedGenesisJson, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay) {
+        //get IP and Port from storage
+
+        //use REST client to send JSON
+    },
+
+    /**
+     * Get the geth process id (implies a running geth process)
      */
     getGethProcessId: function () {
         return new Promise(function (resolve, reject) {
@@ -79,7 +85,7 @@ module.exports = {
     },
 
     /**
-     * get the amount of open file descriptors of the system for a specifc process id
+     * Get the amount of open file descriptors of the system for a specifc process id
      */
     getAmountOfOpenFileDescriptorsForPID: function (gethPID) {
         return new Promise(function (resolve, reject) {

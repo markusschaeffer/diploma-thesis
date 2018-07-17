@@ -16,14 +16,16 @@ var httpProviderString = "http://localhost:" + httpPort; //TODO change for bench
 //http provider (node-0 PORT 8100, node-1 PORT 8101)
 web3 = new Web3(new Web3.providers.HttpProvider(httpProviderString));
 
-const maxAmountTransactions = process.argv[3];
-const maxMinutes = process.argv[4] * 1000 * 60;
+const usedGenesisJson = process.argv[3];
+const maxTransactions = process.argv[4];
+const maxRuntime = process.argv[5] * 1000 * 60;
+
 var transactionsTimestampMapStart = new Map();
 var transactionsTimestampMapEnd = new Map();
-var successfullTransactionCounter = 0;
+var successfulTransactions = 0;
 var promises = [];
-var sentTransactionsCounter = 0;
-var benchmarkStartTime;
+var sentTransactions = 0;
+var startTime;
 
 //specify which account to use for gas costs for each transaction
 const accountAddress = "0x5dfe021f45f00ae83b0aa963be44a1310a782fcc";
@@ -57,23 +59,23 @@ contract2.options.address = contract2Address;
 
 var amountTobeSent = web3.utils.toWei('1', "ether"); //amount to be send for each transaction
 
-runBenchmark(maxAmountTransactions, maxMinutes);
+runBenchmark(maxTransactions, maxRuntime);
 
-async function runBenchmark(maxAmountTransactions, maxMinutes) {
+async function runBenchmark(maxTransactions, maxRuntime) {
+  startTime = new Date();
   util.printFormatedMessage("BENCHMARK STARTED");
-  benchmarkStartTime = new Date();
 
   setTimeout(function () {
-    benchmarkLib.printResultMaxTime(benchmarkStartTime, successfullTransactionCounter, transactionsTimestampMapStart, transactionsTimestampMapEnd);
-  }, maxMinutes);
+    benchmarkLib.logBenchmarkResult(usedGenesisJson, startTime, maxRuntime, true, maxTransactions, false, successfulTransactions, transactionsTimestampMapStart, transactionsTimestampMapEnd);
+  }, maxRuntime);
 
-  for (var i = 1; i <= maxAmountTransactions; i++) {
+  for (var i = 1; i <= maxTransactions; i++) {
     promises.push(handleTransaction(i));
   }
 
   Promise.all(promises.map(p => p.catch(() => undefined))).
   then(function () {
-    benchmarkLib.printResultMaxTransactions(benchmarkStartTime, successfullTransactionCounter, transactionsTimestampMapStart, transactionsTimestampMapEnd);
+    benchmarkLib.logBenchmarkResult(usedGenesisJson, startTime, maxRuntime, false, maxTransactions, true, successfulTransactions, transactionsTimestampMapStart, transactionsTimestampMapEnd);
   }, function (err) {
     console.log(err);
   });
@@ -81,23 +83,24 @@ async function runBenchmark(maxAmountTransactions, maxMinutes) {
 
 function handleTransaction(transactionNumber) {
   return new Promise(function (resolve, reject) {
-    sentTransactionsCounter++;
+    sentTransactions++;
     console.log(httpProviderString + ": sending " + transactionNumber + " at " + timestamp('HH:mm:ss:ms'));
+    transactionsTimestampMapStart.set(transactionNumber, new Date());
 
     contract1.methods.transferEther(contract2.options.address, amountTobeSent).send({
         from: accountAddress
       })
       .once('transactionHash', function (hash) {
-        transactionsTimestampMapStart.set(transactionNumber, new Date());
         console.log(httpProviderString + ": received transaction hash " + transactionNumber + " at " + timestamp('HH:mm:ss:ms'));
       })
       .on('receipt', function (receipt) {
-        successfullTransactionCounter++;
+        successfulTransactions++;
         transactionsTimestampMapEnd.set(transactionNumber, new Date());
         console.log(httpProviderString + ": finished " + transactionNumber + " at " + timestamp('HH:mm:ss:ms'));
         return resolve(receipt);
       })
       .on('error', function (error) {
+        console.log(error);
         return reject(error);
       });
   });

@@ -7,8 +7,7 @@ var rp = require('request-promise');
 var peersCount_options = {
     method: 'GET',
     uri: 'http://localhost:8999/peers-count',
-    body: {
-    },
+    body: {},
     json: true
 };
 
@@ -37,12 +36,15 @@ var benchmarkLog_options = {
     uri: 'http://localhost:8999/benchmark-log',
     body: {
         usedGenesisJson: "genesis.json",
-        benchmarkRuntime: new Date(),
-        maxTransactionsReached: false,
-        maxRuntimeReached: true,
-        successfulTransactions: 0,
-        txPerSecond: 0,
-        averageDelay: 0,
+        startTime: new Date,
+        maxRuntime: 1000,
+        runtime: 100,
+        maxRuntimeReached: false,
+        maxTransactions: 1000,
+        maxTransactionsReached: true,
+        successfulTransactions: 1000,
+        txPerSecond: 20,
+        averageDelay: 10
     },
     json: true
 };

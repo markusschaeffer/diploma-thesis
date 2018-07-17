@@ -1,5 +1,7 @@
 #RUN THIS FILE WITH "sudo make ...."
 
+genesisFile=genesis_pow_difficulty_0x400_gasLimit_double.json
+
 benchmark_full: run_full sc_deploy_accounts sc_run_accounts_without_deploy_node0
 
 run_full: kill_running delete_root_folder init_folders delete_contract_addresses netstats bootnode nodes_startup_full
@@ -58,10 +60,10 @@ genesis_create:
 #$4 path to genesis.json file
 
 node0_startup_full:
-	cd scripts/sh; sudo ./node_startup.sh 0 127.0.0.1 127.0.0.1 ~/Dropbox/UbuntuVM/DropboxShared/diploma-thesis/genesis_json_files/genesis_pow_difficulty_0x400_gasLimit_double.json
+	cd scripts/sh; sudo ./node_startup.sh 0 127.0.0.1 127.0.0.1 ~/Dropbox/UbuntuVM/DropboxShared/diploma-thesis/genesis_json_files/$(genesisFile)
 
 node1_startup_full:
-	cd scripts/sh; sudo ./node_startup.sh 1 127.0.0.1 127.0.0.1 ~/Dropbox/UbuntuVM/DropboxShared/diploma-thesis/genesis_json_files/genesis_pow_difficulty_0x400_gasLimit_double.json
+	cd scripts/sh; sudo ./node_startup.sh 1 127.0.0.1 127.0.0.1 ~/Dropbox/UbuntuVM/DropboxShared/diploma-thesis/genesis_json_files/$(genesisFile)
 
 node0_stop:
 	cd scripts/sh; sudo ./node_stop.sh 0
@@ -88,18 +90,12 @@ sc_deploy_accounts: delete_contract_addresses
 	cd scripts/js/deployment; node account.js
 	cd scripts/js/deployment; node account.js
 
-sc_run_accounts_with_deploy_all_nodes: sc_deploy_accounts sc_run_accounts_without_deploy_all_nodes
-
-sc_run_accounts_with_deploy_node0: sc_deploy_accounts
-	cd scripts/js/benchmark; node account_benchmark_approach3.js 8100 1000 10
-
-sc_run_accounts_with_deploy_node1: sc_deploy_accounts
-	cd scripts/js/benchmark; node account_benchmark_approach3.js 8101 1000 10
-
 sc_run_accounts_without_deploy_node0:
-	cd scripts/js/benchmark; sudo node account_benchmark_approach3.js 8100 1000 10
+	cd scripts/js/benchmark; sudo node account_benchmark_approach3.js 8100 $(genesisFile) 1000 10
 
 sc_run_accounts_without_deploy_node1:
-	cd scripts/js/benchmark; node account_benchmark_approach3.js 8101 1000 10
+	cd scripts/js/benchmark; node account_benchmark_approach3.js 8101 $(genesisFile) 1000 10
+
+sc_run_accounts_with_deploy_all_nodes: sc_deploy_accounts sc_run_accounts_without_deploy_all_nodes
 
 sc_run_accounts_without_deploy_all_nodes: sc_run_accounts_without_deploy_node0 sc_run_accounts_without_deploy_node1

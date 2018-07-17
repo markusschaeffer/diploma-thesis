@@ -4,9 +4,9 @@ genesisFile=genesis_pow_difficulty_0x400_gasLimit_double.json
 
 benchmark_full: run_full sc_deploy_accounts sc_run_accounts_without_deploy_node0
 
-run_full: kill_running delete_root_folder init_folders delete_contract_addresses netstats bootnode nodes_startup_full
+run_full: kill_running delete_root_folder init_folders delete_contract_addresses netstats bootnode nodes_startup_full start_rest_server
 	 
-run_without_netstats: kill_running delete_root_folder init_folders delete_contract_addresses bootnode nodes_startup_full
+run_without_netstats: kill_running delete_root_folder init_folders delete_contract_addresses bootnode nodes_startup_full start_rest_server
  
 ####################INITIAL INSTALLATION####################
 install_packages:
@@ -91,7 +91,7 @@ sc_deploy_accounts: delete_contract_addresses
 	cd scripts/js/deployment; node account.js
 
 sc_run_accounts_without_deploy_node0:
-	cd scripts/js/benchmark; sudo node account_benchmark_approach3.js 8100 $(genesisFile) 1000 10
+	cd scripts/js/benchmark; sudo node account_benchmark_approach3.js 8100 $(genesisFile) 100 10
 
 sc_run_accounts_without_deploy_node1:
 	cd scripts/js/benchmark; node account_benchmark_approach3.js 8101 $(genesisFile) 1000 10
@@ -99,3 +99,9 @@ sc_run_accounts_without_deploy_node1:
 sc_run_accounts_with_deploy_all_nodes: sc_deploy_accounts sc_run_accounts_without_deploy_all_nodes
 
 sc_run_accounts_without_deploy_all_nodes: sc_run_accounts_without_deploy_node0 sc_run_accounts_without_deploy_node1
+
+
+####################COMMUNICATION####################
+
+start_rest_server:
+	cd scripts/js/communication/restfulAPI/; node server.js

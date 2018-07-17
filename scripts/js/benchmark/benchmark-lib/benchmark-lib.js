@@ -2,23 +2,26 @@
  * benchmark-lib funcions
  */
 
-var util = require('./../../util/util.js');
+var util = require('./../../util/util');
 var exec = require('child_process').exec;
+var restClient = require('./../../communication/restfulClient/client');
 
 module.exports = {
 
     /**
      * Print result to stdout and send result via REST
      */
-    logBenchmarkResult: function (usedGenesisJson, startTime, maxRuntime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, transactionsTimestampMapStart, transactionsTimestampMapEnd) {
+    logBenchmarkResult: async function (usedGenesisJson, startTime, maxRuntime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, transactionsTimestampMapStart, transactionsTimestampMapEnd) {
         var runtime = Math.abs((new Date() - startTime) / 1000);
         var averageTxDelay = module.exports.caculateAverageDelayOfTransactions(transactionsTimestampMapStart, transactionsTimestampMapEnd, successfulTransactions);
         var txPerSecond = successfulTransactions / runtime;
 
         module.exports.printBenchmarkResults(usedGenesisJson, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay);
         module.exports.sendBenchmarkResults(usedGenesisJson, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay)
-
-        process.exit(0); //kill process
+            .then(function () {
+                util.printFormatedMessage("KILLING PROCESS");
+                process.exit(0); //kill process
+            });
     },
 
     /**
@@ -63,10 +66,13 @@ module.exports = {
     /**
      * Send benchmark result via REST interface
      */
-    sendBenchmarkResults: function (usedGenesisJson, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay) {
+    sendBenchmarkResults: async function (usedGenesisJson, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay) {
+
         //get IP and Port from storage
 
         //use REST client to send JSON
+        await restClient.logBenchmarkResult(usedGenesisJson, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay);
+
     },
 
     /**

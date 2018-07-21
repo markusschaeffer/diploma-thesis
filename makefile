@@ -1,12 +1,13 @@
 #RUN THIS FILE WITH "sudo make ...."
 
-genesisFile=genesis_pow_difficulty_0x400_gasLimit_double.json
+genesisFile=genesis_poa_period_1.json
+#genesisFile=genesis_pow_difficulty_0x400_gasLimit_double.json
 
 benchmark_full: run_full sc_deploy_accounts sc_run_accounts_without_deploy_node0
 
-run_full: kill_running delete_root_folder init_folders delete_contract_addresses netstats bootnode nodes_startup_full start_rest_server
+run_full: kill_running delete_root_folder init_folders delete_contract_addresses netstats bootnode nodes_startup_full start_mongodb start_rest_server
 	 
-run_without_netstats: kill_running delete_root_folder init_folders delete_contract_addresses bootnode nodes_startup_full start_rest_server
+run_without_netstats: kill_running delete_root_folder init_folders delete_contract_addresses bootnode nodes_startup_full start_mongodb start_rest_server
  
 ####################INITIAL INSTALLATION####################
 install_packages:
@@ -84,14 +85,13 @@ nodes_stop: node0_stop node1_stop
 nodes_resume: node0_resume node1_resume
 
 ####################SMART CONTRACTS DEPLOYMENT & BENCHMARK####################
-
 sc_deploy_accounts: delete_contract_addresses
 	cd smart_contracts/account; rm -rf target; bash compile_account.sh
 	cd scripts/js/deployment; node account.js
 	cd scripts/js/deployment; node account.js
 
 sc_run_accounts_without_deploy_node0:
-	cd scripts/js/benchmark; sudo node account_benchmark_approach3.js 8100 $(genesisFile) 100 10
+	cd scripts/js/benchmark; sudo node account_benchmark_approach3.js 8100 $(genesisFile) 1000 10
 
 sc_run_accounts_without_deploy_node1:
 	cd scripts/js/benchmark; node account_benchmark_approach3.js 8101 $(genesisFile) 1000 10
@@ -102,6 +102,9 @@ sc_run_accounts_without_deploy_all_nodes: sc_run_accounts_without_deploy_node0 s
 
 
 ####################COMMUNICATION####################
-
 start_rest_server:
 	cd scripts/js/communication/restfulAPI/; node server.js
+
+####################DATABASE####################
+start_mongodb:
+	cd scripts/sh; sudo ./start_mongoDB.sh

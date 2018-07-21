@@ -3,8 +3,8 @@
  */
 
 //TODO add model https://medium.com/ph-devconnect/build-your-first-restful-api-with-node-js-e701b53d1f41
-//const mongoose = require("mongoose");
-//const Task = mongoose.model("Tasks");
+const mongoose = require("mongoose");
+const BenchmarkLog = mongoose.model("BenchmarkLog");
 
 var util = require('./../../util/util.js');
 
@@ -44,15 +44,22 @@ exports.startBenchmark = (req, res) => {
     res.end(JSON.stringify("OK"));
 };
 
+/**
+ * Stores a benchmark-log-result to the database
+ */
 exports.logBenchmark = (req, res) => {
 
     util.printFormatedMessage("RECEIVED BENCHMARK LOG REQUEST");
-
     var jsonRequest = req.body;
     console.log(jsonRequest);
 
-    //store results to database here
-    //database for selecting parameters more easily via SQL?
-
-    res.end(JSON.stringify("OK"));
+    let newBenchmarkLog = new BenchmarkLog(req.body);
+    util.printFormatedMessage("TRYING TO SAVE BENCHMARK LOG RESULT TO DB");
+    newBenchmarkLog.save( (err, result) => {
+        if (err)
+            res.send(err);
+        console.log("Result:" + result);
+        //res.json(result);
+        res.end(JSON.stringify("OK"));
+    });
 };

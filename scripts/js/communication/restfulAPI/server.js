@@ -1,14 +1,24 @@
 /**
- * REST server (running on a system without geth) for incoming benchmark results 
+ * REST server
  */
-var express = require('express');
-var app = express();
-var bodyParser = require('body-parser')
+const express = require('express');
+const app = express();
+const bodyParser = require('body-parser')
+const mongoose = require('mongoose');
 
-var routes = require("./routes");
+const routes = require("./routes");
+const BenchmarkLog = require("./model");
+
+mongoose.Promise = global.Promise;
+// connect to MongoDB
+mongoose.connect("mongodb://localhost:27017/test")
+    .then(() => console.log("connected to mongoDB"))
+    .catch(err => console.log(err));
 
 // handle incoming requests
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
 app.use(bodyParser.json());
 
 routes(app); // register routes

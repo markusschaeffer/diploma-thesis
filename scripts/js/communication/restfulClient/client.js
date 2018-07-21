@@ -75,7 +75,7 @@ module.exports = {
             rp(options)
                 .then(function (parsedBody) {
                     // request succeeded...
-                    console.log("Response: " + parsedBody)
+                    console.log("Response: " + JSON.stringify(parsedBody));
                     resolve(parsedBody);
                 })
                 .catch(function (err) {

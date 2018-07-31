@@ -1,7 +1,7 @@
 #RUN THIS FILE WITH "sudo make ...."
 
-genesisFile=genesis_poa_period_1.json
-#genesisFile=genesis_pow_difficulty_0x400_gasLimit_double.json
+#genesisFile=genesis_poa_period_1.json
+genesisFile=genesis_pow_difficulty_0x400_gasLimit_double.json
 
 benchmark_full: run_full sc_deploy_accounts sc_run_accounts_without_deploy_node0
 
@@ -99,7 +99,6 @@ sc_run_accounts_without_deploy_node1:
 sc_run_accounts_with_deploy_all_nodes: sc_deploy_accounts sc_run_accounts_without_deploy_all_nodes
 
 sc_run_accounts_without_deploy_all_nodes: sc_run_accounts_without_deploy_node0 sc_run_accounts_without_deploy_node1
-
 
 ####################COMMUNICATION####################
 start_rest_server:

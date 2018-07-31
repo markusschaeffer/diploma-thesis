@@ -1,5 +1,5 @@
 /*
- * Benchmark of sending Ether between Contracts (see deployment folder)
+ * Benchmark for sending Ether between two Contracts (see deployment folder)
  */
 
 var util = require('./../util/util.js');
@@ -19,6 +19,7 @@ web3 = new Web3(new Web3.providers.HttpProvider(httpProviderString));
 const usedGenesisJson = process.argv[3];
 const maxTransactions = process.argv[4];
 const maxRuntime = process.argv[5] * 1000 * 60;
+const gasPrice = '20000000000'; // default gas price in wei, 20 gwei in this case
 
 var transactionsTimestampMapStart = new Map();
 var transactionsTimestampMapEnd = new Map();
@@ -47,13 +48,12 @@ var abiArrayString = util.readFileSync_full(filePath_abi);
 var abiArray = JSON.parse(abiArrayString);
 
 var contract1 = new web3.eth.Contract(abiArray, contract1Address, {
-  gasPrice: '20000000000' // default gas price in wei, 20 gwei in this case
+  gasPrice: gasPrice
 });
 contract1.options.address = contract1Address;
 
 var contract2 = new web3.eth.Contract(abiArray, contract2Address, {
-  //contract options
-  gasPrice: '20000000000' // default gas price in wei, 20 gwei in this case
+  gasPrice: gasPrice
 });
 contract2.options.address = contract2Address;
 

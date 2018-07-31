@@ -7,8 +7,8 @@ module.exports = (app) => {
     /**
      * get the peers count of geth instances (connected nodes that know about each other)
      */
-    app.route('/peers-count')
-        .get(controller.getPeersCount);
+    app.route('/peer-count')
+        .get(controller.getPeerCount);
 
     /**
      * deploy a contract

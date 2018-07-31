@@ -31,10 +31,10 @@ module.exports = {
         await module.exports.sendRequest(options);
     },
 
-    getPeersCount: function () {
+    getPeerCount: function (ip) {
         let options = {
             method: 'GET',
-            uri: 'http://localhost:8999/peers-count',
+            uri: 'http://localhost:' + ip + '/peer-count',
             body: {},
             json: true
         };

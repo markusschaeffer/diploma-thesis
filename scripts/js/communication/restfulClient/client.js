@@ -1,5 +1,5 @@
 /**
- * https://github.com/request/request-promise
+ * Client for sending JSON requests to the server
  */
 
 var util = require('./../../util/util');
@@ -7,12 +7,12 @@ var rp = require('request-promise');
 
 module.exports = {
 
-    logBenchmarkResult: async function (usedGenesisJson, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageDelay) {
+    logBenchmarkResult: async function (ip, port, usedGenesisJson, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageDelay) {
         util.printFormatedMessage("SENDING BENCHMARK LOG RESULTS VIA REST");
 
         let options = {
             method: 'POST',
-            uri: 'http://localhost:8999/benchmark-log',
+            uri: 'http://' + ip + ':' + port + '/benchmark-log',
             body: {
                 usedGenesisJson: usedGenesisJson,
                 startTime: startTime,
@@ -31,10 +31,10 @@ module.exports = {
         await module.exports.sendRequest(options);
     },
 
-    getPeerCount: function (ip) {
+    getPeerCount: function (ip, port) {
         let options = {
             method: 'GET',
-            uri: 'http://localhost:' + ip + '/peer-count',
+            uri: 'http://' + ip + ':' + port + '/peer-count',
             body: {},
             json: true
         };
@@ -42,12 +42,12 @@ module.exports = {
         module.exports.sendRequest(options);
     },
 
-    deployContract: function () {
+    deployContract: function (ip, port, scenario) {
         let options = {
             method: 'POST',
-            uri: 'http://localhost:8999/contract-deploy',
+            uri: 'http://' + ip + ':' + port + '/contract-deploy',
             body: {
-                name: "account.js"
+                scenario: scenario
             },
             json: true
         };
@@ -55,14 +55,14 @@ module.exports = {
         module.exports.sendRequest(options);
     },
 
-    startBenchmark: function () {
+    startBenchmark: function (ip, port, scenario, maxbenchmarkRuntime, maxbenchmarkTransactions) {
         let options = {
             method: 'POST',
-            uri: 'http://localhost:8999/benchmark-start',
+            uri: 'http://' + ip + ':' + port + '/benchmark-start',
             body: {
-                genesisJson: "genesis.json",
-                maxbenchmarkRuntime: 10,
-                maxbenchmarkTransactions: 1000
+                scenario: scenario,
+                maxbenchmarkRuntime: maxbenchmarkRuntime,
+                maxbenchmarkTransactions: maxbenchmarkTransactions
             },
             json: true
         };
@@ -70,12 +70,24 @@ module.exports = {
         module.exports.sendRequest(options);
     },
 
+    /**
+     * see https://github.com/request/request-promise
+     */
     sendRequest: function (options) {
         return new Promise(function (resolve, reject) {
             rp(options)
                 .then(function (parsedBody) {
                     // request succeeded...
                     console.log("Response: " + JSON.stringify(parsedBody));
+
+                    if (parsedBody.contractDeployed != null) {
+                        //contracts have been deployed
+                        //--> store contract addresses in storage folder
+                        var filePath = "./../../../../storage/contract_addresses_local/account.txt";
+                        util.saveContractAddress(filePath, parsedBody.address1);
+                        util.saveContractAddress(filePath, parsedBody.address2);
+                    }
+
                     resolve(parsedBody);
                 })
                 .catch(function (err) {
@@ -84,6 +96,5 @@ module.exports = {
                     reject(err);
                 });
         });
-
     }
 }

@@ -35,8 +35,8 @@ init_folders: delete_root_folder
 	cd scripts/sh; sudo ./init_folders.sh 1
 
 delete_contract_addresses:
-	rm -rf storage/contract_addresses
-	cd storage; mkdir contract_addresses	
+	rm -rf storage/contract_addresses_server
+	cd storage; mkdir contract_addresses_server	
 
 delete_root_folder:
 	cd scripts/sh; sudo ./delete_root_folder.sh 

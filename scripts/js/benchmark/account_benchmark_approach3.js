@@ -20,6 +20,7 @@ const usedGenesisJson = process.argv[3];
 const maxTransactions = process.argv[4];
 const maxRuntime = process.argv[5] * 1000 * 60;
 const gasPrice = '20000000000'; // default gas price in wei, 20 gwei in this case
+const maxTransactionBatchSize = 100;
 
 var transactionsTimestampMapStart = new Map();
 var transactionsTimestampMapEnd = new Map();
@@ -32,15 +33,10 @@ var startTime;
 const accountAddress = "0x5dfe021f45f00ae83b0aa963be44a1310a782fcc";
 
 //get deployed smart contract addresses from a local file in folder storage
-var contract1Address = "";
-var contract2Address = "";
 var filePath = "./../../../storage/contract_addresses/account.txt";
 var addresses = util.readFileSync_lines(filePath);
-if ((addresses.length - 1) >= 2) {
-  contract1Address = addresses[0];
-  contract2Address = addresses[1];
-} else
-  throw new Error('Could not read at least 2 Smart Contract addresses');
+var contract1Address = addresses[0];
+var contract2Address = addresses[1];
 
 //get contract ABI from local .abi file
 var filePath_abi = "./../../../smart_contracts/account/target/Account.abi";
@@ -48,7 +44,7 @@ var abiArrayString = util.readFileSync_full(filePath_abi);
 var abiArray = JSON.parse(abiArrayString);
 
 var contract1 = new web3.eth.Contract(abiArray, contract1Address, {
-  gasPrice:  gasPrice 
+  gasPrice: gasPrice
 });
 contract1.options.address = contract1Address;
 
@@ -71,7 +67,7 @@ async function runBenchmark(maxTransactions, maxRuntime) {
 
   for (var i = 1; i <= maxTransactions; i++) {
     promises.push(handleTransaction(i));
-    if (sentTransaction % 100 == 0) {
+    if (sentTransaction % maxTransactionBatchSize == 0) {
       util.printFormatedMessage("INITIATING SLEEP");
       await util.sleep(1);
     }

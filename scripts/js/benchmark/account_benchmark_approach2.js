@@ -33,15 +33,10 @@ var startTime;
 const accountAddress = "0x5dfe021f45f00ae83b0aa963be44a1310a782fcc";
 
 //get deployed smart contract addresses from a local file in folder storage
-var contract1Address = "";
-var contract2Address = "";
 var filePath = "./../../../storage/contract_addresses/account.txt";
 var addresses = util.readFileSync_lines(filePath);
-if ((addresses.length - 1) >= 2) {
-  contract1Address = addresses[0];
-  contract2Address = addresses[1];
-} else
-  throw new Error('Could not read at least 2 Smart Contract addresses');
+var contract1Address = addresses[0];
+var contract2Address = addresses[1];
 
 //get contract ABI from local .abi file
 var filePath_abi = "./../../../smart_contracts/account/target/Account.abi";

@@ -68,11 +68,12 @@ module.exports = {
      */
     sendBenchmarkResults: async function (usedGenesisJson, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay) {
 
-        //get IP and Port from storage
+        //TODO: get IP and Port from storage
+        var ip = '127.0.0.1';
+        var port = 8999;
 
-        //use REST client to send JSON
-        await restClient.logBenchmarkResult(usedGenesisJson, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay);
-
+        //use REST client to send benchmark result
+        await restClient.logBenchmarkResult(ip, port, usedGenesisJson, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay);
     },
 
     /**

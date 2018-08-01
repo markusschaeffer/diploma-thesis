@@ -1,14 +1,23 @@
-#RUN THIS FILE WITH "sudo make ...."
+#RUN THIS FILE WITH "sudo make genesisFile=... maxRuntime=... maxTransactions=..."
 
 #genesisFile=genesis_poa_period_1.json
 genesisFile=genesis_pow_difficulty_0x400_gasLimit_double.json
+#maxRuntime=10
+#maxTransactions=1000
+netstats_ip=127.0.0.1
+bootnode_ip=127.0.0.1
+
+current_dir = $(shell pwd)
+
+####################AGGREGATED MAKE RULES####################
 
 benchmark_full: run_full sc_deploy_accounts sc_run_accounts_without_deploy_node0
-
-run_full: kill_running delete_root_folder init_folders delete_contract_addresses netstats bootnode nodes_startup_full start_mongodb start_rest_server
-	 
-run_without_netstats: kill_running delete_root_folder init_folders delete_contract_addresses bootnode nodes_startup_full start_mongodb start_rest_server
+run_full: kill_running delete_root_folder init_folders delete_contract_addresses_storage delete_current_genesis_storage netstats bootnode nodes_startup_full start_mongodb start_rest_server
+run_without_netstats: kill_running delete_root_folder init_folders delete_contract_addresses_storage delete_current_genesis_storage bootnode nodes_startup_full start_mongodb start_rest_server
  
+node_start: kill_running delete_root_folder init_folders delete_contract_addresses_storage delete_current_genesis_storage node0_startup_full
+node_start_incl_db_rest: node_start start_mongodb start_rest_server
+
 ####################INITIAL INSTALLATION####################
 install_packages:
 	cd scripts/sh; ./install.sh
@@ -34,9 +43,13 @@ init_folders: delete_root_folder
 	cd scripts/sh; sudo ./init_folders.sh 0
 	cd scripts/sh; sudo ./init_folders.sh 1
 
-delete_contract_addresses:
+delete_contract_addresses_storage:
 	rm -rf storage/contract_addresses_server
 	cd storage; mkdir contract_addresses_server	
+
+delete_current_genesis_storage:
+	rm -rf storage/current_genesis_server
+	cd storage; mkdir current_genesis_server	
 
 delete_root_folder:
 	cd scripts/sh; sudo ./delete_root_folder.sh 
@@ -53,7 +66,7 @@ bootnode:
 genesis_create:
 	cd scripts/sh; sudo ./genesis_create.sh
 	
-####################NODES####################
+####################GETH NODES####################
 #node_startup.sh
 #$1 index of node
 #$2 ip of eth-netstats server
@@ -61,10 +74,10 @@ genesis_create:
 #$4 path to genesis.json file
 
 node0_startup_full:
-	cd scripts/sh; sudo ./node_startup.sh 0 127.0.0.1 127.0.0.1 ~/Dropbox/UbuntuVM/DropboxShared/diploma-thesis/genesis_json_files/$(genesisFile)
+	cd scripts/sh; sudo ./node_startup.sh 0 $(netstats_ip) $(bootnode_ip) $(current_dir)/genesis_json_files/$(genesisFile) $(genesisFile)
 
 node1_startup_full:
-	cd scripts/sh; sudo ./node_startup.sh 1 127.0.0.1 127.0.0.1 ~/Dropbox/UbuntuVM/DropboxShared/diploma-thesis/genesis_json_files/$(genesisFile)
+	cd scripts/sh; sudo ./node_startup.sh 1 $(netstats_ip) $(bootnode_ip) $(current_dir)/genesis_json_files/$(genesisFile) $(genesisFile)
 
 node0_stop:
 	cd scripts/sh; sudo ./node_stop.sh 0
@@ -85,16 +98,16 @@ nodes_stop: node0_stop node1_stop
 nodes_resume: node0_resume node1_resume
 
 ####################SMART CONTRACTS DEPLOYMENT & BENCHMARK####################
-sc_deploy_accounts: delete_contract_addresses
+sc_deploy_accounts: delete_contract_addresses_storage
 	cd smart_contracts/account; rm -rf target; bash compile_account.sh
 	cd scripts/js/deployment; node account.js
 	cd scripts/js/deployment; node account.js
 
 sc_run_accounts_without_deploy_node0:
-	cd scripts/js/benchmark; sudo node account_benchmark_approach3.js 8100 $(genesisFile) 1000 10
+	cd scripts/js/benchmark; sudo node account_benchmark_approach3.js 8100 $(maxTransactions) $(maxRuntime)
 
 sc_run_accounts_without_deploy_node1:
-	cd scripts/js/benchmark; node account_benchmark_approach3.js 8101 $(genesisFile) 1000 10
+	cd scripts/js/benchmark; node account_benchmark_approach3.js 8101 $(maxTransactions) $(maxRuntime)
 
 sc_run_accounts_with_deploy_all_nodes: sc_deploy_accounts sc_run_accounts_without_deploy_all_nodes
 

@@ -23,7 +23,7 @@ web3 = new Web3(new Web3.providers.HttpProvider(httpProviderString));
  */
 exports.getPeerCount = (req, res) => {
 
-    util.printFormatedMessage("RECEIVED PEER COUNT REQUEST");
+    util.printFormatedMessage("RECEIVED getPeerCount REQUEST");
     var peerCount = -1;
     web3.eth.net.getPeerCount()
         .then(function (returnedPeerCount) {
@@ -41,7 +41,7 @@ exports.getPeerCount = (req, res) => {
  */
 exports.deployContract = (req, res) => {
 
-    util.printFormatedMessage("RECEIVED CONTRACT DEPLOYMENT REQUEST");
+    util.printFormatedMessage("RECEIVED deployContract REQUEST");
     var jsonRequest = req.body;
     switch (jsonRequest.scenario) {
         case 'account':
@@ -81,14 +81,29 @@ exports.deployContract = (req, res) => {
  */
 exports.startBenchmark = (req, res) => {
 
-    util.printFormatedMessage("RECEIVED BENCHMARK START REQUEST");
-
+    util.printFormatedMessage("RECEIVED startBenchmark REQUEST");
     var jsonRequest = req.body;
-    console.log(jsonRequest);
-
-    //start execution of scripts to run here
-
-    res.end(JSON.stringify("OK"));
+    switch (jsonRequest.scenario) {
+        case 'account':
+            new Promise(function (resolve, reject) {
+                    //start benchmark
+                    exec("cd " + directionToRootFolder + "; make sc_run_accounts_without_deploy_node0 maxTransactions=" + jsonRequest.maxTransactions + " maxRuntime=" + jsonRequest.maxRunTime + ";", function (error, stdout, stderr) {
+                        resolve(stdout);
+                        if (error !== null)
+                            reject(error);
+                    });
+                })
+                .catch(error => {
+                    res.end(JSON.stringify("NOK - " + error));
+                });
+            break;
+        case 'ballot':
+            break;
+        case 'readWrite':
+            break;
+        default:
+            res.end(JSON.stringify("NOK - could not match specified scenario"));
+    }
 };
 
 /**
@@ -96,7 +111,7 @@ exports.startBenchmark = (req, res) => {
  */
 exports.logBenchmark = (req, res) => {
 
-    util.printFormatedMessage("RECEIVED BENCHMARK LOG REQUEST");
+    util.printFormatedMessage("RECEIVED logBenchmark REQUEST");
     var jsonRequest = req.body;
     console.log(jsonRequest);
 

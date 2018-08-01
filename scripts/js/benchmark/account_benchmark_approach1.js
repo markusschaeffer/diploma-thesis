@@ -16,9 +16,8 @@ var httpProviderString = "http://localhost:" + httpPort; //TODO change for bench
 //http provider (node-0 PORT 8100, node-1 PORT 8101)
 web3 = new Web3(new Web3.providers.HttpProvider(httpProviderString));
 
-const usedGenesisJson = process.argv[3];
-const maxTransactions = process.argv[4];
-const maxRuntime = process.argv[5] * 1000 * 60;
+const maxTransactions = process.argv[3];
+const maxRuntime = process.argv[4] * 1000 * 60;
 const gasPrice = '20000000000'; // default gas price in wei, 20 gwei in this case
 
 var transactionsTimestampMapStart = new Map();
@@ -32,7 +31,7 @@ var startTime;
 const accountAddress = "0x5dfe021f45f00ae83b0aa963be44a1310a782fcc";
 
 //get deployed smart contract addresses from a local file in folder storage
-var filePath = "./../../../storage/contract_addresses/account.txt";
+var filePath = __dirname + "/../../../storage/contract_addresses_server/account.txt";
 var addresses = util.readFileSync_lines(filePath);
 var contract1Address = addresses[0];
 var contract2Address = addresses[1];
@@ -61,7 +60,7 @@ async function runBenchmark(maxTransactions, maxRuntime) {
   util.printFormatedMessage("BENCHMARK STARTED");
 
   setTimeout(function () {
-    benchmarkLib.logBenchmarkResult(usedGenesisJson, startTime, maxRuntime, true, maxTransactions, false, successfulTransactions, transactionsTimestampMapStart, transactionsTimestampMapEnd);
+    benchmarkLib.logBenchmarkResult(startTime, maxRuntime, true, maxTransactions, false, successfulTransactions, transactionsTimestampMapStart, transactionsTimestampMapEnd);
   }, maxRuntime);
 
   for (var i = 1; i <= maxTransactions; i++) {
@@ -70,7 +69,7 @@ async function runBenchmark(maxTransactions, maxRuntime) {
 
   Promise.all(promises.map(p => p.catch(() => undefined))).
   then(function () {
-    benchmarkLib.logBenchmarkResult(usedGenesisJson, startTime, maxRuntime, false, maxTransactions, true, successfulTransactions, transactionsTimestampMapStart, transactionsTimestampMapEnd);
+    benchmarkLib.logBenchmarkResult(startTime, maxRuntime, false, maxTransactions, true, successfulTransactions, transactionsTimestampMapStart, transactionsTimestampMapEnd);
   }, function (err) {
     console.log(err);
   });

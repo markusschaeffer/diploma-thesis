@@ -11,11 +11,13 @@ module.exports = {
     /**
      * Print result to stdout and send result via REST
      */
-    logBenchmarkResult: async function (usedGenesisJson, startTime, maxRuntime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, transactionsTimestampMapStart, transactionsTimestampMapEnd) {
+    logBenchmarkResult: async function (startTime, maxRuntime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, transactionsTimestampMapStart, transactionsTimestampMapEnd) {
+        const usedGenesisJson = util.readFileSync_lines(__dirname + "/../../../../storage/current_genesis_server/current_genesis.txt")[0];
+
         var runtime = Math.abs((new Date() - startTime) / 1000);
         var averageTxDelay = module.exports.caculateAverageDelayOfTransactions(transactionsTimestampMapStart, transactionsTimestampMapEnd, successfulTransactions);
         var txPerSecond = successfulTransactions / runtime;
-
+        
         module.exports.printBenchmarkResults(usedGenesisJson, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay);
         module.exports.sendBenchmarkResults(usedGenesisJson, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay)
             .then(function () {

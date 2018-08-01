@@ -9,6 +9,7 @@ FOLDERNAME=testnet
 ETH_DIR=$ROOT_DIR/$FOLDERNAME
 DATA_DIR=$ETH_DIR/datadir
 GENSISFILE=ETH_DIR/genesis.json
+STORAGEFOLDER=$ROOT_DIR/storage
 
 #GETH
 NETWORK_ID=1515 # custom network id to distinguish between several networks

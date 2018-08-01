@@ -8,8 +8,7 @@ var rp = require('request-promise');
 module.exports = {
 
     logBenchmarkResult: async function (ip, port, usedGenesisJson, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageDelay) {
-        util.printFormatedMessage("SENDING BENCHMARK LOG RESULTS VIA REST");
-
+        util.printFormatedMessage("SENDING logBenchmarkResult REQUEST");
         let options = {
             method: 'POST',
             uri: 'http://' + ip + ':' + port + '/benchmark-log',
@@ -32,6 +31,7 @@ module.exports = {
     },
 
     getPeerCount: function (ip, port) {
+        util.printFormatedMessage("SENDING getPeerCount REQUEST");
         let options = {
             method: 'GET',
             uri: 'http://' + ip + ':' + port + '/peer-count',
@@ -43,6 +43,7 @@ module.exports = {
     },
 
     deployContract: function (ip, port, scenario) {
+        util.printFormatedMessage("SENDING deployContract REQUEST");
         let options = {
             method: 'POST',
             uri: 'http://' + ip + ':' + port + '/contract-deploy',
@@ -55,14 +56,15 @@ module.exports = {
         module.exports.sendRequest(options);
     },
 
-    startBenchmark: function (ip, port, scenario, maxbenchmarkRuntime, maxbenchmarkTransactions) {
+    startBenchmark: function (ip, port, scenario, maxbenchmarkTransactions, maxbenchmarkRuntime) {
+        util.printFormatedMessage("SENDING startBenchmark REQUEST");
         let options = {
             method: 'POST',
             uri: 'http://' + ip + ':' + port + '/benchmark-start',
             body: {
                 scenario: scenario,
-                maxbenchmarkRuntime: maxbenchmarkRuntime,
-                maxbenchmarkTransactions: maxbenchmarkTransactions
+                maxbenchmarkTransactions: maxbenchmarkTransactions,
+                maxbenchmarkRuntime: maxbenchmarkRuntime
             },
             json: true
         };
@@ -83,7 +85,7 @@ module.exports = {
                     if (parsedBody.contractDeployed != null) {
                         //contracts have been deployed
                         //--> store contract addresses in storage folder
-                        var filePath = "./../../../../storage/contract_addresses_local/account.txt";
+                        var filePath = __dirname + "/../../../../storage/contract_addresses_local/account.txt";
                         util.saveContractAddress(filePath, parsedBody.address1);
                         util.saveContractAddress(filePath, parsedBody.address2);
                     }

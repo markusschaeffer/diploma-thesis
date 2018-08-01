@@ -8,6 +8,7 @@ nodeIndex=$1
 netstats_ip=$2
 bootnode_ip=$3
 path_to_genesis_file=$4
+genesis_name=$5
 
 ##########1) create account for node##########
 cd $SHFOLDER
@@ -17,7 +18,11 @@ bash ./create_account.sh $nodeIndex
 cd $SHFOLDER
 bash ./genesis_init.sh $nodeIndex $path_to_genesis_file
 
-##########3) GETH startup incl. mine##########
+##########3) write current genesis filename to genesis storage##########
+cd $STORAGEFOLDER/current_genesis_server
+echo "$genesis_name" > current_genesis.txt
+
+##########4) GETH startup incl. mine##########
 cd $ETH_DIR
 
 #NETSTATS

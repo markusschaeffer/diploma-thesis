@@ -10,7 +10,7 @@ const util = require('./../../util/util.js');
 //instantiate web3
 var Web3 = require('web3');
 var web3 = new Web3();
-const directionToRootFolder = "../../../../";
+const directionToRootFolder = __dirname + "/../../../../";
 
 //set providers from Web3.providers
 var httpPort = 8100; //http provider (node-0 PORT 8100, node-1 PORT 8101)
@@ -87,11 +87,18 @@ exports.startBenchmark = (req, res) => {
         case 'account':
             new Promise(function (resolve, reject) {
                     //start benchmark
-                    exec("cd " + directionToRootFolder + "; make sc_run_accounts_without_deploy_node0 maxTransactions=" + jsonRequest.maxTransactions + " maxRuntime=" + jsonRequest.maxRunTime + ";", function (error, stdout, stderr) {
-                        resolve(stdout);
+                    console.log("jsonRequest.maxTransactions:" + jsonRequest.maxTransactions);
+                    console.log("jsonRequest.maxRuntime:" + jsonRequest.maxRuntime);
+                    exec("cd " + directionToRootFolder + "; make sc_run_accounts_without_deploy_node0 maxTransactions=" + jsonRequest.maxTransactions + " maxRuntime=" + jsonRequest.maxRuntime + ";", function (error, stdout, stderr) {
+                        //var text = stdout.substring(stdout.indexOf("----------BENCHMARK RESULT----------"));
+                        resolve(stdout); //todo: enable/disable?
                         if (error !== null)
                             reject(error);
                     });
+                    res.end(JSON.stringify("benchmark started")); //todo: disable?
+                })
+                .then(function (result) {
+                    res.end(JSON.stringify(result));
                 })
                 .catch(error => {
                     res.end(JSON.stringify("NOK - " + error));

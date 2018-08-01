@@ -56,15 +56,15 @@ module.exports = {
         module.exports.sendRequest(options);
     },
 
-    startBenchmark: function (ip, port, scenario, maxbenchmarkTransactions, maxbenchmarkRuntime) {
+    startBenchmark: function (ip, port, scenario, maxTransactions, maxRuntime) {
         util.printFormatedMessage("SENDING startBenchmark REQUEST");
         let options = {
             method: 'POST',
             uri: 'http://' + ip + ':' + port + '/benchmark-start',
             body: {
                 scenario: scenario,
-                maxbenchmarkTransactions: maxbenchmarkTransactions,
-                maxbenchmarkRuntime: maxbenchmarkRuntime
+                maxTransactions: maxTransactions,
+                maxRuntime: maxRuntime
             },
             json: true
         };

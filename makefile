@@ -11,9 +11,8 @@ current_dir = $(shell pwd)
 
 ####################AGGREGATED MAKE RULES####################
 
-benchmark_full: run_full sc_deploy_accounts sc_run_accounts_without_deploy_node0
-run_full: kill_running delete_root_folder init_folders delete_contract_addresses_storage delete_current_genesis_storage netstats bootnode nodes_startup_full start_mongodb start_rest_server
-run_without_netstats: kill_running delete_root_folder init_folders delete_contract_addresses_storage delete_current_genesis_storage bootnode nodes_startup_full start_mongodb start_rest_server
+run_full: 				kill_running delete_root_folder init_folders delete_contract_addresses_storage delete_current_genesis_storage netstats bootnode node0_startup_full start_mongodb start_rest_server
+run_without_netstats: 	kill_running delete_root_folder init_folders delete_contract_addresses_storage delete_current_genesis_storage bootnode node0_startup_full start_mongodb start_rest_server
  
 node_start: kill_running delete_root_folder init_folders delete_contract_addresses_storage delete_current_genesis_storage node0_startup_full
 node_start_incl_db_rest: node_start start_mongodb start_rest_server
@@ -104,10 +103,10 @@ sc_deploy_accounts: delete_contract_addresses_storage
 	cd scripts/js/deployment; node account.js
 
 sc_run_accounts_without_deploy_node0:
-	cd scripts/js/benchmark; sudo node account_benchmark_approach3.js 8100 $(maxTransactions) $(maxRuntime)
+	cd scripts/js/benchmark; sudo node account_benchmark_approach3.js 8100 $(maxTransactions) $(maxRuntime) $(address1) $(address1)
 
 sc_run_accounts_without_deploy_node1:
-	cd scripts/js/benchmark; node account_benchmark_approach3.js 8101 $(maxTransactions) $(maxRuntime)
+	cd scripts/js/benchmark; node account_benchmark_approach3.js 8101 $(maxTransactions) $(maxRuntime) $(address1) $(address2)
 
 sc_run_accounts_with_deploy_all_nodes: sc_deploy_accounts sc_run_accounts_without_deploy_all_nodes
 

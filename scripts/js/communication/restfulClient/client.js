@@ -11,8 +11,9 @@ module.exports = {
         util.printFormatedMessage("SENDING logBenchmarkResult REQUEST");
         let options = {
             method: 'POST',
-            uri: 'http://' + ip + ':' + port + '/benchmark-log',
+            uri: 'http://' + '127.0.0.1' + ':' + port + '/benchmark-log',
             body: {
+                ip: ip,
                 usedGenesisJson: usedGenesisJson,
                 startTime: startTime,
                 maxRuntime: maxRuntime,
@@ -56,7 +57,7 @@ module.exports = {
         module.exports.sendRequest(options);
     },
 
-    startBenchmark: function (ip, port, scenario, maxTransactions, maxRuntime) {
+    startBenchmark: function (ip, port, scenario, maxTransactions, maxRuntime, smartContractAddresses) {
         util.printFormatedMessage("SENDING startBenchmark REQUEST");
         let options = {
             method: 'POST',
@@ -64,7 +65,8 @@ module.exports = {
             body: {
                 scenario: scenario,
                 maxTransactions: maxTransactions,
-                maxRuntime: maxRuntime
+                maxRuntime: maxRuntime,
+                smartContractAddresses: smartContractAddresses
             },
             json: true
         };

@@ -27,15 +27,20 @@ sudo apt-get install docker-compose
 #sudo apt-get install solc
 #which solc #/usr/bin/solc
 
+#NPM
 #web3
 sudo npm install web3
-
 #time-stamp for node scripts
 sudo npm install --save time-stamp
-
 #request and request-promise for RESTful client
 npm install --save request
 npm install --save request-promise
+#read-last-N-lines of files
+npm install read-last-lines --save
+#https://www.npmjs.com/package/public-ip
+npm install --save public-ip
+#Mongoose for MongoDB interaction
+npm install --save mongoose
 
 #MongoDB (only used locally)
 #https://www.digitalocean.com/community/tutorials/how-to-install-mongodb-on-ubuntu-16-04
@@ -44,6 +49,3 @@ npm install --save request-promise
 #sudo apt-get update
 #sudo apt-get install -y mongodb-org
 #sudo systemctl start mongod #starting MongoDB 
-
-#Mongoose for MongoDB interaction
-npm install --save mongoose

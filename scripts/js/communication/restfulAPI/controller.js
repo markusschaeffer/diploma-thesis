@@ -89,12 +89,20 @@ exports.startBenchmark = (req, res) => {
                     //start benchmark
                     console.log("jsonRequest.maxTransactions:" + jsonRequest.maxTransactions);
                     console.log("jsonRequest.maxRuntime:" + jsonRequest.maxRuntime);
-                    exec("cd " + directionToRootFolder + "; make sc_run_accounts_without_deploy_node0 maxTransactions=" + jsonRequest.maxTransactions + " maxRuntime=" + jsonRequest.maxRuntime + ";", function (error, stdout, stderr) {
-                        //var text = stdout.substring(stdout.indexOf("----------BENCHMARK RESULT----------"));
-                        resolve(stdout); //todo: enable/disable?
-                        if (error !== null)
-                            reject(error);
-                    });
+                    console.log("jsonRequest.smartContractAddresses: " + jsonRequest.smartContractAddresses);
+                    
+                    exec("cd " + directionToRootFolder + "; make sc_run_accounts_without_deploy_node0" +
+                        " maxTransactions=" + jsonRequest.maxTransactions +
+                        " maxRuntime=" + jsonRequest.maxRuntime +
+                        " address1=" + jsonRequest.smartContractAddresses[0] +
+                        " address2=" + jsonRequest.smartContractAddresses[1] +
+                        ";",
+                        function (error, stdout, stderr) {
+                            //var text = stdout.substring(stdout.indexOf("----------BENCHMARK RESULT----------"));
+                            resolve(stdout); //todo: enable/disable?
+                            if (error !== null)
+                                reject(error);
+                        });
                     res.end(JSON.stringify("benchmark started")); //todo: disable?
                 })
                 .then(function (result) {

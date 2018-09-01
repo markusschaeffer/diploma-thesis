@@ -1,5 +1,6 @@
 #!/bin/bash
-#make all ports free for geth, bootnode and eth-netstats startup
+# Kill running geth, bootnode and nodejs processes
+# => free ports for new processes
 
 echo "##########KILLING RUNNING GETH, BOOTNODE, NODE##########"
 

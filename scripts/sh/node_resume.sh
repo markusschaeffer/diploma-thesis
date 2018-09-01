@@ -1,4 +1,6 @@
 #!/bin/bash
+# Resume mining at Geth node
+# $1: id of the node
 
 . env.sh
 set -x #echo on

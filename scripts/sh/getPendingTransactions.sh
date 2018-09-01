@@ -1,5 +1,5 @@
 #!/bin/bash
-#attach to a node's javaScript console
+# Attach to a node's javaScript console
 
 . env.sh
 #set -x #echo on

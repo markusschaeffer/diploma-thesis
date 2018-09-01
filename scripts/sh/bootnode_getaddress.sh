@@ -1,5 +1,5 @@
 #!/bin/bash
-#get the enode address (inlcuding other data) from bootnode.txt and extract it to bootnode_enode_address.txt for later use
+# Get enode address from bootnode.txt and extract it to bootnode_enode_address.txt for later use
 
 . env.sh
 set -x #echo on

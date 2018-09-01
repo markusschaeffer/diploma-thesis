@@ -1,8 +1,8 @@
 #!/bin/bash
-#delete root folder of blockchain if existing
+# Delete root folder if existing
 
 . env.sh
 set -x #echo on
 
-cd $ROOT_DIR;
-sudo rm -rf $FOLDERNAME;
+cd $ROOT_DIR
+sudo rm -rf $FOLDERNAME

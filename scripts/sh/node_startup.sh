@@ -1,5 +1,10 @@
 #!/bin/bash
-#Geth node startup incl. mining
+# Geth node startup incl. mining
+# $1:node index
+# $2:netstats_ip
+# $3:bootnode ip
+# $4:path to genesis file
+# $5:genesis name
 
 . env.sh
 set -x #echo on

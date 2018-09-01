@@ -1,8 +1,13 @@
 #!/bin/bash
-# installing all kind of software/dependencies needed for the project
+# Install project dependencies/libraries
 
 . env.sh
 set -x #echo on
+
+#Network Time Protocol for time sync
+sudo apt-get update
+sudo apt-get install ntp
+sudo service ntp start
 
 #Ethereum(Geth-Client)
 sudo apt-get install software-properties-common
@@ -22,30 +27,35 @@ sudo apt-get install docker
 sudo apt-get install docker-compose
 
 #Solidity Compiler (only used locally)
-#sudo add-apt-repository ppa:ethereum/ethereum
-#sudo apt-get update
-#sudo apt-get install solc
 #which solc #/usr/bin/solc
+sudo add-apt-repository ppa:ethereum/ethereum
+sudo apt-get update
+sudo apt-get install solc
 
-#NPM
 #web3
 sudo npm install web3
+
 #time-stamp for node scripts
 sudo npm install --save time-stamp
+
 #request and request-promise for RESTful client
 npm install --save request
 npm install --save request-promise
+
 #read-last-N-lines of files
 npm install read-last-lines --save
+
+#public ip
 #https://www.npmjs.com/package/public-ip
 npm install --save public-ip
+
 #Mongoose for MongoDB interaction
 npm install --save mongoose
 
 #MongoDB (only used locally)
+#(sudo systemctl start mongodb) for starting MongoDB 
 #https://www.digitalocean.com/community/tutorials/how-to-install-mongodb-on-ubuntu-16-04
-#sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv EA312927
-#echo "deb http://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.2 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.2.list
-#sudo apt-get update
-#sudo apt-get install -y mongodb-org
-#sudo systemctl start mongod #starting MongoDB 
+sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv EA312927
+echo "deb http://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.2 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.2.list
+sudo apt-get update
+sudo apt-get install -y mongodb-org

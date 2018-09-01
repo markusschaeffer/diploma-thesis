@@ -1,5 +1,5 @@
 #!/bin/bash
-# copy existing keystore files in each node for prefunded accounts with always the same address
+# Copy existing keystore files in each node for prefunded accounts with a static address
 # $1: node index
 
 #https://github.com/ethereum/go-ethereum/wiki/Managing-your-accounts

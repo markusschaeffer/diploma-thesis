@@ -1,5 +1,5 @@
 #!/bin/bash
-#setup and rund eth-netstats frontend and backend
+# Setup and rund eth-netstats frontend and backend
 
 #https://github.com/ethereum/wiki/wiki/Network-Status
 #https://github.com/ethereum/go-ethereum/wiki/Setting-up-private-network-or-local-cluster

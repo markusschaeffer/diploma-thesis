@@ -1,5 +1,5 @@
 #!/bin/bash
-#setup a bootnode for node discovery
+# Setup a bootnode for Geth node discovery
 
 . env.sh
 set -x #echo on

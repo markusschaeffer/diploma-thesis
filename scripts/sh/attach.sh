@@ -1,5 +1,6 @@
 #!/bin/bash
-#attach to a node's javaScript console
+# attach to a node's JavaScript console
+# $1: index of the node
 
 . env.sh
 set -x #echo on

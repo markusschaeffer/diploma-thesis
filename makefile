@@ -11,31 +11,20 @@ current_dir = $(shell pwd)
 
 ####################AGGREGATED MAKE RULES####################
 
-run_full: 				kill_running delete_root_folder init_folders delete_contract_addresses_storage delete_current_genesis_storage netstats bootnode node0_startup_full start_mongodb start_rest_server
-run_without_netstats: 	kill_running delete_root_folder init_folders delete_contract_addresses_storage delete_current_genesis_storage bootnode node0_startup_full start_mongodb start_rest_server
- 
-node_start: kill_running delete_root_folder init_folders delete_contract_addresses_storage delete_current_genesis_storage node0_startup_full
-node_start_incl_db_rest: node_start start_mongodb start_rest_server
+run_full: prepare bootnode_netstats_start node_start local_start
+
+local_start: 				start_mongodb start_rest_server
+bootnode_netstats_start: 	netstats bootnode
+node_start: 				geth_node0_startup start_rest_server
+
+prepare: kill_running delete_root_folder init_folders delete_contract_addresses_storage delete_current_genesis_storage
 
 ####################INITIAL INSTALLATION####################
-install_packages:
-	cd scripts/sh; ./install.sh
+install_node:
+	cd scripts/sh; ./install_node.sh	
 
-time_sync_install_and_run:
-	sudo apt-get update
-	sudo apt-get install ntp
-	sudo service ntp start
-	@echo "Time sync started"
-
-####################UTIL####################
-attach_cli_node0:
-	cd scripts/sh; sudo ./attach.sh 0
-
-attach_cli_node1:
-	cd scripts/sh; sudo ./attach.sh 1
-
-kill_running:
-	cd scripts/sh; sudo ./kill_running.sh
+install_local:
+	cd scripts/sh; ./install_local.sh	
 
 ####################INIT NODE FOLDERS####################
 init_folders: delete_root_folder
@@ -43,12 +32,10 @@ init_folders: delete_root_folder
 	cd scripts/sh; sudo ./init_folders.sh 1
 
 delete_contract_addresses_storage:
-	rm -rf storage/contract_addresses_server
-	cd storage; mkdir contract_addresses_server	
+	cd scripts/sh; sudo ./delete_contract_addresses_storage.sh 
 
 delete_current_genesis_storage:
-	rm -rf storage/current_genesis_server
-	cd storage; mkdir current_genesis_server	
+	cd scripts/sh; sudo ./delete_current_genesis_storage.sh 
 
 delete_root_folder:
 	cd scripts/sh; sudo ./delete_root_folder.sh 
@@ -67,34 +54,35 @@ genesis_create:
 	
 ####################GETH NODES####################
 #node_startup.sh
-#$1 index of node
-#$2 ip of eth-netstats server
-#$3 ip of bootnode
-#$4 path to genesis.json file
+#$1: index of node
+#$2: ip of eth-netstats server
+#$3: ip of bootnode
+#$4: path to genesis.json file
+#$5: name of genesis.json
 
-node0_startup_full:
+geth_node0_startup:
 	cd scripts/sh; sudo ./node_startup.sh 0 $(netstats_ip) $(bootnode_ip) $(current_dir)/genesis_json_files/$(genesisFile) $(genesisFile)
 
-node1_startup_full:
-	cd scripts/sh; sudo ./node_startup.sh 1 $(netstats_ip) $(bootnode_ip) $(current_dir)/genesis_json_files/$(genesisFile) $(genesisFile)
-
-node0_stop:
+geth_node0_stop:
 	cd scripts/sh; sudo ./node_stop.sh 0
 
-node1_stop:
-	cd scripts/sh; sudo ./node_stop.sh 1
-
-node0_resume:
+geth_node0_resume:
 	cd scripts/sh; sudo ./node_resume.sh 0
 
-node1_resume:
+geth_node1_startup:
+	cd scripts/sh; sudo ./node_startup.sh 1 $(netstats_ip) $(bootnode_ip) $(current_dir)/genesis_json_files/$(genesisFile) $(genesisFile)
+
+geth_node1_stop:
+	cd scripts/sh; sudo ./node_stop.sh 1
+
+geth_node1_resume:
 	cd scripts/sh; sudo ./node_resume.sh 1
 
-nodes_startup_full: node0_startup_full node1_startup_full
+geth_nodes_startup: geth_node0_startup geth_node1_startup
 
-nodes_stop: node0_stop node1_stop
+geth_nodes_stop: geth_node0_stop geth_node1_stop
 
-nodes_resume: node0_resume node1_resume
+geth_nodes_resume: geth_node0_resume geth_node1_resume
 
 ####################SMART CONTRACTS DEPLOYMENT & BENCHMARK####################
 sc_deploy_accounts: delete_contract_addresses_storage
@@ -119,3 +107,13 @@ start_rest_server:
 ####################DATABASE####################
 start_mongodb:
 	cd scripts/sh; sudo ./start_mongoDB.sh
+
+####################UTIL####################
+attach_cli_node0:
+	cd scripts/sh; sudo ./attach.sh 0
+
+attach_cli_node1:
+	cd scripts/sh; sudo ./attach.sh 1
+
+kill_running:
+	cd scripts/sh; sudo ./kill_running.sh

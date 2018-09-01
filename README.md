@@ -6,15 +6,25 @@ The goal is to benchmark metrics of differently configured Ethereum networks.
 
 # Attention: This is still WORK IN PROGRESS!
 
+# TODO
+
+- Decouple MongoDB from RESTServer (2 Versions of RESTServer needed)
+- IP handling for AWS nodes
+- Bootnode on a remote node
+- Voting and ReadWrite scenario implementation
+- Increase Number of Open File Descriptors for EC2 Instances?
+- Amazon CloudFormation Service Templates for automatic node startup with "scripts/sh/install_node.sh"
+- Visualisation of benchmark results via Python (matplotlib)
+
 # Concept
 
-## Ethereum Network Parameters (so far)
+## Ethereum Network Parameters
 - Consenus Algoithm
     - Proof of Work (Ethash)
         - Mining Difficulty
         - Block gas limit
         - Number of miners in the network
-        - Amount of minerthreads
+        - Quantity of minerthreads
     - Proof of Authority (Clique)
         - Period
         - Block gas limit
@@ -32,9 +42,23 @@ The goal is to benchmark metrics of differently configured Ethereum networks.
 ## Scenarios
 - Simple transfer of ETH between two smart contracts
 - Voting (ballot.sol)
-- Reading and writing from/to a simple contract holdin getter and setter methods
+- Reading and writing from/to a simple contract consisting mainly of getter and setter methods
 
-# Errors/Issues
+# AWS EC2 Startup Procedure
+
+- Start a node with a GETH Bootnode and Eth-Netstats
+- Save the IP of the Bootnode (e.g. GIT push)
+- Change ROOT_DIR in env.sh
+- Start other nodes running GETH and the REST communication module
+- Deploy scenario from a local node (via REST communication to other deployed nodes)
+- Start Benchmarks from a local node (via REST communication to other deployed nodes)
+- Benchmark results are stored on the local DB
+
+# Local MongoDB
+ - start via "mongo" 
+- select last entries descending on startTime: "db.benchmarklogs.find().pretty().sort({"startTime":-1})"
+
+# Geth Related Errors/Issues
 
 - Errors
 -- UnhandledPromiseRejectionWarning: Error: Returned error: known transaction

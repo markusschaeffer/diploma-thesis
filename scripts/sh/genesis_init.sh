@@ -1,5 +1,7 @@
 #!/bin/bash
-#initialize node with genesis block
+# Initialize Geth node with genesis block
+# $1: index of the node
+# $2: path to genesis file
 
 . env.sh
 set -x #echo on

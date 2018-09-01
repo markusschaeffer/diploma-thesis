@@ -1,8 +1,8 @@
 #!/bin/bash
-#sets environment variables
+# Sets environment variables
 
 #FOLDER STRUCTURE
-ROOT_DIR=~/Dropbox/UbuntuVM/DropboxShared/diploma-thesis #change
+ROOT_DIR=~/Dropbox/UbuntuVM/DropboxShared/diploma-thesis #TODO change
 SHFOLDER=$ROOT_DIR/scripts/sh
 JSFOLDER=$ROOT_DIR/scripts/js
 FOLDERNAME=testnet

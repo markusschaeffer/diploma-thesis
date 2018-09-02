@@ -1,6 +1,7 @@
 /*
-You’ll need to have MongoDB server installed locally, if you want to serve your database.
-https://medium.com/ph-devconnect/build-your-first-restful-api-with-node-js-e701b53d1f41
+ * Database Model for local MongoDB Schema 
+ *
+ * https://medium.com/ph-devconnect/build-your-first-restful-api-with-node-js-e701b53d1f41
 */
 
 const mongoose = require('mongoose');

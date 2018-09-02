@@ -1,4 +1,4 @@
-var client = require('./restfulClient/client');
+var client = require('./restfulClient/client_local');
 const readLastLines = require('read-last-lines');
 
 //get deployed smart contract addresses from local storage folder
@@ -12,7 +12,7 @@ readLastLines.read(pathToFile, 2)
         smartContractAddresses = lines.split("\n").splice(0, 2);
     })
     .then(function () {
-        //TODO loop over IPs (running nodes)
+        //TODO loop over IPs (running nodes)--------------------------------------------------------------
         client.startBenchmark('127.0.0.1', 8999, scenario, 100, 10, smartContractAddresses);
     }).catch(function (err) {
         console.log(err.message);

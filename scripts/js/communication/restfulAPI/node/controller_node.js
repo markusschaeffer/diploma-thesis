@@ -1,20 +1,18 @@
 /**
- * REST Controller
+ * REST Controller (node)
  */
 
-const mongoose = require("mongoose");
-const BenchmarkLog = mongoose.model("BenchmarkLog");
 const exec = require('child_process').exec;
-const util = require('./../../util/util.js');
+const util = require('./../../../util/util.js');
 
 //instantiate web3
 var Web3 = require('web3');
 var web3 = new Web3();
-const directionToRootFolder = __dirname + "/../../../../";
+const directionToRootFolder = __dirname + "/../../../../../";
 
 //set providers from Web3.providers
 var httpPort = 8100; //http provider (node-0 PORT 8100, node-1 PORT 8101)
-var httpProviderString = "http://localhost:" + httpPort; //TODO IP?
+var httpProviderString = "http://localhost:" + httpPort;
 
 web3 = new Web3(new Web3.providers.HttpProvider(httpProviderString));
 
@@ -119,23 +117,4 @@ exports.startBenchmark = (req, res) => {
         default:
             res.end(JSON.stringify("NOK - could not match specified scenario"));
     }
-};
-
-/**
- * stores a benchmark-log-result to the database
- */
-exports.logBenchmark = (req, res) => {
-
-    util.printFormatedMessage("RECEIVED logBenchmark REQUEST");
-    var jsonRequest = req.body;
-    console.log(jsonRequest);
-
-    let newBenchmarkLog = new BenchmarkLog(req.body);
-    util.printFormatedMessage("TRYING TO SAVE BENCHMARK LOG RESULT TO DB");
-    newBenchmarkLog.save((err, result) => {
-        if (err)
-            res.send(err);
-        console.log("Result:" + result);
-        res.end(JSON.stringify("OK"));
-    });
 };

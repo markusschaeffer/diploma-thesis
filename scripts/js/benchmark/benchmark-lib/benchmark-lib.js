@@ -4,7 +4,7 @@
 
 var util = require('./../../util/util');
 var exec = require('child_process').exec;
-var restClient = require('./../../communication/restfulClient/client');
+var restClient = require('./../../communication/restfulClient/client_node');
 const publicIp = require('public-ip');
 
 module.exports = {
@@ -19,7 +19,8 @@ module.exports = {
         var averageTxDelay = module.exports.caculateAverageDelayOfTransactions(transactionsTimestampMapStart, transactionsTimestampMapEnd, successfulTransactions);
         var txPerSecond = successfulTransactions / runtime;
 
-        var ip = '127.0.0.1';
+        //TODO get IP of Master (local)-----------------------------------------------------------
+        var ip = '127.0.0.1'; 
         var port = 8999;
 
         publicIp.v4().then(function (publicIp) {
@@ -30,7 +31,7 @@ module.exports = {
             module.exports.sendBenchmarkResults(ip, port, usedGenesisJson, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay)
                 .then(function () {
                     util.printFormatedMessage("KILLING PROCESS");
-                    process.exit(0); //kill process
+                    process.exit(0);
                 });
         });
     },
@@ -81,7 +82,7 @@ module.exports = {
      * Send benchmark result via REST interface
      */
     sendBenchmarkResults: async function (ip, port, usedGenesisJson, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay) {
-        await restClient.logBenchmarkResult(ip, port, usedGenesisJson, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay);
+        await restClient.sendBenchmarkResult(ip, port, usedGenesisJson, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay);
     },
 
     /**

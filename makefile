@@ -13,9 +13,9 @@ current_dir = $(shell pwd)
 
 run_full: prepare bootnode_netstats_start node_start local_start
 
-local_start: 				start_mongodb start_rest_server
+local_start:				start_mongodb start_rest_server_local
 bootnode_netstats_start: 	netstats bootnode
-node_start: 				geth_node0_startup start_rest_server
+node_start: 				geth_node0_startup start_rest_server_node
 
 prepare: kill_running delete_root_folder init_folders delete_contract_addresses_storage delete_current_genesis_storage
 
@@ -101,8 +101,11 @@ sc_run_accounts_with_deploy_all_nodes: sc_deploy_accounts sc_run_accounts_withou
 sc_run_accounts_without_deploy_all_nodes: sc_run_accounts_without_deploy_node0 sc_run_accounts_without_deploy_node1
 
 ####################COMMUNICATION####################
-start_rest_server:
-	cd scripts/js/communication/restfulAPI/; node server.js
+start_rest_server_local:
+	cd scripts/js/communication/restfulAPI/local/; node server_local.js
+
+start_rest_server_node:
+	cd scripts/js/communication/restfulAPI/node/; node server_node.js
 
 ####################DATABASE####################
 start_mongodb:

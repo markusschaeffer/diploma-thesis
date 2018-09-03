@@ -12,12 +12,12 @@ The goal is to benchmark metrics of differently configured Ethereum networks.
 - Voting and ReadWrite scenario implementation
 - Increase Number of Open File Descriptors for EC2 Instances?
 - Amazon CloudFormation Service Templates for automatic node startup with "scripts/sh/install_node.sh"
-- Visualisation of benchmark results via Python (matplotlib)
+- Visualization of benchmark results via Python (matplotlib)
 
 # Concept
 
 ## Ethereum Network Parameters
-- Consenus Algoithm
+- Consensus Algorithm
     - Proof of Work (Ethash)
         - Mining Difficulty
         - Block gas limit

@@ -9,7 +9,9 @@ const Schema = mongoose.Schema;
 
 //schema creation
 let BenchmarkLogSchema = new Schema({
-    ip: {type:String},
+    benchmark: {type: String},
+    scenario: {type: Number},
+    ip: {type: String},
     usedGenesisJson: {type: String},
     startTime: {type: Date},
     maxRuntime: {type: Number},

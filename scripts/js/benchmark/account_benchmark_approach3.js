@@ -28,6 +28,8 @@ const maxTransactionBatchSize = 100;
 const gasPrice = '20000000000'; // default gas price in wei, 20 gwei in this case
 const amountTobeSent = web3.utils.toWei('1', "ether"); //define amount to be sent between contracts
 const accountAddress = "0x5dfe021f45f00ae83b0aa963be44a1310a782fcc"; //specify which account to use for gas costs for each transaction
+const benchmark = "account";
+const scenario = 3;
 
 var transactionsTimestampMapStart = new Map();
 var transactionsTimestampMapEnd = new Map();
@@ -70,7 +72,7 @@ async function runBenchmark(maxTransactions, maxRuntime) {
   util.printFormatedMessage("BENCHMARK STARTED");
 
   setTimeout(function () {
-    benchmarkLib.logBenchmarkResult(startTime, maxRuntime, true, maxTransactions, false, successfulTransactions, transactionsTimestampMapStart, transactionsTimestampMapEnd);
+    benchmarkLib.logBenchmarkResult(benchmark, scenario, startTime, maxRuntime, true, maxTransactions, false, successfulTransactions, transactionsTimestampMapStart, transactionsTimestampMapEnd);
   }, maxRuntime);
 
   for (var i = 1; i <= maxTransactions; i++) {
@@ -83,7 +85,7 @@ async function runBenchmark(maxTransactions, maxRuntime) {
 
   Promise.all(promises.map(p => p.catch(() => undefined))).
   then(function () {
-    benchmarkLib.logBenchmarkResult(startTime, maxRuntime, false, maxTransactions, true, successfulTransactions, transactionsTimestampMapStart, transactionsTimestampMapEnd);
+    benchmarkLib.logBenchmarkResult(benchmark, scenario, startTime, maxRuntime, false, maxTransactions, true, successfulTransactions, transactionsTimestampMapStart, transactionsTimestampMapEnd);
   }, function (err) {
     console.log(err);
   });

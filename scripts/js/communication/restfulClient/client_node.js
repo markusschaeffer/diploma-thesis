@@ -7,18 +7,20 @@ var clientUtil = require('./clientUtil');
 
 module.exports = {
 
-    logBenchmarkResult: async function (benchmark, scenario, ip, port, usedGenesisJson, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageDelay) {
+    logBenchmarkResult: async function (ip, scenario, approach, benchmarkID, usedGenesisJson, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageDelay) {
         util.printFormatedMessage("SENDING logBenchmarkResult REQUEST");
 
-        var localMasterIP = '127.0.0.1'; //TODO read LOCAL IP from Storage?-----------------------------------------------------------
+        var masterIP = '127.0.0.1'; //TODO read MASTER IP from Storage-----------------------------------------------------------
+        var port = 8998;
 
         let options = {
             method: 'POST',
-            uri: 'http://' + localMasterIP + ':' + port + '/local-benchmark-log',
+            uri: 'http://' + masterIP + ':' + port + '/local-benchmark-log',
             body: {
-                benchmark: benchmark,
-                scenario: scenario,
                 ip: ip,
+                scenario: scenario,
+                approach: approach,
+                benchmarkID: benchmarkID,
                 usedGenesisJson: usedGenesisJson,
                 startTime: startTime,
                 maxRuntime: maxRuntime,

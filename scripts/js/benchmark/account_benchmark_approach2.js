@@ -6,6 +6,7 @@
  * argv[4] : maxRuntime
  * argv[5] : smartContract address 1
  * argv[6] : smartContract address 2
+ * argv[7] : benchmarkID
  */
 
 var util = require('./../util/util.js');
@@ -13,23 +14,26 @@ var benchmarkLib = require('./benchmark-lib/benchmark-lib.js');
 var timestamp = require('time-stamp');
 
 //instantiate web3
-var Web3 = require('web3');
+const Web3 = require('web3');
 var web3 = new Web3();
 
+const ip = "localhost";
+const httpPort = process.argv[2]; //get port as cli parameter
+const maxTransactions = process.argv[3];
+const maxRuntime = process.argv[4] * 1000 * 60;
+const benchmarkID = process.argv[7];
+
 //set providers from Web3.providers
-var httpPort = process.argv[2]; //get port as cli parameter
-var httpProviderString = "http://localhost:" + httpPort; //TODO change for benchmark on ec2 instances
+const httpProviderString = "http://" + ip + ":" + httpPort;
 //http provider (node-0 PORT 8100, node-1 PORT 8101)
 web3 = new Web3(new Web3.providers.HttpProvider(httpProviderString));
 
-const maxTransactions = process.argv[3];
-const maxRuntime = process.argv[4] * 1000 * 60;
 const maxOpenFileDescriptors = 1024;
 const gasPrice = '20000000000'; // default gas price in wei, 20 gwei in this case
 const amountTobeSent = web3.utils.toWei('1', "ether"); //define amount to be sent between contracts
 const accountAddress = "0x5dfe021f45f00ae83b0aa963be44a1310a782fcc"; //specify which account to use for gas costs for each transaction
-const benchmark = "account";
-const scenario = 2;
+const scenario = "account";
+const approach = 2;
 
 var transactionsTimestampMapStart = new Map();
 var transactionsTimestampMapEnd = new Map();
@@ -75,7 +79,7 @@ async function runBenchmark(gethPID, maxTransactions, maxRuntime) {
   util.printFormatedMessage("BENCHMARK STARTED");
 
   setTimeout(function () {
-    benchmarkLib.logBenchmarkResult(benchmark, scenario, startTime, maxRuntime, true, maxTransactions, false, successfulTransactions, transactionsTimestampMapStart, transactionsTimestampMapEnd);
+    benchmarkLib.logBenchmarkResult(scenario, approach, benchmarkID, startTime, maxRuntime, true, maxTransactions, false, successfulTransactions, transactionsTimestampMapStart, transactionsTimestampMapEnd);
   }, maxRuntime);
 
   for (var i = 1; i <= maxTransactions; i++) {
@@ -88,7 +92,7 @@ async function runBenchmark(gethPID, maxTransactions, maxRuntime) {
 
   Promise.all(promises.map(p => p.catch(() => undefined))).
   then(function () {
-    benchmarkLib.logBenchmarkResult(benchmark, scenario, startTime, maxRuntime, false, maxTransactions, true, successfulTransactions, transactionsTimestampMapStart, transactionsTimestampMapEnd);
+    benchmarkLib.logBenchmarkResult(scenario, approach, startTime, benchmarkID, maxRuntime, false, maxTransactions, true, successfulTransactions, transactionsTimestampMapStart, transactionsTimestampMapEnd);
   }, function (err) {
     console.log(err);
   });

@@ -13,7 +13,10 @@ readLastLines.read(pathToFile, 2)
     })
     .then(function () {
         //TODO loop over IPs (running nodes)--------------------------------------------------------------
-        client.startBenchmark('127.0.0.1', 8999, scenario, 100, 10, smartContractAddresses);
+        var benchmarkId = Math.round(Math.random() * 1000);
+        var approach = 3;
+        
+        client.startBenchmark('127.0.0.1', 8999, scenario, approach, benchmarkId, 100, 10, smartContractAddresses);
     }).catch(function (err) {
         console.log(err.message);
     });

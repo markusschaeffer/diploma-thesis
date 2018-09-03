@@ -8,8 +8,6 @@ The goal is to benchmark metrics of differently configured Ethereum networks.
 
 # TODO
 
-- Decouple MongoDB from RESTServer (2 Versions of RESTServer needed)
-- IP handling for AWS nodes
 - Bootnode on a remote node
 - Voting and ReadWrite scenario implementation
 - Increase Number of Open File Descriptors for EC2 Instances?
@@ -47,10 +45,10 @@ The goal is to benchmark metrics of differently configured Ethereum networks.
 # AWS EC2 Startup Procedure
 
 - Start a node with a GETH Bootnode and Eth-Netstats
-- Save the IP of the Bootnode (e.g. GIT push)
+- Save the IP of the Bootnode to the storage folder (e.g. GIT push)
 - Change ROOT_DIR in env.sh
 - Start other nodes running GETH and the REST communication module
-- Deploy scenario from a local node (via REST communication to other deployed nodes)
+- Deploy smart contract scenario from a local node (via REST communication to other deployed nodes)
 - Start Benchmarks from a local node (via REST communication to other deployed nodes)
 - Benchmark results are stored on the local DB
 

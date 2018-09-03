@@ -33,13 +33,15 @@ module.exports = {
         clientUtil.sendRequest(options);
     },
 
-    startBenchmark: function (ip, port, scenario, maxTransactions, maxRuntime, smartContractAddresses) {
+    startBenchmark: function (ip, port, scenario, approach, benchmarkID, maxTransactions, maxRuntime, smartContractAddresses) {
         util.printFormatedMessage("SENDING startBenchmark REQUEST");
         let options = {
             method: 'POST',
             uri: 'http://' + ip + ':' + port + '/node-benchmark-start',
             body: {
                 scenario: scenario,
+                approach: approach,
+                benchmarkID: benchmarkID,
                 maxTransactions: maxTransactions,
                 maxRuntime: maxRuntime,
                 smartContractAddresses: smartContractAddresses

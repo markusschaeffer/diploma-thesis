@@ -12,23 +12,22 @@ module.exports = {
     /**
      * Print result to stdout and send result via REST
      */
-    logBenchmarkResult: async function (benchmark, scenario, startTime, maxRuntime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, transactionsTimestampMapStart, transactionsTimestampMapEnd) {
-        const usedGenesisJson = util.readFileSync_lines(__dirname + "/../../../../storage/current_genesis_server/current_genesis.txt")[0];
+    logBenchmarkResult: async function (scenario, approach, benchmarkID, startTime, maxRuntime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, transactionsTimestampMapStart, transactionsTimestampMapEnd) {
+        const usedGenesisJson = util.readFileSync_lines(__dirname + "/../../../../storage/current_genesis/current_genesis")[0];
 
         var runtime = Math.abs((new Date() - startTime) / 1000);
         var averageTxDelay = module.exports.caculateAverageDelayOfTransactions(transactionsTimestampMapStart, transactionsTimestampMapEnd, successfulTransactions);
         var txPerSecond = successfulTransactions / runtime;
 
-        //TODO get IP of Master (local)-----------------------------------------------------------
+        //TODO get IP of this machine!-------------------------------------------------------------------------------
         var ip = '127.0.0.1'; 
-        var port = 8998;
-
+        
         publicIp.v4().then(function (publicIp) {
             console.log(publicIp);
             ip = publicIp;
         }).then(function () {
-            module.exports.printBenchmarkResults(benchmark, scenario, ip, port, usedGenesisJson, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay);
-            module.exports.sendBenchmarkResults(benchmark, scenario, ip, port, usedGenesisJson, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay)
+            module.exports.printBenchmarkResults(ip, scenario, approach, benchmarkID, usedGenesisJson, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay);
+            module.exports.sendBenchmarkResults(ip, scenario, approach, benchmarkID, usedGenesisJson, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay)
                 .then(function () {
                     util.printFormatedMessage("KILLING PROCESS");
                     process.exit(0);
@@ -55,16 +54,16 @@ module.exports = {
     /**
      * Print result of benchmark to stdout
      */
-    printBenchmarkResults: function (benchmark, scenario, ip, port, usedGenesisJson, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay) {
+    printBenchmarkResults: function (ip, scenario, approach, benchmarkID, usedGenesisJson, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay) {
         console.log("\n");
         console.log("----------BENCHMARK RESULT----------");
-        console.log("Benchmark: " + benchmark);
-        console.log("Scenario: " + scenario);
-        console.log("-----------------------------");
         console.log("IP: " + ip);
-        console.log("Port: " + port);
         console.log("-----------------------------");
-        console.log("used genesis.json file: " + usedGenesisJson);
+        console.log("Scenario: " + scenario);
+        console.log("Approach: " + approach);
+        console.log("BenchmarkID: " + benchmarkID);
+        console.log("-----------------------------");
+        console.log("Genesis.json: " + usedGenesisJson);
         console.log("Starttime: " + startTime);
         console.log("-----------------------------");
         console.log("MaxRuntime: " + maxRuntime);
@@ -84,8 +83,8 @@ module.exports = {
     /**
      * Send benchmark result via REST interface
      */
-    sendBenchmarkResults: async function (benchmark, scenario, ip, port, usedGenesisJson, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay) {
-        await restClient.logBenchmarkResult(benchmark, scenario, ip, port, usedGenesisJson, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay);
+    sendBenchmarkResults: async function (ip, scenario, approach, benchmarkID, usedGenesisJson, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay) {
+        await restClient.logBenchmarkResult(ip, scenario, approach, benchmarkID, usedGenesisJson, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay);
     },
 
     /**

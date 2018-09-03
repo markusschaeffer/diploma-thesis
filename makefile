@@ -1,13 +1,22 @@
-#RUN THIS FILE WITH "sudo make genesisFile=... maxRuntime=... maxTransactions=..."
+# Root file initiating bash scripts/processes
 
-#genesisFile=genesis_poa_period_1.json
-genesisFile=genesis_pow_difficulty_0x400_gasLimit_double.json
-#maxRuntime=10
-#maxTransactions=1000
-netstats_ip=127.0.0.1
-bootnode_ip=127.0.0.1
+# Startup sequence:
+# 0) Specify IPs of bootnode, eth-netstats, master and geth-nodes in storage/ips/
+# 1) Start several processes needed: 
+#	e.g. "sudo make run_full" (everything on the local node)
+# 2) Deploy desired smart contract scenario: 
+#	e.g. via "sudo make deploy_accounts"
+# 	or deploy via REST communication in folder scripts/js/
+# 3) Start benchmark: 
+#	e.g. via "sudo make sc_run_accounts_without_deploy_node0 $(maxTransactions) $(maxRuntime) $(address1) $(address1)" 
+#	or start via REST communication in folder scripts/js/
+
+####################VARIABLES####################
 
 current_dir = $(shell pwd)
+genesisFile=`cat $(current_dir)/storage/current_genesis/current_genesis`
+netstats_ip=`cat $(current_dir)/storage/ips/netstats_ip`
+bootnode_ip=`cat $(current_dir)/storage/ips/bootnode_ip`
 
 ####################AGGREGATED MAKE RULES####################
 
@@ -91,10 +100,10 @@ sc_deploy_accounts: delete_contract_addresses_storage
 	cd scripts/js/deployment; node account.js
 
 sc_run_accounts_without_deploy_node0:
-	cd scripts/js/benchmark; sudo node account_benchmark_approach3.js 8100 $(maxTransactions) $(maxRuntime) $(address1) $(address1)
+	cd scripts/js/benchmark; sudo node account_benchmark_approach3.js 8100 $(maxTransactions) $(maxRuntime) $(address1) $(address1) $(benchmarkID)
 
 sc_run_accounts_without_deploy_node1:
-	cd scripts/js/benchmark; node account_benchmark_approach3.js 8101 $(maxTransactions) $(maxRuntime) $(address1) $(address2)
+	cd scripts/js/benchmark; node account_benchmark_approach3.js 8101 $(maxTransactions) $(maxRuntime) $(address1) $(address2) $(benchmarkID)
 
 sc_run_accounts_with_deploy_all_nodes: sc_deploy_accounts sc_run_accounts_without_deploy_all_nodes
 

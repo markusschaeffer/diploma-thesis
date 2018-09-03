@@ -45,6 +45,7 @@ exports.deployContract = (req, res) => {
         case 'account':
             new Promise(function (resolve, reject) {
                     //deploy contract(s)
+                    //TODO DEPLOY VIA NODE, not via MAKE!--------------------------------------------------------------------------------
                     exec("cd " + directionToRootFolder + "; make sc_deploy_accounts;", function (error, stdout, stderr) {
                         resolve(stdout);
                         if (error !== null)
@@ -52,7 +53,7 @@ exports.deployContract = (req, res) => {
                     });
                 }).then(function () {
                     //get contract addresses from storage folder of server
-                    var filePath = directionToRootFolder + "storage/contract_addresses_server/account.txt";
+                    var filePath = directionToRootFolder + "storage/contract_addresses_node/account.txt";
                     var addresses = util.readFileSync_lines(filePath);
                     res.end(JSON.stringify({
                         contractDeployed: true,
@@ -71,7 +72,6 @@ exports.deployContract = (req, res) => {
         default:
             res.end(JSON.stringify("NOK - could not match specified scenario"));
     }
-    //res.end(JSON.stringify("NOK - could not match specified scenario"));
 };
 
 /**
@@ -84,24 +84,26 @@ exports.startBenchmark = (req, res) => {
     switch (jsonRequest.scenario) {
         case 'account':
             new Promise(function (resolve, reject) {
-                    //start benchmark
+                    console.log("jsonRequest.benchmarkID:" + jsonRequest.benchmarkID);
                     console.log("jsonRequest.maxTransactions:" + jsonRequest.maxTransactions);
                     console.log("jsonRequest.maxRuntime:" + jsonRequest.maxRuntime);
                     console.log("jsonRequest.smartContractAddresses: " + jsonRequest.smartContractAddresses);
-                    
+
+                    //TODO directly invoke approach - NOT VIA MAKE!--------------------------------------------------------------------
+                    //start benchmark
                     exec("cd " + directionToRootFolder + "; make sc_run_accounts_without_deploy_node0" +
                         " maxTransactions=" + jsonRequest.maxTransactions +
                         " maxRuntime=" + jsonRequest.maxRuntime +
                         " address1=" + jsonRequest.smartContractAddresses[0] +
                         " address2=" + jsonRequest.smartContractAddresses[1] +
+                        " benchmarkID=" + jsonRequest.benchmarkID +
                         ";",
                         function (error, stdout, stderr) {
-                            //var text = stdout.substring(stdout.indexOf("----------BENCHMARK RESULT----------"));
-                            resolve(stdout); //todo: enable/disable?
+                            resolve(stdout);
                             if (error !== null)
                                 reject(error);
                         });
-                    res.end(JSON.stringify("benchmark started")); //todo: disable?
+                    res.end(JSON.stringify("benchmark with benchmarkID " + jsonRequest.benchmarkID + " started"));
                 })
                 .then(function (result) {
                     res.end(JSON.stringify(result));

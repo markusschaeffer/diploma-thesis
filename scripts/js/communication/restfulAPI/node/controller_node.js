@@ -71,7 +71,7 @@ exports.deployContract = (req, res) => {
         default:
             res.end(JSON.stringify("NOK - could not match specified scenario"));
     }
-
+    //res.end(JSON.stringify("NOK - could not match specified scenario"));
 };
 
 /**

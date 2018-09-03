@@ -21,7 +21,7 @@ module.exports = {
 
         //TODO get IP of Master (local)-----------------------------------------------------------
         var ip = '127.0.0.1'; 
-        var port = 8999;
+        var port = 8998;
 
         publicIp.v4().then(function (publicIp) {
             console.log(publicIp);
@@ -82,7 +82,7 @@ module.exports = {
      * Send benchmark result via REST interface
      */
     sendBenchmarkResults: async function (ip, port, usedGenesisJson, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay) {
-        await restClient.sendBenchmarkResult(ip, port, usedGenesisJson, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay);
+        await restClient.logBenchmarkResult(ip, port, usedGenesisJson, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay);
     },
 
     /**

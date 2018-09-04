@@ -26,6 +26,9 @@ sudo apt-get install -y nodejs
 sudo apt-get install docker
 sudo apt-get install docker-compose
 
+#Terminator for splitting the shellter
+#sudo apt-get install terminator
+
 #web3
 sudo npm install web3
 

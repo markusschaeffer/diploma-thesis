@@ -4,10 +4,10 @@
  */
 
 //require util functions
-var util = require('./../util/util.js');
+const util = require('./../util/util.js');
 
 // instantiate web3
-var Web3 = require('web3');
+const Web3 = require('web3');
 var web3 = new Web3();
 
 // set the provider you want from Web3.providers
@@ -15,7 +15,7 @@ var web3 = new Web3();
 web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8100"));
 
 //specify which account to use for contract deployment (pays the gas cost)
-var accountAddress = "0x5dfe021f45f00ae83b0aa963be44a1310a782fcc";
+const accountAddress = "0x5dfe021f45f00ae83b0aa963be44a1310a782fcc";
 
 // unlock account
 web3.eth.personal.unlockAccount(accountAddress, "iloveethereum").
@@ -25,21 +25,21 @@ then(() => {
 catch(console.error);
 
 // contract ABI
-var filePath_abi = "./../../../smart_contracts/account/target/Account.abi";
-var abiArrayString = util.readFileSync_full(filePath_abi);
-var abiArray = JSON.parse(abiArrayString);
+const filePath_abi = "./../../../smart_contracts/account/target/Account.abi";
+const abiArrayString = util.readFileSync_full(filePath_abi);
+const abiArray = JSON.parse(abiArrayString);
 
 // contract Bytecode
-var filePath_bin = "./../../../smart_contracts/account/target/Account.bin";
-var bytecode = util.readFileSync_full(filePath_bin);
-var contractBytecode = "0x" + bytecode;
+const filePath_bin = "./../../../smart_contracts/account/target/Account.bin";
+const bytecode = util.readFileSync_full(filePath_bin);
+const contractBytecode = "0x" + bytecode;
 
 // contract
-var myContract = new web3.eth.Contract(abiArray);
+const myContract = new web3.eth.Contract(abiArray);
 
 util.printFormatedMessage("DEPLOYING CONTRACT");
 //deploy the contract to the blockchain and send some ether from account[0] to the smart contract
-var amount = web3.utils.toWei('1000000', "ether");
+const amount = web3.utils.toWei('1000000', "ether");
 myContract.deploy({
     data: contractBytecode,
     arguments: []

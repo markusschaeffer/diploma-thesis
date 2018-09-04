@@ -10,8 +10,8 @@ module.exports = {
     logBenchmarkResult: async function (ip, scenario, approach, benchmarkID, usedGenesisJson, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageDelay) {
         util.printFormatedMessage("SENDING logBenchmarkResult REQUEST");
 
-        var masterIP = '127.0.0.1'; //TODO read MASTER IP from Storage-----------------------------------------------------------
-        var port = 8998;
+        var masterIP = util.readFileSync_lines(__dirname + "/../../../../storage/ips/master_ip");
+        var port = util.readFileSync_lines(__dirname + "/../../../../storage/ports/master_port");
 
         let options = {
             method: 'POST',

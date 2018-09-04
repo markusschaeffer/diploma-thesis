@@ -2,8 +2,8 @@
  * Client (node) for REST communication
  */
 
-var util = require('./../../util/util');
-var clientUtil = require('./clientUtil');
+const util = require('./../../util/util');
+const clientUtil = require('./clientUtil');
 
 module.exports = {
 

@@ -2,9 +2,9 @@
  * benchmark-lib funcions
  */
 
-var util = require('./../../util/util');
-var exec = require('child_process').exec;
-var restClient = require('./../../communication/restfulClient/client_node');
+const util = require('./../../util/util');
+const exec = require('child_process').exec;
+const restClient = require('./../../communication/restfulClient/client_node');
 const publicIp = require('public-ip');
 
 module.exports = {
@@ -18,13 +18,11 @@ module.exports = {
         var runtime = Math.abs((new Date() - startTime) / 1000);
         var averageTxDelay = module.exports.caculateAverageDelayOfTransactions(transactionsTimestampMapStart, transactionsTimestampMapEnd, successfulTransactions);
         var txPerSecond = successfulTransactions / runtime;
+        var ip;
 
-        //TODO get IP of this machine!-------------------------------------------------------------------------------
-        var ip = '127.0.0.1'; 
-        
-        publicIp.v4().then(function (publicIp) {
-            console.log(publicIp);
-            ip = publicIp;
+        publicIp.v4().then(function (_ip) {
+            console.log(_ip);
+            ip = _ip;
         }).then(function () {
             module.exports.printBenchmarkResults(ip, scenario, approach, benchmarkID, usedGenesisJson, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay);
             module.exports.sendBenchmarkResults(ip, scenario, approach, benchmarkID, usedGenesisJson, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay)
@@ -57,7 +55,7 @@ module.exports = {
     printBenchmarkResults: function (ip, scenario, approach, benchmarkID, usedGenesisJson, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay) {
         console.log("\n");
         console.log("----------BENCHMARK RESULT----------");
-        console.log("IP: " + ip);
+        console.log("ip: " + ip);
         console.log("-----------------------------");
         console.log("Scenario: " + scenario);
         console.log("Approach: " + approach);

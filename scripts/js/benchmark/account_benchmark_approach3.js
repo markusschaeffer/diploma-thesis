@@ -9,9 +9,9 @@
  * argv[7] : benchmarkID
  */
 
-var util = require('./../util/util.js');
-var benchmarkLib = require('./benchmark-lib/benchmark-lib.js');
-var timestamp = require('time-stamp');
+const util = require('./../util/util.js');
+const benchmarkLib = require('./benchmark-lib/benchmark-lib.js');
+const timestamp = require('time-stamp');
 
 //instantiate web3
 const Web3 = require('web3');

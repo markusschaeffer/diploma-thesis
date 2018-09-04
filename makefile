@@ -3,12 +3,12 @@
 # Startup sequence:
 # 0) Specify IPs of bootnode, eth-netstats, master and geth-nodes in storage/ips/
 # 1) Start several processes needed: 
-#	e.g. "sudo make run_full" (everything on the local node)
+#	make prepare; make bootnode_start; make master_start; make node_start
 # 2) Deploy desired smart contract scenario: 
 #	e.g. via "sudo make deploy_accounts"
 # 	or deploy via REST communication in folder scripts/js/
 # 3) Start benchmark: 
-#	e.g. via "sudo make sc_run_accounts_without_deploy_node0 $(maxTransactions) $(maxRuntime) $(address1) $(address1)" 
+#	e.g. via "sudo make sc_run_accounts_without_deploy_node0 $(maxTransactions) $(maxRuntime) $(address1) $(address1) $(benchmarkID)" 
 #	or start via REST communication in folder scripts/js/
 
 ####################VARIABLES####################
@@ -20,13 +20,10 @@ bootnode_ip=`cat $(current_dir)/storage/ips/bootnode_ip`
 
 ####################AGGREGATED MAKE RULES####################
 
-run_full: prepare bootnode_netstats_start node_start local_start
-
-local_start:				start_mongodb start_rest_server_local
-bootnode_netstats_start: 	netstats bootnode
-node_start: 				geth_node0_startup start_rest_server_node
-
 prepare: kill_running delete_root_folder init_folders delete_contract_addresses_storage delete_current_genesis_storage
+bootnode_start: 	netstats bootnode
+master_start:		start_mongodb start_rest_server_local
+node_start: 		geth_node0_startup start_rest_server_node
 
 ####################INITIAL INSTALLATION####################
 install_node:

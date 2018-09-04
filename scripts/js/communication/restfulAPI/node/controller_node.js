@@ -4,9 +4,10 @@
 
 const exec = require('child_process').exec;
 const util = require('./../../../util/util.js');
+const publicIp = require('public-ip');
 
 //instantiate web3
-var Web3 = require('web3');
+const Web3 = require('web3');
 var web3 = new Web3();
 const directionToRootFolder = __dirname + "/../../../../../";
 
@@ -21,17 +22,27 @@ web3 = new Web3(new Web3.providers.HttpProvider(httpProviderString));
  */
 exports.getPeerCount = (req, res) => {
 
-    util.printFormatedMessage("RECEIVED getPeerCount REQUEST");
     var peerCount = -1;
-    web3.eth.net.getPeerCount()
-        .then(function (returnedPeerCount) {
-            console.log("Peer Count is: " + returnedPeerCount);
-            peerCount = returnedPeerCount;
-            res.end(JSON.stringify(peerCount));
+    var ip;
+    publicIp.v4().then(function (_ip) {
+        ip = _ip;
+    }).then(function () {
+        util.printFormatedMessage(ip + " RECEIVED getPeerCount REQUEST");
+        web3.eth.net.getPeerCount().then(function (_peerCount) {
+            console.log(ip + ": Peer Count is: " + _peerCount);
+            peerCount = _peerCount;
+            res.end(JSON.stringify({
+                ip: ip,
+                peerCount: peerCount
+            }));
         }).catch((err) => {
             console.log(err);
-            res.end(JSON.stringify(peerCount));
+            res.end(JSON.stringify({
+                ip: ip,
+                peerCount: peerCount
+            }));
         });
+    })
 };
 
 /**
@@ -39,84 +50,96 @@ exports.getPeerCount = (req, res) => {
  */
 exports.deployContract = (req, res) => {
 
-    util.printFormatedMessage("RECEIVED deployContract REQUEST");
-    var jsonRequest = req.body;
-    switch (jsonRequest.scenario) {
-        case 'account':
-            new Promise(function (resolve, reject) {
-                    //deploy contract(s)
-                    //TODO DEPLOY VIA NODE, not via MAKE!--------------------------------------------------------------------------------
-                    exec("cd " + directionToRootFolder + "; make sc_deploy_accounts;", function (error, stdout, stderr) {
-                        resolve(stdout);
-                        if (error !== null)
-                            reject(error);
+    var ip;
+    publicIp.v4().then(function (_ip) {
+        ip = _ip;
+    }).then(function () {
+        util.printFormatedMessage(ip + ": RECEIVED deployContract REQUEST");
+        var jsonRequest = req.body;
+        switch (jsonRequest.scenario) {
+            case 'account':
+                new Promise(function (resolve, reject) {
+                        //deploy contract(s)
+                        //TODO DEPLOY VIA NODE, not via MAKE!--------------------------------------------------------------------------------
+                        exec("cd " + directionToRootFolder + "; make sc_deploy_accounts;", function (error, stdout, stderr) {
+                            resolve(stdout);
+                            if (error !== null)
+                                reject(error);
+                        });
+                    }).then(function () {
+                        //get contract addresses from storage folder of server
+                        var filePath = directionToRootFolder + "storage/contract_addresses_node/account.txt";
+                        var addresses = util.readFileSync_lines(filePath);
+                        res.end(JSON.stringify({
+                            contractDeployed: true,
+                            address1: addresses[0],
+                            address2: addresses[1]
+                        }));
+                    })
+                    .catch(error => {
+                        res.end(JSON.stringify(ip + ": NOK - " + error));
                     });
-                }).then(function () {
-                    //get contract addresses from storage folder of server
-                    var filePath = directionToRootFolder + "storage/contract_addresses_node/account.txt";
-                    var addresses = util.readFileSync_lines(filePath);
-                    res.end(JSON.stringify({
-                        contractDeployed: true,
-                        address1: addresses[0],
-                        address2: addresses[1]
-                    }));
-                })
-                .catch(error => {
-                    res.end(JSON.stringify("NOK - " + error));
-                });
-            break;
-        case 'ballot':
-            break;
-        case 'readWrite':
-            break;
-        default:
-            res.end(JSON.stringify("NOK - could not match specified scenario"));
-    }
+                break;
+            case 'ballot':
+                break;
+            case 'readWrite':
+                break;
+            default:
+                res.end(JSON.stringify(ip + ": NOK - could not match specified scenario"));
+        }
+    })
 };
 
 /**
  * starts a specific benchmark
  */
 exports.startBenchmark = (req, res) => {
+    
+    var ip;
+    publicIp.v4().then(function (_ip) {
+        ip = _ip;
+    }).then(function () {
+        util.printFormatedMessage(ip + " RECEIVED startBenchmark REQUEST");
+        var jsonRequest = req.body;
+        switch (jsonRequest.scenario) {
+            case 'account':
+                new Promise(function (resolve, reject) {
+                        console.log("jsonRequest.benchmarkID:" + jsonRequest.benchmarkID);
+                        console.log("jsonRequest.maxTransactions:" + jsonRequest.maxTransactions);
+                        console.log("jsonRequest.maxRuntime:" + jsonRequest.maxRuntime);
+                        console.log("jsonRequest.smartContractAddresses: " + jsonRequest.smartContractAddresses);
 
-    util.printFormatedMessage("RECEIVED startBenchmark REQUEST");
-    var jsonRequest = req.body;
-    switch (jsonRequest.scenario) {
-        case 'account':
-            new Promise(function (resolve, reject) {
-                    console.log("jsonRequest.benchmarkID:" + jsonRequest.benchmarkID);
-                    console.log("jsonRequest.maxTransactions:" + jsonRequest.maxTransactions);
-                    console.log("jsonRequest.maxRuntime:" + jsonRequest.maxRuntime);
-                    console.log("jsonRequest.smartContractAddresses: " + jsonRequest.smartContractAddresses);
+                        //TODO directly invoke approach - NOT VIA MAKE!--------------------------------------------------------------------
+                        //start benchmark
+                        exec("cd " + directionToRootFolder + "; make sc_run_accounts_without_deploy_node0" +
+                            " maxTransactions=" + jsonRequest.maxTransactions +
+                            " maxRuntime=" + jsonRequest.maxRuntime +
+                            " address1=" + jsonRequest.smartContractAddresses[0] +
+                            " address2=" + jsonRequest.smartContractAddresses[1] +
+                            " benchmarkID=" + jsonRequest.benchmarkID +
+                            ";",
+                            function (error, stdout, stderr) {
+                                resolve(stdout);
+                                if (error !== null)
+                                    reject(error);
+                            });
 
-                    //TODO directly invoke approach - NOT VIA MAKE!--------------------------------------------------------------------
-                    //start benchmark
-                    exec("cd " + directionToRootFolder + "; make sc_run_accounts_without_deploy_node0" +
-                        " maxTransactions=" + jsonRequest.maxTransactions +
-                        " maxRuntime=" + jsonRequest.maxRuntime +
-                        " address1=" + jsonRequest.smartContractAddresses[0] +
-                        " address2=" + jsonRequest.smartContractAddresses[1] +
-                        " benchmarkID=" + jsonRequest.benchmarkID +
-                        ";",
-                        function (error, stdout, stderr) {
-                            resolve(stdout);
-                            if (error !== null)
-                                reject(error);
-                        });
-                    res.end(JSON.stringify("benchmark with benchmarkID " + jsonRequest.benchmarkID + " started"));
-                })
-                .then(function (result) {
-                    res.end(JSON.stringify(result));
-                })
-                .catch(error => {
-                    res.end(JSON.stringify("NOK - " + error));
-                });
-            break;
-        case 'ballot':
-            break;
-        case 'readWrite':
-            break;
-        default:
-            res.end(JSON.stringify("NOK - could not match specified scenario"));
-    }
+                        res.end(JSON.stringify(ip + ": benchmark with benchmarkID " + jsonRequest.benchmarkID + " started"));
+                    })
+                    .then(function (result) {
+                        res.end(JSON.stringify(result));
+                    })
+                    .catch(error => {
+                        res.end(JSON.stringify(ip + ": NOK - " + error));
+                    });
+                break;
+            case 'ballot':
+                break;
+            case 'readWrite':
+                break;
+            default:
+                res.end(JSON.stringify(ip + ": NOK - could not match specified scenario"));
+        };
+    });
+
 };

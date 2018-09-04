@@ -8,7 +8,7 @@ The goal is to benchmark metrics of differently configured Ethereum networks.
 
 # TODO
 
-- Bootnode on a remote node
+- Bootnode on a remote node (move boot.key etc. in storage!): boot.key needs to be in storage and shell scripts need to be rewritten!
 - Voting and ReadWrite scenario implementation
 - Increase Number of Open File Descriptors for EC2 Instances?
 - Amazon CloudFormation Service Templates for automatic node startup with "scripts/sh/install_node.sh"

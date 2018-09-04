@@ -7,8 +7,8 @@ const app = express();
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose');
 
-const routes = require("./routes_local");
-const BenchmarkLog = require("./model_local");
+const routes = require("./routes_master");
+const BenchmarkLog = require("./model_master");
 
 const serverPort = 8998;
 

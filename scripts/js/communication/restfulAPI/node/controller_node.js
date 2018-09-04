@@ -59,8 +59,7 @@ exports.deployContract = (req, res) => {
         switch (jsonRequest.scenario) {
             case 'account':
                 new Promise(function (resolve, reject) {
-                        //deploy contract(s)
-                        //TODO DEPLOY VIA NODE, not via MAKE!--------------------------------------------------------------------------------
+                        //deploy contract(s) via make rule
                         exec("cd " + directionToRootFolder + "; make sc_deploy_accounts;", function (error, stdout, stderr) {
                             resolve(stdout);
                             if (error !== null)
@@ -94,24 +93,24 @@ exports.deployContract = (req, res) => {
  * starts a specific benchmark
  */
 exports.startBenchmark = (req, res) => {
-    
+
     var ip;
     publicIp.v4().then(function (_ip) {
         ip = _ip;
     }).then(function () {
         util.printFormatedMessage(ip + " RECEIVED startBenchmark REQUEST");
         var jsonRequest = req.body;
+
+        console.log("jsonRequest.maxTransactions:" + jsonRequest.maxTransactions);
+        console.log("jsonRequest.maxRuntime:" + jsonRequest.maxRuntime);
+        console.log("jsonRequest.smartContractAddresses: " + jsonRequest.smartContractAddresses);
+        console.log("jsonRequest.benchmarkID:" + jsonRequest.benchmarkID);
+
         switch (jsonRequest.scenario) {
             case 'account':
                 new Promise(function (resolve, reject) {
-                        console.log("jsonRequest.benchmarkID:" + jsonRequest.benchmarkID);
-                        console.log("jsonRequest.maxTransactions:" + jsonRequest.maxTransactions);
-                        console.log("jsonRequest.maxRuntime:" + jsonRequest.maxRuntime);
-                        console.log("jsonRequest.smartContractAddresses: " + jsonRequest.smartContractAddresses);
-
-                        //TODO directly invoke approach - NOT VIA MAKE!--------------------------------------------------------------------
-                        //start benchmark
-                        exec("cd " + directionToRootFolder + "; make sc_run_accounts_without_deploy_node0" +
+                        //start account scenario benchmark
+                        exec("cd " + directionToRootFolder + "; make sc_run_accounts_node0" +
                             " maxTransactions=" + jsonRequest.maxTransactions +
                             " maxRuntime=" + jsonRequest.maxRuntime +
                             " address1=" + jsonRequest.smartContractAddresses[0] +
@@ -123,7 +122,6 @@ exports.startBenchmark = (req, res) => {
                                 if (error !== null)
                                     reject(error);
                             });
-
                         res.end(JSON.stringify(ip + ": benchmark with benchmarkID " + jsonRequest.benchmarkID + " started"));
                     })
                     .then(function (result) {

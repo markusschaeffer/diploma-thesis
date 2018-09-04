@@ -22,15 +22,15 @@ bootnode_ip=`cat $(current_dir)/storage/ips/bootnode_ip`
 
 prepare: kill_running delete_root_folder init_folders delete_contract_addresses_storage delete_current_genesis_storage
 bootnode_start: 	netstats bootnode
-master_start:		start_mongodb start_rest_server_local
+master_start:		start_mongodb start_rest_server_master
 node_start: 		geth_node0_startup start_rest_server_node
 
 ####################INITIAL INSTALLATION####################
 install_node:
 	cd scripts/sh; ./install_node.sh	
 
-install_local:
-	cd scripts/sh; ./install_local.sh	
+install_master:
+	cd scripts/sh; ./install_master.sh	
 
 ####################INIT NODE FOLDERS####################
 init_folders: delete_root_folder
@@ -96,19 +96,15 @@ sc_deploy_accounts: delete_contract_addresses_storage
 	cd scripts/js/deployment; node account.js
 	cd scripts/js/deployment; node account.js
 
-sc_run_accounts_without_deploy_node0:
+sc_run_accounts_node0:
 	cd scripts/js/benchmark; sudo node account_benchmark_approach3.js 8100 $(maxTransactions) $(maxRuntime) $(address1) $(address1) $(benchmarkID)
 
-sc_run_accounts_without_deploy_node1:
+sc_run_accounts_node1:
 	cd scripts/js/benchmark; node account_benchmark_approach3.js 8101 $(maxTransactions) $(maxRuntime) $(address1) $(address2) $(benchmarkID)
 
-sc_run_accounts_with_deploy_all_nodes: sc_deploy_accounts sc_run_accounts_without_deploy_all_nodes
-
-sc_run_accounts_without_deploy_all_nodes: sc_run_accounts_without_deploy_node0 sc_run_accounts_without_deploy_node1
-
 ####################COMMUNICATION####################
-start_rest_server_local:
-	cd scripts/js/communication/restfulAPI/local/; node server_local.js
+start_rest_server_master:
+	cd scripts/js/communication/restfulAPI/master/; node server_master.js
 
 start_rest_server_node:
 	cd scripts/js/communication/restfulAPI/node/; node server_node.js

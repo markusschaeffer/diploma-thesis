@@ -7,7 +7,7 @@
  */
 
 const util = require('./../util/util');
-const client = require('./restfulClient/client_local');
+const client = require('./restfulClient/client_master');
 
 //deploy on first IP in nodes_ip from /storage
 const ip = util.readFileSync_lines(__dirname + "/../../../storage/ips/nodes_ip")[0];

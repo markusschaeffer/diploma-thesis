@@ -1,6 +1,6 @@
 
 const util = require('./../util/util');
-const client = require('./restfulClient/client_local');
+const client = require('./restfulClient/client_master');
 const readLastLines = require('read-last-lines');
 
 //get deployed smart contract addresses from local storage folder

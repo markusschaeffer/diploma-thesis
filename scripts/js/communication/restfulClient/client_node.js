@@ -1,5 +1,5 @@
 /**
- * Client (local) for REST communication
+ * Client (master) for REST communication
  */
 
 var util = require('./../../util/util');
@@ -10,12 +10,12 @@ module.exports = {
     logBenchmarkResult: async function (ip, scenario, approach, benchmarkID, usedGenesisJson, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageDelay) {
         util.printFormatedMessage("SENDING logBenchmarkResult REQUEST");
 
-        var masterIP = util.readFileSync_lines(__dirname + "/../../../../storage/ips/master_ip");
-        var port = util.readFileSync_lines(__dirname + "/../../../../storage/ports/master_port");
+        var masterIP = util.readFileSync_lines(__dirname + "/../../../../storage/ips/master_ip.txt")[0];
+        var port = util.readFileSync_lines(__dirname + "/../../../../storage/ports/master_port.txt")[0];
 
         let options = {
             method: 'POST',
-            uri: 'http://' + masterIP + ':' + port + '/local-benchmark-log',
+            uri: 'http://' + masterIP + ':' + port + '/master-benchmark-log',
             body: {
                 ip: ip,
                 scenario: scenario,

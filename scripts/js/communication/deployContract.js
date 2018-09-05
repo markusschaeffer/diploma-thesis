@@ -11,8 +11,8 @@ const client = require('./restfulClient/client_master');
 
 //deploy on first IP in nodes_ip from /storage
 const pathToRootFolder = __dirname + "/../../../";
-const ip = util.readFileSync_lines(pathToRootFolder + "storage/ips/nodes_ip")[0];
-const port = util.readFileSync_lines(pathToRootFolder + "storage/ports/node_port");
+const ip = util.readFileSync_lines(pathToRootFolder + "storage/ips/nodes_ip.txt")[0];
+const port = util.readFileSync_lines(pathToRootFolder + "storage/ports/node_port.txt")[0];
 
 const scenario = "account"; //TODO - delete --------------------------------------------
 //const scenario = process.argv[2];

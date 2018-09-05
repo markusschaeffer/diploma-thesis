@@ -9,7 +9,7 @@ const routes = require("./routes_bootnode-netstats");
 const util = require('./../../../util/util.js');
 
 const pathToRootFolder = __dirname + "/../../../../../";
-const serverPort = Number(util.readFileSync_lines(pathToRootFolder + "storage/ports/bootnode_port"));
+const serverPort = Number(util.readFileSync_lines(pathToRootFolder + "storage/ports/bootnode_port.txt")[0]);
 
 // handle incoming requests
 app.use(bodyParser.urlencoded({

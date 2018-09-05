@@ -1,5 +1,5 @@
 /**
- * REST routes (local)
+ * REST routes (master)
  */
 module.exports = (app) => {
     let controller = require('./controller_master');
@@ -7,7 +7,7 @@ module.exports = (app) => {
     /**
      * log/store a benchmark result
      */
-    app.route('/local-benchmark-log')
+    app.route('/master-benchmark-log')
         .post(controller.logBenchmark);
 
 }

@@ -13,7 +13,7 @@ module.exports = {
      * Print result to stdout and send result via REST
      */
     logBenchmarkResult: async function (scenario, approach, benchmarkID, startTime, maxRuntime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, transactionsTimestampMapStart, transactionsTimestampMapEnd) {
-        const usedGenesisJson = util.readFileSync_lines(__dirname + "/../../../../storage/current_genesis/current_genesis")[0];
+        const usedGenesisJson = util.readFileSync_lines(__dirname + "/../../../../storage/current_genesis/current_genesis.txt")[0];
 
         var runtime = Math.abs((new Date() - startTime) / 1000);
         var averageTxDelay = module.exports.caculateAverageDelayOfTransactions(transactionsTimestampMapStart, transactionsTimestampMapEnd, successfulTransactions);

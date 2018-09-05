@@ -14,9 +14,9 @@
 ####################VARIABLES####################
 
 current_dir = $(shell pwd)
-genesisFile=`cat $(current_dir)/storage/current_genesis/current_genesis`
-netstats_ip=`cat $(current_dir)/storage/ips/netstats_ip`
-bootnode_ip=`cat $(current_dir)/storage/ips/bootnode_ip`
+genesisFile=`cat $(current_dir)/storage/current_genesis/current_genesis.txt`
+netstats_ip=`cat $(current_dir)/storage/ips/netstats_ip.txt`
+bootnode_ip=`cat $(current_dir)/storage/ips/bootnode_ip.txt`
 geth_httpPort_node0=8100
 geth_httpPort_node1=8101
 

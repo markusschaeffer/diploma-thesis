@@ -1,5 +1,5 @@
 /*
- * Database Model for local MongoDB Schema 
+ * Database Model for MongoDB Schema
  *
  * https://medium.com/ph-devconnect/build-your-first-restful-api-with-node-js-e701b53d1f41
 */

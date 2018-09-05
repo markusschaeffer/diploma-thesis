@@ -1,5 +1,5 @@
 /**
- * REST server (local)
+ * REST server (master)
  */
 
 const express = require('express');
@@ -11,7 +11,7 @@ const routes = require("./routes_master");
 const BenchmarkLog = require("./model_master");
 
 const pathToRootFolder = __dirname + "/../../../../../";
-const serverPort = Number(util.readFileSync_lines(pathToRootFolder + "storage/ports/master_port"));
+const serverPort = Number(util.readFileSync_lines(pathToRootFolder + "storage/ports/master_port.txt")[0]);
 
 mongoose.Promise = global.Promise;
 // connect to local MongoDB

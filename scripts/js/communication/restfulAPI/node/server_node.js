@@ -9,7 +9,7 @@ const routes = require("./routes_node");
 const util = require('./../../../util/util.js');
 
 const pathToRootFolder = __dirname + "/../../../../../";
-const serverPort = Number(util.readFileSync_lines(pathToRootFolder + "storage/ports/node_port"));
+const serverPort = Number(util.readFileSync_lines(pathToRootFolder + "storage/ports/node_port.txt")[0]);
 
 // handle incoming requests
 app.use(bodyParser.urlencoded({

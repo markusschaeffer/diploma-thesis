@@ -25,7 +25,7 @@ readLastLines.read(pathToSmartContractAddresses, 2)
 
         //TODO loop over IPs (running nodes)--------------------------------------------------------------
         var ip = '127.0.0.1';
-        client.startBenchmark(ip, port, scenario, approach, benchmarkId, 1000, 10, smartContractAddresses);
+        client.startBenchmark(ip, port, scenario, approach, benchmarkId, 100, 10, smartContractAddresses);
 
 
     }).catch(function (err) {

@@ -62,7 +62,7 @@ myContract.deploy({
     myContract.options.address = newContractInstance.options.address;
 
     //store deployed contract address to contract address storage folder
-    var filePath = __dirname + "/../../../storage/contract_addresses_server/account.txt";
+    var filePath = __dirname + "/../../../storage/contract_addresses_node/account.txt";
     util.saveContractAddress(filePath, myContract.options.address);
     
     //check the balance of the Smart Contract

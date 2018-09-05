@@ -60,10 +60,20 @@ exports.deployContract = (req, res) => {
             case 'account':
                 new Promise(function (resolve, reject) {
                         //deploy contract(s) via make rule
-                        exec("cd " + directionToRootFolder + "; make sc_deploy_accounts;", function (error, stdout, stderr) {
+                        var child = exec("cd " + directionToRootFolder + "; make sc_deploy_accounts;", function (error, stdout, stderr) {
                             resolve(stdout);
                             if (error !== null)
                                 reject(error);
+                        });
+                        // attach listeners to the stdout and stderr.
+                        child.stdout.on('data', function (data) {
+                            console.log(data);
+                        });
+                        child.stderr.on('data', function (data) {
+                            console.log(data);
+                        });
+                        child.on('close', function (close) {
+                            console.log(close);
                         });
                     }).then(function () {
                         //get contract addresses from storage folder of server
@@ -110,7 +120,7 @@ exports.startBenchmark = (req, res) => {
             case 'account':
                 new Promise(function (resolve, reject) {
                         //start account scenario benchmark
-                        exec("cd " + directionToRootFolder + "; make sc_run_accounts_node0" +
+                        var child = exec("cd " + directionToRootFolder + "; make sc_run_accounts_node0" +
                             " maxTransactions=" + jsonRequest.maxTransactions +
                             " maxRuntime=" + jsonRequest.maxRuntime +
                             " address1=" + jsonRequest.smartContractAddresses[0] +
@@ -122,9 +132,19 @@ exports.startBenchmark = (req, res) => {
                                 if (error !== null)
                                     reject(error);
                             });
-                        res.end(JSON.stringify(ip + ": benchmark with benchmarkID " + jsonRequest.benchmarkID + " started"));
+                        // attach listeners to the stdout and stderr.
+                        child.stdout.on('data', function (data) {
+                            console.log(data);
+                        });
+                        child.stderr.on('data', function (data) {
+                            console.log(data);
+                        });
+                        child.on('close', function (close) {
+                            console.log(close);
+                        });
                     })
                     .then(function (result) {
+                        res.end(JSON.stringify(ip + ": benchmark with benchmarkID " + jsonRequest.benchmarkID + " started"));
                         res.end(JSON.stringify(result));
                     })
                     .catch(error => {

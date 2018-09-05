@@ -3,7 +3,7 @@
 # Startup sequence:
 # 0) Specify IPs of bootnode, eth-netstats, master and geth-nodes in storage/ips/
 # 1) Start several processes needed: 
-#	make prepare; make bootnode_start; make master_start; make node_start
+#	make bootnode_netstats_start; make master_start; make node_start
 # 2) Deploy desired smart contract scenario: 
 #	e.g. via "sudo make deploy_accounts"
 # 	or deploy via REST communication in folder scripts/js/
@@ -17,13 +17,16 @@ current_dir = $(shell pwd)
 genesisFile=`cat $(current_dir)/storage/current_genesis/current_genesis`
 netstats_ip=`cat $(current_dir)/storage/ips/netstats_ip`
 bootnode_ip=`cat $(current_dir)/storage/ips/bootnode_ip`
+geth_httpPort_node0=8100
+geth_httpPort_node1=8101
 
 ####################AGGREGATED MAKE RULES####################
 
+bootnode_netstats_start: 	start_rest_server_bootnode_netstats
+master_start:				start_mongodb start_rest_server_master
+node_start: 				prepare geth_node0_startup start_rest_server_node
+
 prepare: kill_running delete_root_folder init_folders delete_contract_addresses_storage delete_current_genesis_storage
-bootnode_start: 	netstats bootnode
-master_start:		start_mongodb start_rest_server_master
-node_start: 		geth_node0_startup start_rest_server_node
 
 ####################INITIAL INSTALLATION####################
 install_node:
@@ -97,10 +100,10 @@ sc_deploy_accounts: delete_contract_addresses_storage
 	cd scripts/js/deployment; node account.js
 
 sc_run_accounts_node0:
-	cd scripts/js/benchmark; sudo node account_benchmark_approach3.js 8100 $(maxTransactions) $(maxRuntime) $(address1) $(address1) $(benchmarkID)
+	cd scripts/js/benchmark; sudo node account_benchmark_approach3.js $(geth_httpPort_node0) $(maxTransactions) $(maxRuntime) $(address1) $(address1) $(benchmarkID)
 
 sc_run_accounts_node1:
-	cd scripts/js/benchmark; node account_benchmark_approach3.js 8101 $(maxTransactions) $(maxRuntime) $(address1) $(address2) $(benchmarkID)
+	cd scripts/js/benchmark; node account_benchmark_approach3.js $(geth_httpPort_node1) $(maxTransactions) $(maxRuntime) $(address1) $(address2) $(benchmarkID)
 
 ####################COMMUNICATION####################
 start_rest_server_master:
@@ -108,6 +111,9 @@ start_rest_server_master:
 
 start_rest_server_node:
 	cd scripts/js/communication/restfulAPI/node/; node server_node.js
+
+start_rest_server_bootnode_netstats:
+	cd scripts/js/communication/restfulAPI/bootnode-netstats/; node server_bootnode-netstats.js
 
 ####################DATABASE####################
 start_mongodb:

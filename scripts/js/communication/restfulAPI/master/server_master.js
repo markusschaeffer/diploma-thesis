@@ -6,11 +6,12 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose');
-
+const util = require('./../../../util/util.js');
 const routes = require("./routes_master");
 const BenchmarkLog = require("./model_master");
 
-const serverPort = 8998;
+const pathToRootFolder = __dirname + "/../../../../../";
+const serverPort = Number(util.readFileSync_lines(pathToRootFolder + "storage/ports/master_port"));
 
 mongoose.Promise = global.Promise;
 // connect to local MongoDB
@@ -30,5 +31,5 @@ routes(app); // register routes
 var server = app.listen(serverPort, function () {
     var host = server.address().address
     var port = server.address().port
-    console.log("Benchmark recording app listening at http://%s:%s", host, port)
+    console.log("Master REST server listening at http://%s:%s", host, port)
 })

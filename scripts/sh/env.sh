@@ -25,4 +25,5 @@ WSSECRET=secret
 #BOOTNODE
 BOOTNODE_PORT=30309
 BOOTNODE_VERBOSITY=9
-BOOTNODE_ENODE_ADDRESS_FILE=$ETH_DIR/bootnode_enode_address.txt
+BOOTNODE_ENODE_ADDRESS=$ROOT_DIR/storage/bootnode/bootnode_enode_address.txt
+BOOTKEY=$ROOT_DIR/storage/bootnode/boot.key

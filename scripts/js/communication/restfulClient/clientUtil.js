@@ -2,8 +2,10 @@
  * Util for clients
  */
 
-var util = require('./../../util/util');
-var rp = require('request-promise');
+const util = require('./../../util/util');
+const rp = require('request-promise');
+
+const pathToRootFolder = __dirname + "/../../../../";
 
 module.exports = {
 
@@ -20,9 +22,15 @@ module.exports = {
                     if (parsedBody.contractDeployed != null) {
                         //contracts have been deployed
                         //--> store contract addresses in storage folder
-                        var filePath = __dirname + "/../../../../storage/contract_addresses_local/account.txt";
+                        var filePath = pathToRootFolder + "storage/contract_addresses_local/account.txt";
                         util.saveContractAddress(filePath, parsedBody.address1);
                         util.saveContractAddress(filePath, parsedBody.address2);
+                    }
+
+                    if (parsedBody.bootnodeStarted != null) {
+                        console.log("bootnodeStarted != null")
+                        //TODO----------------------------------------------------------------------
+
                     }
 
                     resolve(parsedBody);

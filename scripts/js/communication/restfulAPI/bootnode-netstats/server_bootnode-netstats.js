@@ -1,15 +1,15 @@
 /**
- * REST server (node)
+ * REST server (bootnode-netstats)
  */
 
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser')
-const routes = require("./routes_node");
+const routes = require("./routes_bootnode-netstats");
 const util = require('./../../../util/util.js');
 
 const pathToRootFolder = __dirname + "/../../../../../";
-const serverPort = Number(util.readFileSync_lines(pathToRootFolder + "storage/ports/node_port"));
+const serverPort = Number(util.readFileSync_lines(pathToRootFolder + "storage/ports/bootnode_port"));
 
 // handle incoming requests
 app.use(bodyParser.urlencoded({
@@ -23,5 +23,5 @@ routes(app); // register routes
 var server = app.listen(serverPort, function () {
     var host = server.address().address
     var port = server.address().port
-    console.log("Benchmark recording app listening at http://%s:%s", host, port)
+    console.log("Bootnode-Netstats REST server listening at http://%s:%s", host, port)
 })

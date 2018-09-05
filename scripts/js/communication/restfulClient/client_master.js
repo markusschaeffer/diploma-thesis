@@ -19,6 +19,30 @@ module.exports = {
         clientUtil.sendRequest(options);
     },
 
+    startBootnode: function (ip, port) {
+        util.printFormatedMessage("SENDING startBootnode REQUEST");
+        let options = {
+            method: 'POST',
+            uri: 'http://' + ip + ':' + port + '/bootnode-start',
+            body: {},
+            json: true
+        };
+
+        clientUtil.sendRequest(options);
+    },
+
+    startNetstats: function (ip, port) {
+        util.printFormatedMessage("SENDING startNetstats REQUEST");
+        let options = {
+            method: 'POST',
+            uri: 'http://' + ip + ':' + port + '/netstats-start',
+            body: {},
+            json: true
+        };
+
+        clientUtil.sendRequest(options);
+    },
+
     deployContract: function (ip, port, scenario) {
         util.printFormatedMessage("SENDING deployContract REQUEST");
         let options = {

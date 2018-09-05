@@ -7,8 +7,6 @@ The goal is to benchmark metrics of differently configured Ethereum networks.
 # Attention: This is still WORK IN PROGRESS!
 
 # TODO
-
-- Bootnode on a remote node (move boot.key etc. in storage!): boot.key needs to be in storage and shell scripts need to be rewritten!
 - Voting and ReadWrite scenario implementation
 - Increase Number of Open File Descriptors for EC2 Instances?
 - Amazon CloudFormation Service Templates for automatic node startup with "scripts/sh/install_node.sh"
@@ -44,13 +42,12 @@ The goal is to benchmark metrics of differently configured Ethereum networks.
 
 # AWS EC2 Startup Procedure
 
-- Start a node with a GETH Bootnode and Eth-Netstats
-- Save the IP of the Bootnode to the storage folder (e.g. GIT push)
-- Change ROOT_DIR in env.sh
-- Start other nodes running GETH and the REST communication module
-- Deploy smart contract scenario from a local node (via REST communication to other deployed nodes)
-- Start Benchmarks from a local node (via REST communication to other deployed nodes)
-- Benchmark results are stored on the local DB
+- Start a node with a geth bootnode and eth-netstats (automatic startup, not via REST api)
+- Save the IP of the bootnode to the storage folder and push to repo
+- Start other nodes (running geth and the REST api)
+- Deploy smart contract scenario from the master node (via REST)
+- Start benchmarks from master node (via REST)
+- Benchmark results are stored on the master DB
 
 # Local MongoDB
  - start via "mongo" 
@@ -67,6 +64,3 @@ The goal is to benchmark metrics of differently configured Ethereum networks.
     at process._tickCallback (internal/process/next_tick.js:180:9)
 -- ERROR[07-05|16:14:33] Transaction referenced missing 
 -- "Error: Failed to check for transaction receipt:
-
-- eth-netstats
--- transactions are not listed on the eth-netstats frontend

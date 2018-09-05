@@ -34,7 +34,7 @@ cd $ETH_DIR
 netstats_address='node-'$nodeIndex:$WSSECRET@$netstats_ip:$NETSTATS_PORT
 
 #BOOTNODE
-bootnode_address=`cat $BOOTNODE_ENODE_ADDRESS_FILE`@$bootnode_ip:$BOOTNODE_PORT
+bootnode_address=`cat $BOOTNODE_ENODE_ADDRESS`@$bootnode_ip:$BOOTNODE_PORT
 
 #IPC-Path
 node_ipcpath=$ETH_DIR/node-$nodeIndex/geth.ipc

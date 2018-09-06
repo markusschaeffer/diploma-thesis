@@ -142,9 +142,9 @@ exports.startBenchmark = (req, res) => {
                         child.on('close', function (close) {
                             console.log(close);
                         });
+                        res.end(JSON.stringify(ip + ": benchmark with benchmarkID " + jsonRequest.benchmarkID + " started"));
                     })
                     .then(function (result) {
-                        res.end(JSON.stringify(ip + ": benchmark with benchmarkID " + jsonRequest.benchmarkID + " started"));
                         res.end(JSON.stringify(result));
                     })
                     .catch(error => {

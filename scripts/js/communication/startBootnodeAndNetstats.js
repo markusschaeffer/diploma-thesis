@@ -1,6 +1,9 @@
 /**
  * Script for starting a bootnode and eth-netstats on a remote instance
  * 
+ * Note:    storage/ips/bootnode_ip.txt and storage/ports/bootnode_port.txt 
+ *          holds information of the ip and port for the bootnode and eth-netstas node
+ * 
  */
 
 const util = require('./../util/util');

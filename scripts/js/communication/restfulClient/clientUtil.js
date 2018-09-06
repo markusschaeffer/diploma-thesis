@@ -26,13 +26,6 @@ module.exports = {
                         util.saveContractAddress(filePath, parsedBody.address1);
                         util.saveContractAddress(filePath, parsedBody.address2);
                     }
-
-                    if (parsedBody.bootnodeStarted != null) {
-                        console.log("bootnodeStarted != null")
-                        //TODO----------------------------------------------------------------------
-
-                    }
-
                     resolve(parsedBody);
                 })
                 .catch(function (err) {

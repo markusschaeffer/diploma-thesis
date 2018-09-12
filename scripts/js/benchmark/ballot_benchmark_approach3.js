@@ -1,12 +1,11 @@
 /*
- * Benchmark for sending Ether between two Contracts (see deployment folder)
- *
+ * Benchmark for a simple voting (ballot) (see deployment folder)
+ * 
  * argv[2] : httpPort
  * argv[3] : maxTransactions
  * argv[4] : maxRuntime
- * argv[5] : smartContract address 1
- * argv[6] : smartContract address 2
- * argv[7] : benchmarkID
+ * argv[5] : smartContract address
+ * argv[6] : benchmarkID
  */
 
 const util = require('./../util/util.js');
@@ -20,10 +19,10 @@ var web3 = new Web3();
 
 const ip = "localhost";
 //get CLI parameters
-const httpPort = process.argv[2]; 
+const httpPort = process.argv[2];
 const maxTransactions = process.argv[3];
 const maxRuntime = process.argv[4] * 1000 * 60;
-const benchmarkID = process.argv[7];
+const benchmarkID = process.argv[6];
 
 //default values
 if (httpPort == undefined) httpPort = util.readFileSync_full(pathToRootFolder + "storage/ports/geth_http_port_node0.txt");
@@ -36,57 +35,50 @@ const httpProviderString = "http://" + ip + ":" + httpPort;
 //http provider (node-0 PORT 8100, node-1 PORT 8101)
 web3 = new Web3(new Web3.providers.HttpProvider(httpProviderString));
 
-const maxOpenFileDescriptors = 1024;
+const maxTransactionBatchSize = 100;
 // default gas price in wei, 20 gwei in this case
 const gasPrice = '20000000000';
-//define amount to be sent between contracts
-const amountTobeSent = web3.utils.toWei('1', "ether");
 //specify which account to use for gas costs for each transaction
 const accountAddress = util.readFileSync_full(pathToRootFolder + "storage/staticAccount_address/address.txt");
-
-const scenario = "account";
-const approach = 2;
+const scenario = "ballot";
+const approach = 3;
 
 var transactionsTimestampMapStart = new Map();
 var transactionsTimestampMapEnd = new Map();
 var successfulTransactions = 0;
 var promises = [];
-var sentTransactions = 0;
+var sentTransaction = 0;
 var startTime;
+var proposalId;
 
 //get contract ABI from local .abi file
-var filePath_abi = pathToRootFolder + "smart_contracts/account/target/Account.abi";
+var filePath_abi = pathToRootFolder + "smart_contracts/ballot/target/Ballot.abi";
 var abiArrayString = util.readFileSync_full(filePath_abi);
 var abiArray = JSON.parse(abiArrayString);
 
-//get deployed smart contract addresses (via argv or from a local file in folder storage)
-if (process.argv[5] != null && process.argv[6] != null) {
-  var contract1Address = process.argv[5];
-  var contract2Address = process.argv[6];
+//get deployed smart contract address (via argv or from a local file in folder storage)
+if (process.argv[5] != null) {
+  var contractAddress = process.argv[5];
 } else {
-  var filePath = pathToRootFolder + "storage/contract_addresses_node/account.txt";
-  var addresses = util.readFileSync_lines(filePath);
-  var contract1Address = addresses[0];
-  var contract2Address = addresses[1];
+  var filePath = pathToRootFolder + "storage/contract_addresses_node/ballot.txt";
+  var contractAddress = util.readFileSync_lines(filePath)[0];
 }
 
-//get contracts
-var contract1 = new web3.eth.Contract(abiArray, contract1Address, {
+//get contract
+var contract = new web3.eth.Contract(abiArray, contractAddress, {
   gasPrice: gasPrice
 });
-contract1.options.address = contract1Address;
-var contract2 = new web3.eth.Contract(abiArray, contract2Address, {
-  gasPrice: gasPrice
-});
-contract2.options.address = contract2Address;
+contract.options.address = contractAddress;
 
 //run benchmark
-benchmarkLib.getGethProcessId()
-  .then(function (gethPID) {
-    runBenchmark(gethPID, maxTransactions, maxRuntime);
-  });
+runBenchmark(maxTransactions, maxRuntime);
 
-async function runBenchmark(gethPID, maxTransactions, maxRuntime) {
+async function runBenchmark(maxTransactions, maxRuntime) {
+
+  //vote for a random proposal
+  const numProposals = util.readFileSync_lines(pathToRootFolder + "storage/ips/nodes_ip.txt").length;
+  proposalId = Math.floor(Math.random() * numProposals);
+
   startTime = new Date();
   util.printFormatedMessage("BENCHMARK STARTED");
 
@@ -95,16 +87,16 @@ async function runBenchmark(gethPID, maxTransactions, maxRuntime) {
   }, maxRuntime);
 
   for (var i = 1; i <= maxTransactions; i++) {
-    await benchmarkLib.getAmountOfOpenFileDescriptorsForPID(gethPID)
-      .then(function (amountOfOpenFileDescriptors) {
-        if (amountOfOpenFileDescriptors <= maxOpenFileDescriptors)
-          promises.push(handleTransaction(i));
-      });
+    promises.push(handleTransaction(i));
+    if (sentTransaction % maxTransactionBatchSize == 0) {
+      util.printFormatedMessage("INITIATING SLEEP");
+      await util.sleep(1);
+    }
   }
 
   Promise.all(promises.map(p => p.catch(() => undefined))).
   then(function () {
-    benchmarkLib.logBenchmarkResult(scenario, approach, startTime, benchmarkID, maxRuntime, false, maxTransactions, true, successfulTransactions, transactionsTimestampMapStart, transactionsTimestampMapEnd);
+    benchmarkLib.logBenchmarkResult(scenario, approach, benchmarkID, startTime, maxRuntime, false, maxTransactions, true, successfulTransactions, transactionsTimestampMapStart, transactionsTimestampMapEnd);
   }, function (err) {
     console.log(err);
   });
@@ -112,11 +104,11 @@ async function runBenchmark(gethPID, maxTransactions, maxRuntime) {
 
 function handleTransaction(transactionNumber) {
   return new Promise(function (resolve, reject) {
-    sentTransactions++;
+    sentTransaction++;
     console.log(httpProviderString + ": sending " + transactionNumber + " at " + timestamp('HH:mm:ss:ms'));
     transactionsTimestampMapStart.set(transactionNumber, new Date());
 
-    contract1.methods.transferEther(contract2.options.address, amountTobeSent).send({
+    contract.methods.vote(proposalId).send({
         from: accountAddress
       })
       .once('transactionHash', function (hash) {

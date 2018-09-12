@@ -40,8 +40,9 @@ const contractBytecode = "0x" + bytecode;
 // contract
 const myContract = new web3.eth.Contract(abiArray);
 
-//number of different proposals to vote for
-const _numProposals = 10;
+//number of different proposals to vote for = amount of nodes in the network
+const _numProposals = util.readFileSync_lines(pathToRootFolder + "storage/ips/nodes_ip.txt").length;
+console.log("number of proposals: " + _numProposals);
 
 //deploy the contract to the blockchain
 util.printFormatedMessage("DEPLOYING CONTRACT");

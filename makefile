@@ -109,6 +109,12 @@ sc_deploy_ballot: delete_contract_addresses_storage_node
 	cd smart_contracts/ballot; rm -rf target; bash compile_ballot.sh
 	cd scripts/js/deployment; node ballot.js
 
+sc_run_ballot_node0:
+	cd scripts/js/benchmark; sudo node ballot_benchmark_approach3.js $(geth_httpPort_node0) $(maxTransactions) $(maxRuntime) $(address) $(benchmarkID)
+
+sc_run_ballot_node1:
+	cd scripts/js/benchmark; node ballot_benchmark_approach3.js $(geth_httpPort_node1) $(maxTransactions) $(maxRuntime) $(address) $(benchmarkID)
+
 ####################COMMUNICATION####################
 start_rest_server_master:
 	cd scripts/js/communication/restfulAPI/master/; node server_master.js

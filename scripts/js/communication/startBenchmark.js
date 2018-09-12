@@ -62,6 +62,8 @@ try {
     console.log("maxRuntime: " + maxRuntime);
     util.printFormatedMessage("");
 
+    const ips = util.readFileSync_lines(pathToRootFolder + "storage/ips/nodes_ip.txt");
+
     switch (scenario) {
         case "account":
             //get deployed smart contract addresses from local storage folder
@@ -71,7 +73,6 @@ try {
                     smartContractAddresses = lines.split("\n").splice(0, 2);
                 })
                 .then(function () {
-                    var ips = util.readFileSync_lines(pathToRootFolder + "storage/ips/nodes_ip.txt");
                     if (broadcastBenchmark == true) {
                         //start benchmark on each node of storage/ips/nodes_ip.txt
                         for (var i = 0; i <= ips.length - 1; i++) {
@@ -86,6 +87,26 @@ try {
                 });
             break;
         case "ballot":
+            //get the deployed smart contract address from local storage folder
+            //read the last line1
+            readLastLines.read(pathToSmartContractAddresses, 1)
+                .then(function (lines) {
+                    smartContractAddresses = lines.split("\n").splice(0, 2);
+                    console.log()
+                })
+                .then(function () {
+                    if (broadcastBenchmark == true) {
+                        //start benchmark on each node of storage/ips/nodes_ip.txt
+                        for (var i = 0; i <= ips.length - 1; i++) {
+                            client.startBenchmark(ips[i], port, scenario, approach, benchmarkId, maxTransactions, maxRuntime, smartContractAddresses);
+                            benchmarkId++;
+                        }
+                    } else {
+                        //start benchmark on the first node in storage/ips/nodes_ip.txt
+                        client.startBenchmark(ips[0], port, scenario, approach, benchmarkId, maxTransactions, maxRuntime, smartContractAddresses);
+                        benchmarkId++;
+                    }
+                });
             break;
         case "readWrite":
             break;

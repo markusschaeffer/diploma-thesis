@@ -66,15 +66,8 @@ exports.deployContract = (req, res) => {
                                 reject(error);
                         });
                         // attach listeners to the stdout and stderr.
-                        child.stdout.on('data', function (data) {
-                            console.log(data);
-                        });
-                        child.stderr.on('data', function (data) {
-                            console.log(data);
-                        });
-                        child.on('close', function (close) {
-                            console.log(close);
-                        });
+                        exports.attachListeners(child);
+
                     }).then(function () {
                         //get contract addresses from storage folder of server
                         var filePath = directionToRootFolder + "storage/contract_addresses_node/account.txt";
@@ -98,15 +91,8 @@ exports.deployContract = (req, res) => {
                                 reject(error);
                         });
                         // attach listeners to the stdout and stderr.
-                        child.stdout.on('data', function (data) {
-                            console.log(data);
-                        });
-                        child.stderr.on('data', function (data) {
-                            console.log(data);
-                        });
-                        child.on('close', function (close) {
-                            console.log(close);
-                        });
+                        exports.attachListeners(child);
+
                     }).then(function () {
                         //get contract addresses from storage folder of server
                         var filePath = directionToRootFolder + "storage/contract_addresses_node/ballot.txt";
@@ -163,15 +149,8 @@ exports.startBenchmark = (req, res) => {
                                     reject(error);
                             });
                         // attach listeners to the stdout and stderr.
-                        child.stdout.on('data', function (data) {
-                            console.log(data);
-                        });
-                        child.stderr.on('data', function (data) {
-                            console.log(data);
-                        });
-                        child.on('close', function (close) {
-                            console.log(close);
-                        });
+                        exports.attachListeners(child);
+
                         res.end(JSON.stringify(ip + ": benchmark with benchmarkID " + jsonRequest.benchmarkID + " started"));
                     })
                     .then(function (result) {
@@ -182,12 +161,49 @@ exports.startBenchmark = (req, res) => {
                     });
                 break;
             case 'ballot':
+                new Promise(function (resolve, reject) {
+                        //start account scenario benchmark
+                        var child = exec("cd " + directionToRootFolder + "; make sc_run_ballot_node0" +
+                            " maxTransactions=" + jsonRequest.maxTransactions +
+                            " maxRuntime=" + jsonRequest.maxRuntime +
+                            " address=" + jsonRequest.smartContractAddresses[0] +
+                            " benchmarkID=" + jsonRequest.benchmarkID +
+                            ";",
+                            function (error, stdout, stderr) {
+                                resolve(stdout);
+                                if (error !== null)
+                                    reject(error);
+                            });
+                        // attach listeners to the stdout and stderr.
+                        exports.attachListeners(child);
+
+                        res.end(JSON.stringify(ip + ": benchmark with benchmarkID " + jsonRequest.benchmarkID + " started"));
+                    })
+                    .then(function (result) {
+                        res.end(JSON.stringify(result));
+                    })
+                    .catch(error => {
+                        res.end(JSON.stringify(ip + ": NOK - " + error));
+                    });
                 break;
             case 'readWrite':
+                //TODO------------------------------------------------------------------------------------------------------------------------
                 break;
             default:
                 res.end(JSON.stringify(ip + ": NOK - could not match specified scenario"));
         };
     });
 
+};
+
+exports.attachListeners = function (child) {
+    child.stdout.on('data', function (data) {
+        console.log(data);
+    });
+    child.stderr.on('data', function (data) {
+        console.log(data);
+    });
+    child.on('close', function (close) {
+        console.log(close);
+    });
 };

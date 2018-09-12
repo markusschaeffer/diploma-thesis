@@ -12,16 +12,24 @@
 const util = require('./../util/util.js');
 const benchmarkLib = require('./benchmark-lib/benchmark-lib.js');
 const timestamp = require('time-stamp');
+const pathToRootFolder = __dirname + "/../../../";
 
 //instantiate web3
 const Web3 = require('web3');
 var web3 = new Web3();
 
 const ip = "localhost";
-const httpPort = process.argv[2]; //get port as cli parameter
+//get CLI parameters
+const httpPort = process.argv[2];
 const maxTransactions = process.argv[3];
 const maxRuntime = process.argv[4] * 1000 * 60;
 const benchmarkID = process.argv[7];
+
+//default values
+if (httpPort == undefined) httpPort = util.readFileSync_full(pathToRootFolder + "storage/ports/geth_http_port_node0.txt");
+if (maxTransactions == undefined) maxTransactions = 1000;
+if (maxRuntime == undefined) maxRuntime = 10 * 1000 * 60;
+if (benchmarkID == undefined) benchmarkID = 0;
 
 //set providers from Web3.providers
 const httpProviderString = "http://" + ip + ":" + httpPort;
@@ -29,9 +37,12 @@ const httpProviderString = "http://" + ip + ":" + httpPort;
 web3 = new Web3(new Web3.providers.HttpProvider(httpProviderString));
 
 const maxTransactionBatchSize = 100;
-const gasPrice = '20000000000'; // default gas price in wei, 20 gwei in this case
-const amountTobeSent = web3.utils.toWei('1', "ether"); //define amount to be sent between contracts
-const accountAddress = "0x5dfe021f45f00ae83b0aa963be44a1310a782fcc"; //specify which account to use for gas costs for each transaction
+// default gas price in wei, 20 gwei in this case
+const gasPrice = '20000000000'; 
+//define amount to be sent between contracts
+const amountTobeSent = web3.utils.toWei('1', "ether"); 
+//specify which account to use for gas costs for each transaction
+const accountAddress = util.readFileSync_full(pathToRootFolder + "storage/staticAccount_address/address.txt");
 const scenario = "account";
 const approach = 3;
 
@@ -43,7 +54,7 @@ var sentTransaction = 0;
 var startTime;
 
 //get contract ABI from local .abi file
-var filePath_abi = "./../../../smart_contracts/account/target/Account.abi";
+var filePath_abi = pathToRootFolder + "smart_contracts/account/target/Account.abi";
 var abiArrayString = util.readFileSync_full(filePath_abi);
 var abiArray = JSON.parse(abiArrayString);
 
@@ -52,7 +63,7 @@ if (process.argv[5] != null && process.argv[6] != null) {
   var contract1Address = process.argv[5];
   var contract2Address = process.argv[6];
 } else {
-  var filePath = __dirname + "/../../../storage/contract_addresses_server/account.txt";
+  var filePath = pathToRootFolder + "storage/contract_addresses_node/account.txt";
   var addresses = util.readFileSync_lines(filePath);
   var contract1Address = addresses[0];
   var contract2Address = addresses[1];

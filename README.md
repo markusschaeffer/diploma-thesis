@@ -6,15 +6,6 @@ The goal is to benchmark metrics of differently configured Ethereum networks.
 
 # Attention: This is still WORK IN PROGRESS!
 
-# TODO
-- Check balances after account benchmark
-- Check genesis handling (local!=node)
-- Adapt architecture figure
-- ReadWrite scenario implementation
-- Increase Number of Open File Descriptors for EC2 Instances?
-- Amazon CloudFormation Service Templates for automatic node startup with "scripts/sh/install_node.sh"
-- Visualization of benchmark results via Python (matplotlib)
-
 # Concept
 
 ## Ethereum Network Parameters
@@ -43,7 +34,20 @@ The goal is to benchmark metrics of differently configured Ethereum networks.
 - Voting (ballot.sol)
 - Reading and writing from/to a simple contract consisting mainly of getter and setter methods
 
-# AWS EC2 Startup Procedure
+#Architecture
+
+![Architecture](architecture_overview.png)
+
+## TODO
+- Check balances after account benchmark
+- Check genesis handling (local!=node)
+- Adapt architecture figure
+- ReadWrite scenario implementation
+- Increase Number of Open File Descriptors for EC2 Instances?
+- Amazon CloudFormation Service Templates for automatic node startup with "scripts/sh/install_node.sh"
+- Visualization of benchmark results via Python (matplotlib)
+
+## AWS EC2 Startup Procedure
 
 - Start a node with a geth bootnode and eth-netstats (automatic startup, not via REST api)
 - Save the IP of the bootnode to the storage folder and push to repo
@@ -52,18 +56,6 @@ The goal is to benchmark metrics of differently configured Ethereum networks.
 - Start benchmarks from master node (via REST)
 - Benchmark results are stored on the master DB
 
-# Local MongoDB
+## Local MongoDB
  - start via "mongo" 
 - select last entries descending on startTime: "db.benchmarklogs.find().pretty().sort({"startTime":-1})"
-
-# Geth Related Errors/Issues
-
-- Errors
--- UnhandledPromiseRejectionWarning: Error: Returned error: known transaction
-    at emitNone (events.js:111:20)
-    at IncomingMessage.emit (events.js:208:7)
-    at endReadableNT (_stream_readable.js:1064:12)
-    at _combinedTickCallback (internal/process/next_tick.js:138:11)
-    at process._tickCallback (internal/process/next_tick.js:180:9)
--- ERROR[07-05|16:14:33] Transaction referenced missing 
--- "Error: Failed to check for transaction receipt:

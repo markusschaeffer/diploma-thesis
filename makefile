@@ -25,8 +25,10 @@ geth_httpPort_node1=`cat $(current_dir)/storage/ports/geth_http_port_node1.txt`
 bootnode_netstats_start: 	start_rest_server_bootnode_netstats
 master_start:				start_mongodb start_rest_server_master
 node_start: 				prepare geth_node0_startup start_rest_server_node
+node_restart:				prepare geth_node0_startup
 
-prepare: kill_running delete_root_folder init_folders delete_contract_addresses_storage_node delete_current_genesis_storage
+prepare: kill_running_geth delete_root_folder init_folders delete_contract_addresses_storage_node delete_current_genesis_storage
+kill_running: kill_running_geth kill_running_bootnode kill_running_node
 
 ####################INITIAL INSTALLATION####################
 install_node:
@@ -135,6 +137,12 @@ attach_cli_node0:
 
 attach_cli_node1:
 	cd scripts/sh; sudo ./attach.sh 1
+	
+kill_running_geth:
+	cd scripts/sh; sudo ./kill_running_geth.sh;
 
-kill_running:
-	cd scripts/sh; sudo ./kill_running.sh
+kill_running_bootnode:
+	cd scripts/sh; sudo ./kill_running_bootnode.sh;
+
+kill_running_node:
+	cd scripts/sh; sudo ./kill_running_node.sh;  

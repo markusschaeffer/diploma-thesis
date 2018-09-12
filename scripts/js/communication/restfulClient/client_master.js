@@ -7,6 +7,18 @@ const clientUtil = require('./clientUtil');
 
 module.exports = {
 
+    restartNode: function (ip, port) {
+        util.printFormatedMessage("SENDING restartNode REQUEST");
+        let options = {
+            method: 'POST',
+            uri: 'http://' + ip + ':' + port + '/node-restart',
+            body: {},
+            json: true
+        };
+
+        clientUtil.sendRequest(options);
+    },
+
     getPeerCount: function (ip, port) {
         util.printFormatedMessage("SENDING getPeerCount REQUEST");
         let options = {

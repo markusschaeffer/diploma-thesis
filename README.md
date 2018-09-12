@@ -7,7 +7,10 @@ The goal is to benchmark metrics of differently configured Ethereum networks.
 # Attention: This is still WORK IN PROGRESS!
 
 # TODO
-- Voting and ReadWrite scenario implementation
+- Check balances after account benchmark
+- Check genesis handling (local!=node)
+- Adapt architecture figure
+- ReadWrite scenario implementation
 - Increase Number of Open File Descriptors for EC2 Instances?
 - Amazon CloudFormation Service Templates for automatic node startup with "scripts/sh/install_node.sh"
 - Visualization of benchmark results via Python (matplotlib)

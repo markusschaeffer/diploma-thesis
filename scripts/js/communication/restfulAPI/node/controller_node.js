@@ -196,6 +196,29 @@ exports.startBenchmark = (req, res) => {
 
 };
 
+exports.restartNode = (req, res) => {
+    var ip;
+    publicIp.v4().then(function (_ip) {
+        ip = _ip;
+    }).then(function () {
+        util.printFormatedMessage(ip + " RECEIVED restartNode REQUEST");
+        var child = exec("cd " + directionToRootFolder + "; make node_restart" + ";",
+            function (error, stdout, stderr) {
+                if (error !== null)
+                    throw new Error(error);
+            });
+        // attach listeners to the stdout and stderr.
+        exports.attachListeners(child);
+
+        res.end(JSON.stringify(ip + ": node restart initiated"));
+
+    }).catch((err) => {
+        console.log(err);
+        res.end(JSON.stringify(ip + ": NOK - " + error));
+    });
+
+};
+
 exports.attachListeners = function (child) {
     child.stdout.on('data', function (data) {
         console.log(data);

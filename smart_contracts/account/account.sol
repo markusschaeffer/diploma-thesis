@@ -1,8 +1,9 @@
 pragma solidity ^0.4.0;
 
 /*
-* see https://programtheblockchain.com/posts/2017/12/15/writing-a-contract-that-handles-ether/
-*/
+ * Simple account contract 
+ * see https://programtheblockchain.com/posts/2017/12/15/writing-a-contract-that-handles-ether/
+ */
 contract Account  {
     
     address public owner;

@@ -80,7 +80,7 @@ exports.deployContract = (req, res) => {
                         var filePath = directionToRootFolder + "storage/contract_addresses_node/account.txt";
                         var addresses = util.readFileSync_lines(filePath);
                         res.end(JSON.stringify({
-                            contractDeployed: true,
+                            accountDeployed: true,
                             address1: addresses[0],
                             address2: addresses[1]
                         }));
@@ -90,8 +90,38 @@ exports.deployContract = (req, res) => {
                     });
                 break;
             case 'ballot':
+                new Promise(function (resolve, reject) {
+                        //deploy contract(s) via make rule
+                        var child = exec("cd " + directionToRootFolder + "; make sc_deploy_ballot;", function (error, stdout, stderr) {
+                            resolve(stdout);
+                            if (error !== null)
+                                reject(error);
+                        });
+                        // attach listeners to the stdout and stderr.
+                        child.stdout.on('data', function (data) {
+                            console.log(data);
+                        });
+                        child.stderr.on('data', function (data) {
+                            console.log(data);
+                        });
+                        child.on('close', function (close) {
+                            console.log(close);
+                        });
+                    }).then(function () {
+                        //get contract addresses from storage folder of server
+                        var filePath = directionToRootFolder + "storage/contract_addresses_node/ballot.txt";
+                        var address = util.readFileSync_lines(filePath)[0];
+                        res.end(JSON.stringify({
+                            ballotDeployed: true,
+                            address: address
+                        }));
+                    })
+                    .catch(error => {
+                        res.end(JSON.stringify(ip + ": NOK - " + error));
+                    });
                 break;
             case 'readWrite':
+                //TODO------------------------------------------------------------------------------------------------
                 break;
             default:
                 res.end(JSON.stringify(ip + ": NOK - could not match specified scenario"));

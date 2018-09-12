@@ -5,6 +5,12 @@
 
 //require util functions
 const util = require('./../util/util.js');
+const pathToRootFolder = __dirname + "/../../../";
+
+//specify which account to use for contract deployment (pays the gas cost)
+const accountAddress = util.readFileSync_full(pathToRootFolder + "storage/staticAccount_address/address.txt");
+const accountPassword = util.readFileSync_full(pathToRootFolder + "storage/staticAccount_password/password.txt");
+const gethHttpPort = util.readFileSync_full(pathToRootFolder + "storage/ports/geth_http_port_node0.txt");
 
 // instantiate web3
 const Web3 = require('web3');
@@ -12,34 +18,32 @@ var web3 = new Web3();
 
 // set the provider you want from Web3.providers
 // provider = node-0 RPC PORT 8100
-web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8100"));
-
-//specify which account to use for contract deployment (pays the gas cost)
-const accountAddress = "0x5dfe021f45f00ae83b0aa963be44a1310a782fcc";
+web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:" + gethHttpPort));
 
 // unlock account
-web3.eth.personal.unlockAccount(accountAddress, "iloveethereum").
+web3.eth.personal.unlockAccount(accountAddress, accountPassword).
 then(() => {
   console.log('Account unlocked.');
 }).
 catch(console.error);
 
 // contract ABI
-const filePath_abi = "./../../../smart_contracts/account/target/Account.abi";
+const filePath_abi = pathToRootFolder + "smart_contracts/account/target/Account.abi";
 const abiArrayString = util.readFileSync_full(filePath_abi);
 const abiArray = JSON.parse(abiArrayString);
 
 // contract Bytecode
-const filePath_bin = "./../../../smart_contracts/account/target/Account.bin";
+const filePath_bin = pathToRootFolder + "smart_contracts/account/target/Account.bin";
 const bytecode = util.readFileSync_full(filePath_bin);
 const contractBytecode = "0x" + bytecode;
 
 // contract
 const myContract = new web3.eth.Contract(abiArray);
 
-util.printFormatedMessage("DEPLOYING CONTRACT");
 //deploy the contract to the blockchain and send some ether from account[0] to the smart contract
 const amount = web3.utils.toWei('1000000', "ether");
+
+util.printFormatedMessage("DEPLOYING CONTRACT");
 myContract.deploy({
     data: contractBytecode,
     arguments: []
@@ -62,9 +66,9 @@ myContract.deploy({
     myContract.options.address = newContractInstance.options.address;
 
     //store deployed contract address to contract address storage folder
-    var filePath = __dirname + "/../../../storage/contract_addresses_node/account.txt";
+    var filePath = pathToRootFolder + "storage/contract_addresses_node/account.txt";
     util.saveContractAddress(filePath, myContract.options.address);
-    
+
     //check the balance of the Smart Contract
     myContract.methods.getBalance().call(function (error, result) {
         console.log("Balance is: " + web3.utils.fromWei(result, 'ether') + " ether");

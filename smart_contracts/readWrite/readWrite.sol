@@ -1,5 +1,8 @@
 pragma solidity ^0.4.0;
 
+/*
+ * Simple bean contract
+ */
 contract ReadWrite{
     
     string varString;

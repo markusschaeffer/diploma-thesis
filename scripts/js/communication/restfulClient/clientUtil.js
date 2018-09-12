@@ -19,13 +19,26 @@ module.exports = {
                     // request succeeded...
                     console.log("Response: " + JSON.stringify(parsedBody));
 
-                    if (parsedBody.contractDeployed != null) {
-                        //contracts have been deployed
+                    if (parsedBody.accountDeployed != null) {
+                        //account contracts have been deployed
                         //--> store contract addresses in storage folder
                         var filePath = pathToRootFolder + "storage/contract_addresses_local/account.txt";
                         util.saveContractAddress(filePath, parsedBody.address1);
                         util.saveContractAddress(filePath, parsedBody.address2);
                     }
+
+                    if (parsedBody.ballotDeployed != null) {
+                        //ballot contract hasbeen deployed
+                        //--> store contract address in storage folder
+                        var filePath = pathToRootFolder + "storage/contract_addresses_local/ballot.txt";
+                        util.saveContractAddress(filePath, parsedBody.address);
+                    }
+
+                    if(parsedBody.readWriteDeployed != null){
+                        var filePath = pathToRootFolder + "storage/contract_addresses_local/readWrite.txt";
+                        util.saveContractAddress(filePath, parsedBody.address);
+                    }
+
                     resolve(parsedBody);
                 })
                 .catch(function (err) {

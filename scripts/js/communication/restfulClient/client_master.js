@@ -44,7 +44,7 @@ module.exports = {
     },
 
     deployContract: function (ip, port, scenario) {
-        util.printFormatedMessage("SENDING deployContract REQUEST");
+        util.printFormatedMessage("SENDING deployContract REQUEST for " + scenario);
         let options = {
             method: 'POST',
             uri: 'http://' + ip + ':' + port + '/node-contract-deploy',

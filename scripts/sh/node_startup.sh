@@ -1,4 +1,8 @@
 #!/bin/bash
+
+#HTTP ports 8100-81** (--rpc)
+#WS ports 8500-85** (--ws)
+
 # Geth node startup incl. mining
 # $1:node index
 # $2:netstats_ip

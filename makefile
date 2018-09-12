@@ -17,8 +17,8 @@ current_dir = $(shell pwd)
 genesisFile=`cat $(current_dir)/storage/current_genesis/current_genesis.txt`
 netstats_ip=`cat $(current_dir)/storage/ips/netstats_ip.txt`
 bootnode_ip=`cat $(current_dir)/storage/ips/bootnode_ip.txt`
-geth_httpPort_node0=8100
-geth_httpPort_node1=8101
+geth_httpPort_node0=`cat $(current_dir)/storage/ports/geth_http_port_node0.txt`
+geth_httpPort_node1=`cat $(current_dir)/storage/ports/geth_http_port_node1.txt`
 
 ####################AGGREGATED MAKE RULES####################
 
@@ -26,7 +26,7 @@ bootnode_netstats_start: 	start_rest_server_bootnode_netstats
 master_start:				start_mongodb start_rest_server_master
 node_start: 				prepare geth_node0_startup start_rest_server_node
 
-prepare: kill_running delete_root_folder init_folders delete_contract_addresses_storage delete_current_genesis_storage
+prepare: kill_running delete_root_folder init_folders delete_contract_addresses_storage_node delete_current_genesis_storage
 
 ####################INITIAL INSTALLATION####################
 install_node:
@@ -40,8 +40,8 @@ init_folders: delete_root_folder
 	cd scripts/sh; sudo ./init_folders.sh 0
 	cd scripts/sh; sudo ./init_folders.sh 1
 
-delete_contract_addresses_storage:
-	cd scripts/sh; sudo ./delete_contract_addresses_storage.sh 
+delete_contract_addresses_storage_node:
+	cd scripts/sh; sudo ./delete_contract_addresses_storage_node.sh 
 
 delete_current_genesis_storage:
 	cd scripts/sh; sudo ./delete_current_genesis_storage.sh 
@@ -94,7 +94,7 @@ geth_nodes_stop: geth_node0_stop geth_node1_stop
 geth_nodes_resume: geth_node0_resume geth_node1_resume
 
 ####################SMART CONTRACTS DEPLOYMENT & BENCHMARK####################
-sc_deploy_accounts: delete_contract_addresses_storage
+sc_deploy_accounts: delete_contract_addresses_storage_node
 	cd smart_contracts/account; rm -rf target; bash compile_account.sh
 	cd scripts/js/deployment; node account.js
 	cd scripts/js/deployment; node account.js
@@ -104,6 +104,10 @@ sc_run_accounts_node0:
 
 sc_run_accounts_node1:
 	cd scripts/js/benchmark; node account_benchmark_approach3.js $(geth_httpPort_node1) $(maxTransactions) $(maxRuntime) $(address1) $(address2) $(benchmarkID)
+
+sc_deploy_ballot: delete_contract_addresses_storage_node
+	cd smart_contracts/ballot; rm -rf target; bash compile_ballot.sh
+	cd scripts/js/deployment; node ballot.js
 
 ####################COMMUNICATION####################
 start_rest_server_master:

@@ -34,7 +34,7 @@ The goal is to benchmark metrics of differently configured Ethereum networks.
 - Voting (ballot.sol)
 - Reading and writing from/to a simple contract consisting mainly of getter and setter methods
 
-#Architecture
+# Architecture
 
 ![Architecture](architecture_overview.png)
 

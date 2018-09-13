@@ -1,7 +1,7 @@
 
-# Framework for Benchmarking the Performance of differently configured private Ethereum networks
+# Framework for Benchmarking the Performance of Differently Configured Private Ethereum Networks (using Geth)
 
-This is the repository for my diploma-thesis, which is  related to Ethereum performance and scalability measurements.
+This is the repository for my diploma-thesis, which is related to Ethereum performance and scalability measurements.
 The goal is to benchmark metrics of differently configured Ethereum networks.
 
 # Attention: This is still WORK IN PROGRESS!
@@ -41,7 +41,6 @@ The goal is to benchmark metrics of differently configured Ethereum networks.
 ## TODO
 - Check balances after account benchmark
 - Check genesis handling (local!=node)
-- Adapt architecture figure
 - ReadWrite scenario implementation
 - Increase Number of Open File Descriptors for EC2 Instances?
 - Amazon CloudFormation Service Templates for automatic node startup with "scripts/sh/install_node.sh"

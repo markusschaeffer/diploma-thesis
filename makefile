@@ -102,7 +102,7 @@ sc_deploy_accounts: delete_contract_addresses_storage_node
 	cd scripts/js/deployment; node account.js
 
 sc_run_accounts_node0:
-	cd scripts/js/benchmark; sudo node account_benchmark_approach3.js $(geth_httpPort_node0) $(maxTransactions) $(maxRuntime) $(address1) $(address1) $(benchmarkID)
+	cd scripts/js/benchmark; sudo node account_benchmark_approach3.js $(geth_httpPort_node0) $(maxTransactions) $(maxRuntime) $(address1) $(address2) $(benchmarkID)
 
 sc_run_accounts_node1:
 	cd scripts/js/benchmark; node account_benchmark_approach3.js $(geth_httpPort_node1) $(maxTransactions) $(maxRuntime) $(address1) $(address2) $(benchmarkID)

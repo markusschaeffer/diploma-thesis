@@ -41,6 +41,7 @@ const maxTransactionBatchSize = 100;
 const gasPrice = '20000000000'; 
 //define amount to be sent between contracts
 const amountTobeSent = web3.utils.toWei('1', "ether"); 
+util.printFormatedMessage("amountTobeSent " + amountTobeSent);
 //specify which account to use for gas costs for each transaction
 const accountAddress = util.readFileSync_full(pathToRootFolder + "storage/staticAccount_address/address.txt");
 const scenario = "account";

@@ -7,8 +7,8 @@ module.exports = (app) => {
     /**
      * restart the geth-node
      */
-    app.route('/node-restart')
-        .post(controller.restartNode);
+    app.route('/node-geth-start')
+        .post(controller.startGeth);
 
     /**
      * get the peers count (connected geth nodes that know about each other)

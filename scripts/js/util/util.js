@@ -2,7 +2,9 @@
  * Util functions
  */
 
-
+const fs = require('fs');
+const os = require("os");
+const readline = require('readline');
 
 module.exports = {
 
@@ -10,7 +12,7 @@ module.exports = {
      * save a smart contract's address to a file
      */
     saveContractAddress: function (filePath, address) {
-        const fs = require('fs');
+
         var appendString = address + "\n";
         fs.appendFile(filePath, appendString, function (err) {
             if (err) {
@@ -21,8 +23,6 @@ module.exports = {
     },
 
     readLineFromFile: function (filePath) {
-        const readline = require('readline');
-        const fs = require('fs');
 
         const rl = readline.createInterface({
             input: fs.createReadStream(filePath),
@@ -36,8 +36,6 @@ module.exports = {
 
     readFileSync_lines: function (filePath) {
         try {
-            const fs = require('fs');
-            const os = require("os");
 
             var text = fs.readFileSync(filePath, 'utf8');
             return text.split(os.EOL);
@@ -48,9 +46,6 @@ module.exports = {
 
     readFileSync_full: function (filePath) {
         try {
-            const fs = require('fs');
-            const os = require("os");
-
             var text = fs.readFileSync(filePath, 'utf8');
             return text;
         } catch (e) {
@@ -66,5 +61,13 @@ module.exports = {
 
     sleep: function (ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
+    },
+
+    writeToFile: function (filePath, genesisName) {
+        try {
+            fs.writeFileSync(filePath, genesisName);
+        } catch (e) {
+            throw new Error("Error at writing to file " + filePath + "\n " + e);
+        }
     }
 };

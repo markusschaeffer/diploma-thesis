@@ -39,7 +39,6 @@ The goal is to benchmark metrics of differently configured Ethereum networks.
 ![Architecture](architecture_overview.png)
 
 ## TODO
-- Check genesis handling (local!=node)
 - ReadWrite scenario implementation
 - Increase Number of Open File Descriptors for EC2 Instances?
 - Amazon CloudFormation Service Templates for automatic node startup with "scripts/sh/install_node.sh"

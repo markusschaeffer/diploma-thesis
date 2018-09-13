@@ -2,19 +2,22 @@
 
 # Startup sequence:
 # 0) Specify IPs of bootnode, eth-netstats, master and geth-nodes in storage/ips/
-# 1) Start several processes needed: 
-#	make bootnode_netstats_start; make master_start; make node_start
-# 2) Deploy desired smart contract scenario: 
+# 1) Start all REST APIs: 
+#	make bootnode_start; make master_start; make node_start
+# 2) Start GETH clients on nodes
+# 	e.g. via geth_start
+# 	or start clients via REST communication in folder scripts/js/
+# 3) Deploy desired smart contract scenario: 
 #	e.g. via "sudo make deploy_accounts"
 # 	or deploy via REST communication in folder scripts/js/
-# 3) Start benchmark: 
-#	e.g. via "sudo make sc_run_accounts_without_deploy_node0 $(maxTransactions) $(maxRuntime) $(address1) $(address1) $(benchmarkID)" 
+# 4) Start benchmark: 
+#	e.g. via "sudo make sc_run_accounts_without_deploy_node0 $(maxTransactions) $(maxRuntime) $(address1) $(address2) $(benchmarkID)" 
 #	or start via REST communication in folder scripts/js/
 
 ####################VARIABLES####################
 
 current_dir = $(shell pwd)
-genesisFile=`cat $(current_dir)/storage/current_genesis/current_genesis.txt`
+genesisFile=`cat $(current_dir)/storage/current_genesis_node/current_genesis.txt`
 netstats_ip=`cat $(current_dir)/storage/ips/netstats_ip.txt`
 bootnode_ip=`cat $(current_dir)/storage/ips/bootnode_ip.txt`
 geth_httpPort_node0=`cat $(current_dir)/storage/ports/geth_http_port_node0.txt`
@@ -22,12 +25,14 @@ geth_httpPort_node1=`cat $(current_dir)/storage/ports/geth_http_port_node1.txt`
 
 ####################AGGREGATED MAKE RULES####################
 
-bootnode_netstats_start: 	start_rest_server_bootnode_netstats
-master_start:				start_mongodb start_rest_server_master
-node_start: 				prepare geth_node0_startup start_rest_server_node
-node_restart:				prepare geth_node0_startup
+bootnode_start: 	start_rest_server_bootnode_netstats
+master_start:		start_mongodb start_rest_server_master
+node_start: 		start_rest_server_node
 
-prepare: kill_running_geth delete_root_folder init_folders delete_contract_addresses_storage_node delete_current_genesis_storage
+geth_start:			prepare geth_node0_startup 
+
+prepare: kill_running_geth delete_root_folder init_folders delete_contract_addresses_storage_node
+
 kill_running: kill_running_geth kill_running_bootnode kill_running_node
 
 ####################INITIAL INSTALLATION####################
@@ -44,9 +49,6 @@ init_folders: delete_root_folder
 
 delete_contract_addresses_storage_node:
 	cd scripts/sh; sudo ./delete_contract_addresses_storage_node.sh 
-
-delete_current_genesis_storage:
-	cd scripts/sh; sudo ./delete_current_genesis_storage.sh 
 
 delete_root_folder:
 	cd scripts/sh; sudo ./delete_root_folder.sh 

@@ -2,14 +2,14 @@
  * REST Controller (bootnode-netstats)
  */
 
-const exec = require('child_process').exec;
+const spawn = require('child_process').spawn;
 const util = require('./../../../util/util.js');
 const publicIp = require('public-ip');
 
 const pathToRootFolder = __dirname + "/../../../../../";
 
 /**
- * starts a bootnode
+ * starts a bootnode service
  */
 exports.startBootnode = (req, res) => {
 
@@ -20,16 +20,10 @@ exports.startBootnode = (req, res) => {
         util.printFormatedMessage(ip + ": RECEIVED startBootnode REQUEST");
 
         try {
-            var child = exec("cd " + pathToRootFolder + "; make bootnode;");
-            // attach listeners to the stdout and stderr.
-            child.stdout.on('data', function (data) {
-                console.log(data);
-            });
-            child.stderr.on('data', function (data) {
-                console.log(data);
-            });
-            child.on('close', function (close) {
-                console.log(close);
+            //start bootnode
+            var child = spawn("cd " + pathToRootFolder + "; make bootnode;", {
+                stdio: 'inherit',
+                shell: true
             });
 
             res.end(JSON.stringify({
@@ -55,16 +49,10 @@ exports.startNetstats = (req, res) => {
         util.printFormatedMessage(ip + ": RECEIVED startNetstats REQUEST");
 
         try {
-            var child = exec("cd " + pathToRootFolder + "; make netstats;");
-            //attach listeners to the stdout and stderr.
-            child.stdout.on('data', function (data) {
-                console.log(data);
-            });
-            child.stderr.on('data', function (data) {
-                console.log(data);
-            });
-            child.on('close', function (close) {
-                console.log(close);
+            //start netstats
+            var child = spawn("cd " + pathToRootFolder + "; make netstats;", {
+                stdio: 'inherit',
+                shell: true
             });
 
             res.end(JSON.stringify({

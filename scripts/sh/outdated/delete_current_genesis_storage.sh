@@ -5,7 +5,7 @@
 set -x #echo on
 
 cd $ROOT_DIR
-rm -rf storage/current_genesis_server
+rm -rf storage/current_genesis_node
 cd storage
-mkdir current_genesis_server
-chmod -R 777 current_genesis_server
+mkdir current_genesis_node
+chmod -R 777 current_genesis_node

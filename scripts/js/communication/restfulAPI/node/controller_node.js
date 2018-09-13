@@ -10,13 +10,44 @@ const publicIp = require('public-ip');
 //instantiate web3
 const Web3 = require('web3');
 var web3 = new Web3();
-const directionToRootFolder = __dirname + "/../../../../../";
+const pathToRootFolder = __dirname + "/../../../../../";
 
 //set providers from Web3.providers
 var httpPort = 8100; //http provider (node-0 PORT 8100, node-1 PORT 8101)
 var httpProviderString = "http://localhost:" + httpPort;
 
 web3 = new Web3(new Web3.providers.HttpProvider(httpProviderString));
+
+/**
+ * starts geth client on a node
+ */
+exports.startGeth = (req, res) => {
+    var ip;
+    publicIp.v4().then(function (_ip) {
+        ip = _ip;
+    }).then(function () {
+
+        util.printFormatedMessage(ip + " RECEIVED startGeth REQUEST");
+        const jsonRequest = req.body;
+
+        //update current_genesis.txt @ node
+        util.writeToFile(pathToRootFolder + "storage/current_genesis_node/current_genesis.txt", jsonRequest.genesis);
+
+        //start geth client
+        var child = spawn("cd " + pathToRootFolder + "; make geth_start;", {
+            stdio: 'inherit',
+            shell: true
+        });
+
+        //end connection
+        res.end(JSON.stringify(ip + ": geth start initiated"));
+
+    }).catch((err) => {
+        console.log(err);
+        res.end(JSON.stringify(ip + ": NOK - " + error));
+    });
+
+};
 
 /**
  * returns the peer-count of the node (amount of known peers in the network)
@@ -61,7 +92,7 @@ exports.deployContract = (req, res) => {
             case 'account':
                 new Promise(function (resolve, reject) {
                         //deploy contract(s) via make rule
-                        var child = exec("cd " + directionToRootFolder + "; make sc_deploy_accounts;", function (error, stdout, stderr) {
+                        var child = exec("cd " + pathToRootFolder + "; make sc_deploy_accounts;", function (error, stdout, stderr) {
                             resolve(stdout);
                             if (error !== null)
                                 reject(error);
@@ -71,7 +102,7 @@ exports.deployContract = (req, res) => {
 
                     }).then(function () {
                         //get contract addresses from storage folder of server
-                        var filePath = directionToRootFolder + "storage/contract_addresses_node/account.txt";
+                        var filePath = pathToRootFolder + "storage/contract_addresses_node/account.txt";
                         var addresses = util.readFileSync_lines(filePath);
                         res.end(JSON.stringify({
                             accountDeployed: true,
@@ -86,7 +117,7 @@ exports.deployContract = (req, res) => {
             case 'ballot':
                 new Promise(function (resolve, reject) {
                         //deploy contract(s) via make rule
-                        var child = exec("cd " + directionToRootFolder + "; make sc_deploy_ballot;", function (error, stdout, stderr) {
+                        var child = exec("cd " + pathToRootFolder + "; make sc_deploy_ballot;", function (error, stdout, stderr) {
                             resolve(stdout);
                             if (error !== null)
                                 reject(error);
@@ -96,7 +127,7 @@ exports.deployContract = (req, res) => {
 
                     }).then(function () {
                         //get contract addresses from storage folder of server
-                        var filePath = directionToRootFolder + "storage/contract_addresses_node/ballot.txt";
+                        var filePath = pathToRootFolder + "storage/contract_addresses_node/ballot.txt";
                         var address = util.readFileSync_lines(filePath)[0];
                         res.end(JSON.stringify({
                             ballotDeployed: true,
@@ -137,7 +168,7 @@ exports.startBenchmark = (req, res) => {
             case 'account':
                 new Promise(function (resolve, reject) {
                         //start account scenario benchmark
-                        var child = exec("cd " + directionToRootFolder + "; make sc_run_accounts_node0" +
+                        var child = exec("cd " + pathToRootFolder + "; make sc_run_accounts_node0" +
                             " maxTransactions=" + jsonRequest.maxTransactions +
                             " maxRuntime=" + jsonRequest.maxRuntime +
                             " address1=" + jsonRequest.smartContractAddresses[0] +
@@ -164,7 +195,7 @@ exports.startBenchmark = (req, res) => {
             case 'ballot':
                 new Promise(function (resolve, reject) {
                         //start account scenario benchmark
-                        var child = exec("cd " + directionToRootFolder + "; make sc_run_ballot_node0" +
+                        var child = exec("cd " + pathToRootFolder + "; make sc_run_ballot_node0" +
                             " maxTransactions=" + jsonRequest.maxTransactions +
                             " maxRuntime=" + jsonRequest.maxRuntime +
                             " address=" + jsonRequest.smartContractAddresses[0] +
@@ -193,27 +224,6 @@ exports.startBenchmark = (req, res) => {
             default:
                 res.end(JSON.stringify(ip + ": NOK - could not match specified scenario"));
         };
-    });
-
-};
-
-exports.restartNode = (req, res) => {
-    var ip;
-    publicIp.v4().then(function (_ip) {
-        ip = _ip;
-    }).then(function () {
-        util.printFormatedMessage(ip + " RECEIVED restartNode REQUEST");
-        const jsonRequest = req.body;
-
-        var child = spawn("cd " + directionToRootFolder + "; make node_restart genesisFile=" + jsonRequest.genesis + ";", {
-            stdio: 'inherit',
-            shell: true
-        });
-        res.end(JSON.stringify(ip + ": node restart initiated"));
-
-    }).catch((err) => {
-        console.log(err);
-        res.end(JSON.stringify(ip + ": NOK - " + error));
     });
 
 };

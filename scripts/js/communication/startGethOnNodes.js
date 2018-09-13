@@ -1,5 +1,5 @@
 /**
- * Script for restarting nodes via REST API
+ * Script for starting geth client on nodes via REST API
  * 
  */
 
@@ -14,5 +14,5 @@ const genesis = util.readFileSync_lines(pathToRootFolder + "storage/current_gene
 util.printFormatedMessage(genesis);
 
 for (var i = 0; i <= ips.length - 1; i++) {
-    client.restartNode(ips[i], port, genesis);
+    client.startGeth(ips[i], port, genesis);
 }

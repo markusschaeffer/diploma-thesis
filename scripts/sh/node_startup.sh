@@ -27,8 +27,8 @@ bash ./create_account.sh $nodeIndex
 cd $SHFOLDER
 bash ./genesis_init.sh $nodeIndex $path_to_genesis_file
 
-##########3) write current genesis filename to genesis storage##########
-cd $STORAGEFOLDER/current_genesis_server
+##########3) write current genesis filename to genesis storage of node##########
+cd $STORAGEFOLDER/current_genesis_node
 echo "$genesis_name" > current_genesis.txt
 
 ##########4) GETH startup incl. mine##########

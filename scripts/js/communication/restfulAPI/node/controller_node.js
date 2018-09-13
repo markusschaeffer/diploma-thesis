@@ -3,6 +3,7 @@
  */
 
 const exec = require('child_process').exec;
+const spawn = require('child_process').spawn;
 const util = require('./../../../util/util.js');
 const publicIp = require('public-ip');
 
@@ -203,15 +204,11 @@ exports.restartNode = (req, res) => {
     }).then(function () {
         util.printFormatedMessage(ip + " RECEIVED restartNode REQUEST");
         const jsonRequest = req.body;
-        
-        var child = exec("cd " + directionToRootFolder + "; make node_restart genesisFile=" + jsonRequest.genesis + ";",
-            function (error, stdout, stderr) {
-                if (error !== null)
-                    throw new Error(error);
-            });
-        // attach listeners to the stdout and stderr.
-        exports.attachListeners(child);
-        
+
+        var child = spawn("cd " + directionToRootFolder + "; make node_restart genesisFile=" + jsonRequest.genesis + ";", {
+            stdio: 'inherit',
+            shell: true
+        });
         res.end(JSON.stringify(ip + ": node restart initiated"));
 
     }).catch((err) => {

@@ -39,7 +39,6 @@ The goal is to benchmark metrics of differently configured Ethereum networks.
 ![Architecture](architecture_overview.png)
 
 ## TODO
-- Check balances after account benchmark
 - Check genesis handling (local!=node)
 - ReadWrite scenario implementation
 - Increase Number of Open File Descriptors for EC2 Instances?

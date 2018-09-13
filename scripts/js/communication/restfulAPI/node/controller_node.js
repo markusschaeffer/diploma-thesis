@@ -202,14 +202,16 @@ exports.restartNode = (req, res) => {
         ip = _ip;
     }).then(function () {
         util.printFormatedMessage(ip + " RECEIVED restartNode REQUEST");
-        var child = exec("cd " + directionToRootFolder + "; make node_restart" + ";",
+        const jsonRequest = req.body;
+        
+        var child = exec("cd " + directionToRootFolder + "; make node_restart genesisFile=" + jsonRequest.genesis + ";",
             function (error, stdout, stderr) {
                 if (error !== null)
                     throw new Error(error);
             });
         // attach listeners to the stdout and stderr.
         exports.attachListeners(child);
-
+        
         res.end(JSON.stringify(ip + ": node restart initiated"));
 
     }).catch((err) => {

@@ -7,12 +7,14 @@ const clientUtil = require('./clientUtil');
 
 module.exports = {
 
-    restartNode: function (ip, port) {
+    restartNode: function (ip, port, genesis) {
         util.printFormatedMessage("SENDING restartNode REQUEST");
         let options = {
             method: 'POST',
             uri: 'http://' + ip + ':' + port + '/node-restart',
-            body: {},
+            body: {
+                genesis: genesis
+            },
             json: true
         };
 

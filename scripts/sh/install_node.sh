@@ -24,33 +24,51 @@ sudo add-apt-repository -y ppa:ethereum/ethereum
 sudo apt-get update
 sudo apt-get install ethereum
 
-#NodeJS and NPM
+#NodeJS and NPM (do not use apt-get install npm)
 sudo apt-get install curl
 curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
-sudo apt-get install -y nodejs
-#sudo apt-get install npm
-#sudo ln -s /usr/bin/nodejs /usr/bin/node
+sudo apt-get install -y nodejs # npm is installed with nodejs
 
 #Docker and Docker-Compose
 sudo apt-get install docker
 sudo apt-get install docker-compose
 
-#NPM EACCESS Error 
+#FIX FOR NPM EACCESS Error (required for global npm installations)
 #https://docs.npmjs.com/getting-started/fixing-npm-permissions
+mkdir ~/.npm-global # Make a directory for global installations:
+npm config set prefix '~/.npm-global' # Configure npm to use the new directory path:
+export PATH=~/.npm-global/:$PATH # Open or create a ~/.profile file and add this line:
+
+###NPM INSTALLATIONS###
+
+#change to root directory of project for npm link creation
+cd $ROOT_DIR
+
+#Express Framework and body-parser
+npm install -g express
+npm link express
+npm install -g body-parser
+npm link body-parser
 
 #web3 (needs make, g++ and gcc)
 npm install -g web3
+npm link web3
 
 #time-stamp for node scripts
-npm install -g --save time-stamp
+npm install -g time-stamp
+npm link time-stamp
 
 #request and request-promise for RESTful client
-npm install -g --save request
-npm install -g --save request-promise
+npm install -g request
+npm link request
+npm install -g request-promise
+npm link request-promise
 
 #read-last-N-lines of files
-npm install -g read-last-lines --save
+npm install -g read-last-lines
+npm link read-last-lines
 
 #public ip
 #https://www.npmjs.com/package/public-ip
-npm install -g --save public-ip
+npm install -g public-ip
+npm link public-ip

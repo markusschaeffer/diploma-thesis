@@ -2,7 +2,7 @@
 # Sets environment variables
 
 #FOLDER STRUCTURE
-ROOT_DIR=~/Dropbox/UbuntuVM/DropboxShared/diploma-thesis #TODO change
+ROOT_DIR=~/diploma-thesis
 SHFOLDER=$ROOT_DIR/scripts/sh
 JSFOLDER=$ROOT_DIR/scripts/js
 FOLDERNAME=testnet

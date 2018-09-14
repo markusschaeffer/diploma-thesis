@@ -99,7 +99,6 @@ geth_nodes_resume: geth_node0_resume geth_node1_resume
 
 ####################SMART CONTRACTS DEPLOYMENT & BENCHMARK####################
 sc_deploy_accounts: delete_contract_addresses_storage_node
-	cd smart_contracts/account; rm -rf target; bash compile_account.sh
 	cd scripts/js/deployment; node account.js
 	cd scripts/js/deployment; node account.js
 
@@ -110,7 +109,6 @@ sc_run_accounts_node1:
 	cd scripts/js/benchmark; node account_benchmark_approach3.js $(geth_httpPort_node1) $(maxTransactions) $(maxRuntime) $(address1) $(address2) $(benchmarkID)
 
 sc_deploy_ballot: delete_contract_addresses_storage_node
-	cd smart_contracts/ballot; rm -rf target; bash compile_ballot.sh
 	cd scripts/js/deployment; node ballot.js
 
 sc_run_ballot_node0:

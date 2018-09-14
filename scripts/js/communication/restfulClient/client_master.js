@@ -8,7 +8,7 @@ const clientUtil = require('./clientUtil');
 module.exports = {
 
     startGeth: function (ip, port, genesis) {
-        util.printFormatedMessage("SENDING startGeth REQUEST");
+        util.printFormatedMessage("SENDING startGeth REQUEST to " + ip);
         let options = {
             method: 'POST',
             uri: 'http://' + ip + ':' + port + '/node-geth-start',
@@ -22,7 +22,7 @@ module.exports = {
     },
 
     getPeerCount: function (ip, port) {
-        util.printFormatedMessage("SENDING getPeerCount REQUEST");
+        util.printFormatedMessage("SENDING getPeerCount REQUEST to " + ip);
         let options = {
             method: 'GET',
             uri: 'http://' + ip + ':' + port + '/node-peer-count',
@@ -34,7 +34,7 @@ module.exports = {
     },
 
     startBootnode: function (ip, port) {
-        util.printFormatedMessage("SENDING startBootnode REQUEST");
+        util.printFormatedMessage("SENDING startBootnode REQUEST to " + ip);
         let options = {
             method: 'POST',
             uri: 'http://' + ip + ':' + port + '/bootnode-start',
@@ -46,7 +46,7 @@ module.exports = {
     },
 
     startNetstats: function (ip, port) {
-        util.printFormatedMessage("SENDING startNetstats REQUEST");
+        util.printFormatedMessage("SENDING startNetstats REQUEST to " + ip);
         let options = {
             method: 'POST',
             uri: 'http://' + ip + ':' + port + '/netstats-start',
@@ -58,7 +58,7 @@ module.exports = {
     },
 
     deployContract: function (ip, port, scenario) {
-        util.printFormatedMessage("SENDING deployContract REQUEST for " + scenario);
+        util.printFormatedMessage("SENDING deployContract REQUEST for " + scenario + " to " + ip);
         let options = {
             method: 'POST',
             uri: 'http://' + ip + ':' + port + '/node-contract-deploy',
@@ -72,7 +72,7 @@ module.exports = {
     },
 
     startBenchmark: function (ip, port, scenario, approach, benchmarkID, maxTransactions, maxRuntime, smartContractAddresses) {
-        util.printFormatedMessage("SENDING startBenchmark REQUEST for " + scenario);
+        util.printFormatedMessage("SENDING startBenchmark REQUEST for " + scenario + " to " + ip);
         let options = {
             method: 'POST',
             uri: 'http://' + ip + ':' + port + '/node-benchmark-start',

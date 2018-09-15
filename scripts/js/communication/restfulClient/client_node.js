@@ -7,7 +7,7 @@ var clientUtil = require('./clientUtil');
 
 module.exports = {
 
-    logBenchmarkResult: async function (ip, scenario, approach, benchmarkID, usedGenesisJson, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageDelay) {
+    logBenchmarkResult: async function (ip, peerCount, scenario, approach, benchmarkID, usedGenesisJson, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageDelay) {
         util.printFormatedMessage("SENDING logBenchmarkResult REQUEST");
 
         var masterIP = util.readFileSync_lines(__dirname + "/../../../../storage/ips/master_ip.txt")[0];
@@ -18,6 +18,7 @@ module.exports = {
             uri: 'http://' + masterIP + ':' + port + '/master-benchmark-log',
             body: {
                 ip: ip,
+                peerCount: peerCount,
                 scenario: scenario,
                 approach: approach,
                 benchmarkID: benchmarkID,

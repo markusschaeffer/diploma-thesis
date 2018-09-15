@@ -8,6 +8,16 @@ const restClient = require('./../../communication/restfulClient/client_node');
 const publicIp = require('public-ip');
 const pathToRootFolder = __dirname + "/../../../../";
 
+//instantiate web3
+const Web3 = require('web3');
+var web3 = new Web3();
+//set providers from Web3.providers
+const ip = "localhost";
+const httpPort = util.readFileSync_full(pathToRootFolder + "storage/ports/geth_http_port_node0.txt");
+const httpProviderString = "http://" + ip + ":" + httpPort;
+//http provider (node-0 PORT 8100, node-1 PORT 8101)
+web3 = new Web3(new Web3.providers.HttpProvider(httpProviderString));
+
 module.exports = {
 
     /**
@@ -17,24 +27,31 @@ module.exports = {
             maxRuntimeReached, maxTransactions, maxTransactionsReached,
             successfulTransactions, transactionsTimestampMapStart, transactionsTimestampMapEnd) {
 
-            const usedGenesisJson = util.readFileSync_lines(pathToRootFolder + "storage/current_genesis_node/current_genesis.txt")[0];
-
             var runtime = Math.abs((new Date() - startTime) / 1000);
             var averageTxDelay = module.exports.caculateAverageDelayOfTransactions(transactionsTimestampMapStart, transactionsTimestampMapEnd, successfulTransactions);
             var txPerSecond = successfulTransactions / runtime;
             var ip;
+            var peerCount;
+            const usedGenesisJson = util.readFileSync_lines(pathToRootFolder + "storage/current_genesis_node/current_genesis.txt")[0];
 
+            //query public ip
             publicIp.v4().then(function (_ip) {
-                console.log(_ip);
                 ip = _ip;
             }).then(function () {
-                module.exports.printBenchmarkResults(ip, scenario, approach, benchmarkID, usedGenesisJson, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay);
-
-                module.exports.sendBenchmarkResults(ip, scenario, approach, benchmarkID, usedGenesisJson, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay)
+                //query web3 peerCount
+                web3.eth.net.getPeerCount().then(function (_peerCount) {
+                        peerCount = _peerCount;
+                    })
                     .then(function () {
-                        util.printFormatedMessage("KILLING PROCESS");
-                        process.exit(0);
-                    });
+                        //print and send BenchmarkResults
+                        module.exports.printBenchmarkResults(ip, peerCount, scenario, approach, benchmarkID, usedGenesisJson, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay);
+
+                        module.exports.sendBenchmarkResults(ip, peerCount, scenario, approach, benchmarkID, usedGenesisJson, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay)
+                            .then(function () {
+                                util.printFormatedMessage("KILLING PROCESS");
+                                process.exit(0);
+                            });
+                    })
             });
         },
 
@@ -60,13 +77,14 @@ module.exports = {
         /**
          * Print result of benchmark to stdout
          */
-        printBenchmarkResults: function (ip, scenario, approach, benchmarkID, usedGenesisJson,
+        printBenchmarkResults: function (ip, peerCount, scenario, approach, benchmarkID, usedGenesisJson,
             startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions,
             maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay) {
 
             console.log("\n");
             console.log("----------BENCHMARK RESULT----------");
-            console.log("ip: " + ip);
+            console.log("IP: " + ip);
+            console.log("PeerCount:" + peerCount);
             console.log("-----------------------------");
             console.log("Scenario: " + scenario);
             console.log("Approach: " + approach);
@@ -92,11 +110,11 @@ module.exports = {
         /**
          * Send benchmark result via REST interface
          */
-        sendBenchmarkResults: async function (ip, scenario, approach, benchmarkID,
+        sendBenchmarkResults: async function (ip, peerCount, scenario, approach, benchmarkID,
                 usedGenesisJson, startTime, maxRuntime, runtime, maxRuntimeReached,
                 maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay) {
 
-                await restClient.logBenchmarkResult(ip, scenario, approach, benchmarkID, usedGenesisJson, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay);
+                await restClient.logBenchmarkResult(ip, peerCount, scenario, approach, benchmarkID, usedGenesisJson, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay);
             },
 
             /**

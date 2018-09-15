@@ -39,20 +39,22 @@ The goal is to benchmark metrics of differently configured Ethereum networks.
 ![Architecture](architecture_overview.png)
 
 ## TODO
-- ReadWrite scenario implementation
-- Increase Number of Open File Descriptors for EC2 Instances?
 - Amazon CloudFormation Service Templates for automatic node startup with "scripts/sh/install_node.sh"
 - Visualization of benchmark results via Python (matplotlib)
+- ReadWrite scenario implementation
+- Increase Number of Open File Descriptors for EC2 Instances?
 
 ## AWS EC2 Startup Procedure
 
-- Start a node with a geth bootnode and eth-netstats (automatic startup, not via REST api)
-- Save the IP of the bootnode to the storage folder and push to repo
-- Start other nodes (running geth and the REST api)
-- Deploy smart contract scenario from the master node (via REST)
+- Start REST API and mongoDB on master
+- Start REST API on bootnode/netstats
+- Start bootnode and netstats via REST command (send from master to bootnode/netstats)
+- Start REST API on nodes
+- Start Geth on nodes via REST command
+- Deploy smart contract scenario on a node (from master via REST communication)
 - Start benchmarks from master node (via REST)
-- Benchmark results are stored on the master DB
+- Benchmark results are stored on the master DB (send via REST from nodes to master)
 
 ## Local MongoDB
- - start via "mongo" 
+- start via "mongo" 
 - select last entries descending on startTime: "db.benchmarklogs.find().pretty().sort({"startTime":-1})"

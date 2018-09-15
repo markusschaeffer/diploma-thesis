@@ -10,6 +10,7 @@ const Schema = mongoose.Schema;
 //schema creation
 let BenchmarkLogSchema = new Schema({
     ip: {type: String},
+    peerCount: {type: Number},
     scenario: {type: String},
     approach: {type: Number},
     benchmarkID: {type: Number},

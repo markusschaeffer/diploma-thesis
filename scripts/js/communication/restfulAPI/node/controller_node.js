@@ -33,9 +33,10 @@ exports.startGeth = (req, res) => {
         //update current_genesis.txt @ node
         util.writeToFile(pathToRootFolder + "storage/current_genesis_node/current_genesis.txt", jsonRequest.genesis);
 
+        //update master_ip.txt @ node
+        util.writeToFile(pathToRootFolder + "storage/ips/master_ip.txt", jsonRequest.masterIP);
         //update bootnode_ip.txt @ node
         util.writeToFile(pathToRootFolder + "storage/ips/bootnode_ip.txt", jsonRequest.bootnodeIP);
-
         //update netstats_ip.txt @ node
         util.writeToFile(pathToRootFolder + "storage/ips/netstats_ip.txt", jsonRequest.netstatsIP);
         

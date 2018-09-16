@@ -11,6 +11,7 @@ const Schema = mongoose.Schema;
 let BenchmarkLogSchema = new Schema({
     ip: {type: String},
     peerCount: {type: Number},
+    hashRate: {type: Number},
     scenario: {type: String},
     approach: {type: Number},
     benchmarkID: {type: Number},

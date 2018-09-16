@@ -32,6 +32,7 @@ module.exports = {
             var txPerSecond = successfulTransactions / runtime;
             var ip;
             var peerCount;
+            var hashRate;
             const usedGenesisJson = util.readFileSync_lines(pathToRootFolder + "storage/current_genesis_node/current_genesis.txt")[0];
             const targetGasLimit = util.readFileSync_lines(pathToRootFolder + "storage/mining_settings/target_gas_limit.txt")[0];
             const mining = util.readFileSync_lines(pathToRootFolder + "storage/mining_settings/mining.txt")[0];
@@ -42,18 +43,22 @@ module.exports = {
             }).then(function () {
                 //query web3 peerCount
                 web3.eth.net.getPeerCount().then(function (_peerCount) {
-                        peerCount = _peerCount;
-                    })
-                    .then(function () {
+                    peerCount = _peerCount;
+                }).then(function () {
+                    //query current hash rate
+                    web3.eth.getHashrate().then(function (_hashRate) {
+                        hashRate = _hashRate;
+                    }).then(function () {
                         //print and send BenchmarkResults
-                        module.exports.printBenchmarkResults(ip, peerCount, scenario, approach, benchmarkID, usedGenesisJson, targetGasLimit, mining, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay);
+                        module.exports.printBenchmarkResults(ip, peerCount, hashRate, scenario, approach, benchmarkID, usedGenesisJson, targetGasLimit, mining, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay);
 
-                        module.exports.sendBenchmarkResults(ip, peerCount, scenario, approach, benchmarkID, usedGenesisJson, targetGasLimit, mining, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay)
+                        module.exports.sendBenchmarkResults(ip, peerCount, hashRate, scenario, approach, benchmarkID, usedGenesisJson, targetGasLimit, mining, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay)
                             .then(function () {
                                 util.printFormatedMessage("KILLING PROCESS");
                                 process.exit(0);
                             });
                     })
+                })
             });
         },
 
@@ -79,7 +84,7 @@ module.exports = {
         /**
          * Print result of benchmark to stdout
          */
-        printBenchmarkResults: function (ip, peerCount, scenario, approach, benchmarkID, usedGenesisJson,
+        printBenchmarkResults: function (ip, peerCount, hashRate, scenario, approach, benchmarkID, usedGenesisJson,
             targetGasLimit, mining, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions,
             maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay) {
 
@@ -87,6 +92,7 @@ module.exports = {
             console.log("----------BENCHMARK RESULT----------");
             console.log("IP: " + ip);
             console.log("PeerCount:" + peerCount);
+            console.log("HashRate:" + hashRate);
             console.log("-----------------------------");
             console.log("Scenario: " + scenario);
             console.log("Approach: " + approach);
@@ -114,11 +120,11 @@ module.exports = {
         /**
          * Send benchmark result via REST interface
          */
-        sendBenchmarkResults: async function (ip, peerCount, scenario, approach, benchmarkID,
+        sendBenchmarkResults: async function (ip, peerCount, hashRate, scenario, approach, benchmarkID,
                 usedGenesisJson, targetGasLimit, mining, startTime, maxRuntime, runtime, maxRuntimeReached,
                 maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay) {
 
-                await restClient.logBenchmarkResult(ip, peerCount, scenario, approach, benchmarkID, usedGenesisJson, targetGasLimit, mining, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay);
+                await restClient.logBenchmarkResult(ip, peerCount, hashRate, scenario, approach, benchmarkID, usedGenesisJson, targetGasLimit, mining, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay);
             },
 
             /**

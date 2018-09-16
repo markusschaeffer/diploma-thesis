@@ -5,13 +5,15 @@
 var util = require('./../../util/util');
 var clientUtil = require('./clientUtil');
 
+const pathToRootFolder = __dirname + "/../../../../";
+
 module.exports = {
 
-    logBenchmarkResult: async function (ip, peerCount, scenario, approach, benchmarkID, usedGenesisJson, targetGasLimit, mining, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageDelay) {
+    logBenchmarkResult: async function (ip, peerCount, hashRate, scenario, approach, benchmarkID, usedGenesisJson, targetGasLimit, mining, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageDelay) {
         util.printFormatedMessage("SENDING logBenchmarkResult REQUEST");
 
-        var masterIP = util.readFileSync_lines(__dirname + "/../../../../storage/ips/master_ip.txt")[0];
-        var port = util.readFileSync_lines(__dirname + "/../../../../storage/ports/master_port.txt")[0];
+        var masterIP = util.readFileSync_lines(pathToRootFolder + "storage/ips/master_ip.txt")[0];
+        var port = util.readFileSync_lines(pathToRootFolder + "storage/ports/master_port.txt")[0];
 
         let options = {
             method: 'POST',
@@ -19,6 +21,7 @@ module.exports = {
             body: {
                 ip: ip,
                 peerCount: peerCount,
+                hashRate: hashRate,
                 scenario: scenario,
                 approach: approach,
                 benchmarkID: benchmarkID,

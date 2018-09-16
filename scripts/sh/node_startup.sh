@@ -113,6 +113,7 @@ sudo chmod 777 $logfile
 #--password value  	    Password file to use for non-interactive password input
 #--etherbase 		    Public address for block mining rewards (default = first account created) (default: "0")
 #--mine 		        Enable mining
+#--metrics              Enable metrics collection and reporting
 #--minerthreads 	    Number of CPU threads to use for mining (default: 8)
 
 sudo fuser -k $portValue/tcp #kill a possibly running process on the tcp geth port
@@ -143,7 +144,8 @@ if [ "$mining" = true ]; then
         --password $ETH_DIR/node-$nodeIndex/password.txt \
         --etherbase 0 \
         --mine \ #mining enabled
-        --minerthreads 8 & 
+        --metrics \ #enabled for querying eth.hashrate
+        --minerthreads 8 &
 else
     geth \
         --datadir $ETH_DIR/node-$nodeIndex/ \
@@ -167,7 +169,6 @@ else
         --targetgaslimit $target_gas_limit \
         --unlock 0 \
         --password $ETH_DIR/node-$nodeIndex/password.txt \
-        --etherbase 0 \
-        --minerthreads 8 &
+        --etherbase 0 &
 fi
     

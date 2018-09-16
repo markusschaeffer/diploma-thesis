@@ -11,13 +11,12 @@ The goal is to benchmark metrics of differently configured Ethereum networks.
 ## Ethereum Network Parameters
 - Consensus Algorithm
     - Proof of Work (Ethash)
-        - Mining Difficulty
-        - Block gas limit
+        - Mining difficulty
         - Number of miners in the network
     - Proof of Authority (Clique)
         - Period
-        - Block gas limit
         - Number of sealers in the network    
+- Block gas limit
 - Number of nodes in the network
 - Power of nodes in the network (CPU, RAM) 
 

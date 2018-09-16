@@ -14,15 +14,12 @@ The goal is to benchmark metrics of differently configured Ethereum networks.
         - Mining Difficulty
         - Block gas limit
         - Number of miners in the network
-        - Quantity of minerthreads
     - Proof of Authority (Clique)
         - Period
         - Block gas limit
         - Number of sealers in the network    
 - Number of nodes in the network
 - Power of nodes in the network (CPU, RAM) 
-- Blockchain sync mode ("fast", "full", or "light")
-- Further performance tuning options of the GETH client (e.g. Megabytes of memory allocated to internal caching)
 
 ## Metrics
 - Throughput: the number of successful transactions per second.

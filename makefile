@@ -18,8 +18,10 @@
 
 current_dir = $(shell pwd)
 genesisFile=`cat $(current_dir)/storage/current_genesis_node/current_genesis.txt`
-netstats_ip=`cat $(current_dir)/storage/ips/netstats_ip.txt`
+target_gas_limit=`cat $(current_dir)/storage/mining_settings/target_gas_limit.txt`
+mining=`cat $(current_dir)/storage/mining_settings/mining.txt`
 bootnode_ip=`cat $(current_dir)/storage/ips/bootnode_ip.txt`
+netstats_ip=`cat $(current_dir)/storage/ips/netstats_ip.txt`
 geth_httpPort_node0=`cat $(current_dir)/storage/ports/geth_http_port_node0.txt`
 geth_httpPort_node1=`cat $(current_dir)/storage/ports/geth_http_port_node1.txt`
 
@@ -74,7 +76,7 @@ genesis_create:
 #$5: name of genesis.json
 
 geth_node0_startup:
-	cd scripts/sh; sudo ./node_startup.sh 0 $(netstats_ip) $(bootnode_ip) $(current_dir)/genesis_json_files/$(genesisFile) $(genesisFile)
+	cd scripts/sh; sudo ./node_startup.sh 0 $(netstats_ip) $(bootnode_ip) $(current_dir)/genesis_json_files/$(genesisFile) $(genesisFile) $(target_gas_limit) $(mining)
 
 geth_node0_stop:
 	cd scripts/sh; sudo ./node_stop.sh 0
@@ -83,7 +85,7 @@ geth_node0_resume:
 	cd scripts/sh; sudo ./node_resume.sh 0
 
 geth_node1_startup:
-	cd scripts/sh; sudo ./node_startup.sh 1 $(netstats_ip) $(bootnode_ip) $(current_dir)/genesis_json_files/$(genesisFile) $(genesisFile)
+	cd scripts/sh; sudo ./node_startup.sh 1 $(netstats_ip) $(bootnode_ip) $(current_dir)/genesis_json_files/$(genesisFile) $(genesisFile) $(target_gas_limit) $(mining)
 
 geth_node1_stop:
 	cd scripts/sh; sudo ./node_stop.sh 1

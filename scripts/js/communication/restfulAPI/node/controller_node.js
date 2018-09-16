@@ -30,14 +30,18 @@ exports.startGeth = (req, res) => {
         util.printFormatedMessage(ip + " RECEIVED startGeth REQUEST");
         const jsonRequest = req.body;
 
-        //update current_genesis.txt @ node
+        //update current_genesis.txt
         util.writeToFile(pathToRootFolder + "storage/current_genesis_node/current_genesis.txt", jsonRequest.genesis);
+        //update target_gas_limit.txt
+        util.writeToFile(pathToRootFolder + "storage/mining_settings/target_gas_limit.txt", jsonRequest.targetGasLimit);
+        //update mining.txt
+        util.writeToFile(pathToRootFolder + "storage/mining_settings/mining.txt", jsonRequest.mining);
 
-        //update master_ip.txt @ node
+        //update master_ip.txt
         util.writeToFile(pathToRootFolder + "storage/ips/master_ip.txt", jsonRequest.masterIP);
-        //update bootnode_ip.txt @ node
+        //update bootnode_ip.txt
         util.writeToFile(pathToRootFolder + "storage/ips/bootnode_ip.txt", jsonRequest.bootnodeIP);
-        //update netstats_ip.txt @ node
+        //update netstats_ip.txt
         util.writeToFile(pathToRootFolder + "storage/ips/netstats_ip.txt", jsonRequest.netstatsIP);
         
         //start geth client

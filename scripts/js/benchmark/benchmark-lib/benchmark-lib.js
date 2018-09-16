@@ -33,6 +33,8 @@ module.exports = {
             var ip;
             var peerCount;
             const usedGenesisJson = util.readFileSync_lines(pathToRootFolder + "storage/current_genesis_node/current_genesis.txt")[0];
+            const targetGasLimit = util.readFileSync_lines(pathToRootFolder + "storage/mining_settings/target_gas_limit.txt")[0];
+            const mining = util.readFileSync_lines(pathToRootFolder + "storage/mining_settings/mining.txt")[0];
 
             //query public ip
             publicIp.v4().then(function (_ip) {
@@ -44,9 +46,9 @@ module.exports = {
                     })
                     .then(function () {
                         //print and send BenchmarkResults
-                        module.exports.printBenchmarkResults(ip, peerCount, scenario, approach, benchmarkID, usedGenesisJson, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay);
+                        module.exports.printBenchmarkResults(ip, peerCount, scenario, approach, benchmarkID, usedGenesisJson, targetGasLimit, mining, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay);
 
-                        module.exports.sendBenchmarkResults(ip, peerCount, scenario, approach, benchmarkID, usedGenesisJson, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay)
+                        module.exports.sendBenchmarkResults(ip, peerCount, scenario, approach, benchmarkID, usedGenesisJson, targetGasLimit, mining, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay)
                             .then(function () {
                                 util.printFormatedMessage("KILLING PROCESS");
                                 process.exit(0);
@@ -78,7 +80,7 @@ module.exports = {
          * Print result of benchmark to stdout
          */
         printBenchmarkResults: function (ip, peerCount, scenario, approach, benchmarkID, usedGenesisJson,
-            startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions,
+            targetGasLimit, mining, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions,
             maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay) {
 
             console.log("\n");
@@ -91,8 +93,10 @@ module.exports = {
             console.log("BenchmarkID: " + benchmarkID);
             console.log("-----------------------------");
             console.log("Genesis.json: " + usedGenesisJson);
-            console.log("Starttime: " + startTime);
+            console.log("TargetGasLimit: " + targetGasLimit);
+            console.log("Mining: " + mining);
             console.log("-----------------------------");
+            console.log("Starttime: " + startTime);
             console.log("MaxRuntime: " + maxRuntime);
             console.log("Runtime: " + runtime);
             console.log("MaxRuntime reached: " + maxRuntimeReached);
@@ -111,10 +115,10 @@ module.exports = {
          * Send benchmark result via REST interface
          */
         sendBenchmarkResults: async function (ip, peerCount, scenario, approach, benchmarkID,
-                usedGenesisJson, startTime, maxRuntime, runtime, maxRuntimeReached,
+                usedGenesisJson, targetGasLimit, mining, startTime, maxRuntime, runtime, maxRuntimeReached,
                 maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay) {
 
-                await restClient.logBenchmarkResult(ip, peerCount, scenario, approach, benchmarkID, usedGenesisJson, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay);
+                await restClient.logBenchmarkResult(ip, peerCount, scenario, approach, benchmarkID, usedGenesisJson, targetGasLimit, mining, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay);
             },
 
             /**

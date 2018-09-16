@@ -1,14 +1,16 @@
 #!/bin/bash
 
-#HTTP ports 8100-81** (--rpc)
-#WS ports 8500-85** (--ws)
-
-# Geth node startup incl. mining
+# Geth node startup
 # $1:node index
 # $2:netstats_ip
 # $3:bootnode ip
 # $4:path to genesis file
 # $5:genesis name
+# $6:target_gas_limit
+# $7:mining
+
+#HTTP ports 8100-81** (--rpc)
+#WS ports 8500-85** (--ws)
 
 . env.sh
 set -x #echo on
@@ -18,6 +20,12 @@ netstats_ip=$2
 bootnode_ip=$3
 path_to_genesis_file=$4
 genesis_name=$5
+target_gas_limit=$6
+mining=$7
+
+#if target_gas_limit or mining_enable not set assing default values
+target_gas_limit="${target_gas_limit:-4712388}"
+mining="${mining:-true}"
 
 ##########1) create account for node##########
 cd $SHFOLDER
@@ -82,9 +90,7 @@ sudo chmod 777 $logfile
 #--datadir 		        Data directory for the databases and keystore
 #--identity 		    Custom node name
 #-networkid 		    Network identifier (integer, 1=Frontier, 2=Morden (disused), 3=Ropsten, 4=Rinkeby) (default: 1)
-#--nodiscover 		    Disables the peer discovery mechanism (manual peer addition)
 #--ipcpath 		        Filename for IPC socket/pipe within the datadir (explicit paths escape it)
-#--syncmode 		    Blockchain sync mode ("fast", "full", or "light")
 #--port 		        Network listening port (default: 30303)
 
 #--rpc                  Enable the HTTP-RPC server
@@ -112,29 +118,56 @@ sudo chmod 777 $logfile
 sudo fuser -k $portValue/tcp #kill a possibly running process on the tcp geth port
 
 #with inlcuded ethstats (without eth-net-intelligence-api)
-geth \
-    --datadir $ETH_DIR/node-$nodeIndex/ \
-    --identity 'node-'$nodeIndex \
-    --networkid "$NETWORK_ID" \
-    --ipcpath $node_ipcpath \
-    --syncmode 'full' \
-    --port $portValue \
-    --rpc \
-    --rpcaddr $rpcaddrValue \
-    --rpcport $rpcportValue \
-    --rpcapi $RPCAPI \
-    --rpccorsdomain "*" \
-    --ws \
-    --wsaddr $wsaddrValue \
-    --wsport $wsportValue \
-    --wsapi $WSAPI \
-    --wsorigins "*" \
-    --bootnodes $bootnode_address \
-    --ethstats $netstats_address \
-    --gasprice $GAS_PRICE \
-    --unlock 0 \
-    --password $ETH_DIR/node-$nodeIndex/password.txt \
-    --etherbase 0 \
-    --mine \
-    --minerthreads 8 &
-#todo: decide if > $logfile 2>&1 &
+if [ "$mining" = true ]; then
+    geth \
+        --datadir $ETH_DIR/node-$nodeIndex/ \
+        --identity 'node-'$nodeIndex \
+        --networkid "$NETWORK_ID" \
+        --ipcpath $node_ipcpath \
+        --port $portValue \
+        --rpc \
+        --rpcaddr $rpcaddrValue \
+        --rpcport $rpcportValue \
+        --rpcapi $RPCAPI \
+        --rpccorsdomain "*" \
+        --ws \
+        --wsaddr $wsaddrValue \
+        --wsport $wsportValue \
+        --wsapi $WSAPI \
+        --wsorigins "*" \
+        --bootnodes $bootnode_address \
+        --ethstats $netstats_address \
+        --gasprice $GAS_PRICE \
+        --targetgaslimit $target_gas_limit \
+        --unlock 0 \
+        --password $ETH_DIR/node-$nodeIndex/password.txt \
+        --etherbase 0 \
+        --mine \ #mining enabled
+        --minerthreads 8 & 
+else
+    geth \
+        --datadir $ETH_DIR/node-$nodeIndex/ \
+        --identity 'node-'$nodeIndex \
+        --networkid "$NETWORK_ID" \
+        --ipcpath $node_ipcpath \
+        --port $portValue \
+        --rpc \
+        --rpcaddr $rpcaddrValue \
+        --rpcport $rpcportValue \
+        --rpcapi $RPCAPI \
+        --rpccorsdomain "*" \
+        --ws \
+        --wsaddr $wsaddrValue \
+        --wsport $wsportValue \
+        --wsapi $WSAPI \
+        --wsorigins "*" \
+        --bootnodes $bootnode_address \
+        --ethstats $netstats_address \
+        --gasprice $GAS_PRICE \
+        --targetgaslimit $target_gas_limit \
+        --unlock 0 \
+        --password $ETH_DIR/node-$nodeIndex/password.txt \
+        --etherbase 0 \
+        --minerthreads 8 &
+fi
+    

@@ -7,13 +7,15 @@ const clientUtil = require('./clientUtil');
 
 module.exports = {
 
-    startGeth: function (ip, port, genesis, masterIP, bootnodeIP, netstatsIP) {
+    startGeth: function (ip, port, genesis, targetGasLimit, mining, masterIP, bootnodeIP, netstatsIP) {
         util.printFormatedMessage("SENDING startGeth REQUEST to " + ip);
         let options = {
             method: 'POST',
             uri: 'http://' + ip + ':' + port + '/node-geth-start',
             body: {
                 genesis: genesis,
+                targetGasLimit: targetGasLimit,
+                mining: mining,
                 masterIP: masterIP,
                 bootnodeIP: bootnodeIP,
                 netstatsIP: netstatsIP

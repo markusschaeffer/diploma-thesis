@@ -15,6 +15,8 @@ let BenchmarkLogSchema = new Schema({
     approach: {type: Number},
     benchmarkID: {type: Number},
     usedGenesisJson: {type: String},
+    targetGasLimit: {type: Number},
+    mining: {type: Boolean},
     startTime: {type: Date},
     maxRuntime: {type: Number},
     runtime: {type: Number},

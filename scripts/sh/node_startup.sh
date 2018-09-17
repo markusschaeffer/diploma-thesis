@@ -143,8 +143,8 @@ if [ "$mining" = true ]; then
         --unlock 0 \
         --password $ETH_DIR/node-$nodeIndex/password.txt \
         --etherbase 0 \
-        --mine \ #mining enabled
-        --metrics \ #enabled for querying eth.hashrate
+        --mine \
+        --metrics \
         --minerthreads 8 &
 else
     geth \

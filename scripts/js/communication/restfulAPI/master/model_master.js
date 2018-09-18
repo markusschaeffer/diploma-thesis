@@ -12,6 +12,7 @@ let BenchmarkLogSchema = new Schema({
     ip: {type: String},
     peerCount: {type: Number},
     hashRate: {type: Number},
+    instanceType: {type: String},
     scenario: {type: String},
     approach: {type: Number},
     benchmarkID: {type: Number},

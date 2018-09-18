@@ -13,13 +13,17 @@ module.exports = {
      */
     saveContractAddress: function (filePath, address) {
 
-        var appendString = address + "\n";
-        fs.appendFile(filePath, appendString, function (err) {
-            if (err) {
-                return console.log(err);
-            }
-            console.log("Contract address was saved to file");
-        });
+        try {
+            var appendString = address + "\n";
+            fs.appendFile(filePath, appendString, function (err) {
+                if (err) {
+                    return console.log(err);
+                }
+                console.log("Contract address was saved to file " + filePath);
+            });
+        } catch (error) {
+            console.log(error);
+        }
     },
 
     readLineFromFile: function (filePath) {

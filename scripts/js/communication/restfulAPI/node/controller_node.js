@@ -6,6 +6,7 @@ const exec = require('child_process').exec;
 const spawn = require('child_process').spawn;
 const util = require('./../../../util/util.js');
 const publicIp = require('public-ip');
+const client = require('./../../restfulClient/client_node.js');
 
 //instantiate web3
 const Web3 = require('web3');
@@ -36,6 +37,8 @@ exports.startGeth = (req, res) => {
         util.writeToFile(pathToRootFolder + "storage/mining_settings/target_gas_limit.txt", jsonRequest.targetGasLimit);
         //update mining.txt
         util.writeToFile(pathToRootFolder + "storage/mining_settings/mining.txt", jsonRequest.mining);
+        //update instance_settings.txt
+        util.writeToFile(pathToRootFolder + "storage/instance_settings/instance_type.txt", jsonRequest.instanceType);
 
         //update master_ip.txt
         util.writeToFile(pathToRootFolder + "storage/ips/master_ip.txt", jsonRequest.masterIP);
@@ -43,7 +46,7 @@ exports.startGeth = (req, res) => {
         util.writeToFile(pathToRootFolder + "storage/ips/bootnode_ip.txt", jsonRequest.bootnodeIP);
         //update netstats_ip.txt
         util.writeToFile(pathToRootFolder + "storage/ips/netstats_ip.txt", jsonRequest.netstatsIP);
-        
+
         //start geth client
         var child = spawn("cd " + pathToRootFolder + "; make geth_start;", {
             stdio: 'inherit',
@@ -93,6 +96,7 @@ exports.getPeerCount = (req, res) => {
  */
 exports.deployContract = (req, res) => {
 
+    var scenario;
     var ip;
     publicIp.v4().then(function (_ip) {
         ip = _ip;
@@ -101,6 +105,7 @@ exports.deployContract = (req, res) => {
         var jsonRequest = req.body;
         switch (jsonRequest.scenario) {
             case 'account':
+                scenario = "account";
                 new Promise(function (resolve, reject) {
                         //deploy contract(s) via make rule
                         var child = exec("cd " + pathToRootFolder + "; make sc_deploy_accounts;", function (error, stdout, stderr) {
@@ -111,21 +116,23 @@ exports.deployContract = (req, res) => {
                         // attach listeners to the stdout and stderr.
                         exports.attachListeners(child);
 
+                        res.end(JSON.stringify("Contract deployment for scenario" + scenario + " initianted"));
                     }).then(function () {
+                        util.printFormatedMessage("HHHEEERRRRREEEEE");
                         //get contract addresses from storage folder of server
                         var filePath = pathToRootFolder + "storage/contract_addresses_node/account.txt";
                         var addresses = util.readFileSync_lines(filePath);
-                        res.end(JSON.stringify({
-                            accountDeployed: true,
-                            address1: addresses[0],
-                            address2: addresses[1]
-                        }));
+
+                        //send addresses to master
+                        client.sendContractAddresses(scenario, addresses[0]);
+                        client.sendContractAddresses(scenario, addresses[1]);
                     })
                     .catch(error => {
                         res.end(JSON.stringify(ip + ": NOK - " + error));
                     });
                 break;
             case 'ballot':
+                scenario = "ballot";
                 new Promise(function (resolve, reject) {
                         //deploy contract(s) via make rule
                         var child = exec("cd " + pathToRootFolder + "; make sc_deploy_ballot;", function (error, stdout, stderr) {
@@ -136,20 +143,22 @@ exports.deployContract = (req, res) => {
                         // attach listeners to the stdout and stderr.
                         exports.attachListeners(child);
 
+                        res.end(JSON.stringify("Contract deployment for scenario" + scenario + " initianted"));
+
                     }).then(function () {
                         //get contract addresses from storage folder of server
                         var filePath = pathToRootFolder + "storage/contract_addresses_node/ballot.txt";
                         var address = util.readFileSync_lines(filePath)[0];
-                        res.end(JSON.stringify({
-                            ballotDeployed: true,
-                            address: address
-                        }));
+
+                        //send addresses to master
+                        client.sendContractAddresses(scenario, address[0]);
                     })
                     .catch(error => {
                         res.end(JSON.stringify(ip + ": NOK - " + error));
                     });
                 break;
             case 'readWrite':
+                scenario = "readWrite";
                 //TODO------------------------------------------------------------------------------------------------
                 break;
             default:

@@ -9,9 +9,6 @@ sudo apt-get update
 sudo apt-get install ntp
 sudo service ntp start
 
-#Make
-sudo apt-get install make
-
 #GNU C COmpiler
 sudo apt-get install gcc
 
@@ -41,34 +38,27 @@ export PATH=~/.npm-global/:$PATH # Open or create a ~/.profile file and add this
 
 ###NPM INSTALLATIONS###
 
-#change to root directory of project for npm link creation
-cd $ROOT_DIR
-
 #Express Framework and body-parser
 npm install -g express
-npm link express
 npm install -g body-parser
-npm link body-parser
 
 #web3 (needs make, g++ and gcc)
 npm install -g web3
-npm link web3
 
 #time-stamp for node scripts
 npm install -g time-stamp
-npm link time-stamp
 
 #request and request-promise for RESTful client
 npm install -g request
-npm link request
 npm install -g request-promise
-npm link request-promise
 
 #read-last-N-lines of files
 npm install -g read-last-lines
-npm link read-last-lines
 
 #public ip
 #https://www.npmjs.com/package/public-ip
 npm install -g public-ip
-npm link public-ip
+
+#make npm links to global packages in the project directory
+cd scripts/sh
+bash install_node_npm_links.sh

@@ -15,4 +15,24 @@ module.exports = (app) => {
      */
     app.route('/master-contract-address-receive')
         .post(controller.storeContractAddress);
+
+    /**
+     * store the bootnode ip
+     */
+    app.route('/master-store-ip-bootnode')
+    .post(controller.storeBootnodeIP);
+
+    /**
+     * store the netstats ip
+     */
+    app.route('/master-store-ip-netstats')
+    .post(controller.storeNetstatsIP);
+
+    /**
+     * store a node ip
+     */
+    app.route('/master-store-ip-node')
+    .post(controller.storeNodeIP);
+
+
 }

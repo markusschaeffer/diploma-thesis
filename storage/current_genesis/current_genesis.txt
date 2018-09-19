@@ -1,1 +1,1 @@
-genesis_pow_difficulty_0x400_gasLimit_double.json
+genesis_poa_period_1.json

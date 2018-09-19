@@ -1,19 +1,18 @@
 /**
- * Client (master) for REST communication
+ * Client (node) for REST communication
  */
 
 var util = require('./../../util/util');
 var clientUtil = require('./clientUtil');
 
 const pathToRootFolder = __dirname + "/../../../../";
+const masterIP = util.readFileSync_lines(pathToRootFolder + "storage/ips/master_ip.txt")[0];
+const port = util.readFileSync_lines(pathToRootFolder + "storage/ports/master_port.txt")[0];
 
 module.exports = {
 
     logBenchmarkResult: async function (ip, peerCount, hashRate, instanceType, scenario, approach, benchmarkID, usedGenesisJson, targetGasLimit, mining, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageDelay) {
             util.printFormatedMessage("SENDING logBenchmarkResult REQUEST");
-
-            var masterIP = util.readFileSync_lines(pathToRootFolder + "storage/ips/master_ip.txt")[0];
-            var port = util.readFileSync_lines(pathToRootFolder + "storage/ports/master_port.txt")[0];
 
             let options = {
                 method: 'POST',
@@ -48,15 +47,27 @@ module.exports = {
         sendContractAddresses: async function (scenario, address) {
             util.printFormatedMessage("SENDING sendContractAddresses REQUEST");
 
-            var masterIP = util.readFileSync_lines(pathToRootFolder + "storage/ips/master_ip.txt")[0];
-            var port = util.readFileSync_lines(pathToRootFolder + "storage/ports/master_port.txt")[0];
-
             let options = {
                 method: 'POST',
                 uri: 'http://' + masterIP + ':' + port + '/master-contract-address-receive',
                 body: {
                     scenario: scenario,
                     address: address
+                },
+                json: true
+            };
+
+            await clientUtil.sendRequest(options);
+        },
+
+        sendNodeIP: async function (ip) {
+            util.printFormatedMessage("SENDING sendNodeIP REQUEST");
+
+            let options = {
+                method: 'POST',
+                uri: 'http://' + masterIP + ':' + port + '/master-store-ip-node',
+                body: {
+                    ip: ip
                 },
                 json: true
             };

@@ -1,5 +1,5 @@
 /**
- * Client (node) for REST communication
+ * Client (master) for REST communication
  */
 
 const util = require('./../../util/util');

@@ -26,6 +26,24 @@ module.exports = {
         }
     },
 
+    /**
+     * appends a text to a file
+     */
+    appendToFile: function (filePath, text) {
+
+        try {
+            var appendString = text + "\n";
+            fs.appendFile(filePath, appendString, function (err) {
+                if (err) {
+                    return console.log(err);
+                }
+                console.log(text + " has been appended to file " + filePath);
+            });
+        } catch (error) {
+            console.log(error);
+        }
+    },
+
     readLineFromFile: function (filePath) {
 
         const rl = readline.createInterface({

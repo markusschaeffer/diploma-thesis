@@ -7,6 +7,8 @@ const app = express();
 const bodyParser = require('body-parser')
 const routes = require("./routes_bootnode-netstats");
 const util = require('./../../../util/util.js');
+const client = require("./../../restfulClient/client_bootnode-netstats")
+const publicIp = require('public-ip');
 
 const pathToRootFolder = __dirname + "/../../../../../";
 const serverPort = Number(util.readFileSync_lines(pathToRootFolder + "storage/ports/bootnode_port.txt")[0]);
@@ -21,7 +23,13 @@ routes(app); // register routes
 
 //start the server
 var server = app.listen(serverPort, function () {
-    var host = server.address().address
-    var port = server.address().port
-    console.log("Bootnode-Netstats REST server listening at http://%s:%s", host, port)
+    var host = server.address().address;
+    var port = server.address().port;
+    console.log("Bootnode-Netstats REST server listening at http://%s:%s", host, port);
+
+    //send bootnode and netstats ip to master
+    publicIp.v4().then(function (_ip) {
+        client.sendBootnodeIP(_ip);
+        client.sendNetstatsIP(_ip);
+    });
 })

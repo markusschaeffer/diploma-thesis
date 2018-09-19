@@ -7,6 +7,8 @@ const app = express();
 const bodyParser = require('body-parser')
 const routes = require("./routes_node");
 const util = require('./../../../util/util.js');
+const client = require("./../../restfulClient/client_node")
+const publicIp = require('public-ip');
 
 const pathToRootFolder = __dirname + "/../../../../../";
 const serverPort = Number(util.readFileSync_lines(pathToRootFolder + "storage/ports/node_port.txt")[0]);
@@ -24,4 +26,9 @@ var server = app.listen(serverPort, function () {
     var host = server.address().address
     var port = server.address().port
     console.log("Benchmark recording app listening at http://%s:%s", host, port)
+
+    //send node ip to master
+    publicIp.v4().then(function (_ip) {
+        client.sendNodeIP(_ip);
+    });
 })

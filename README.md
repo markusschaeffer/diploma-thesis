@@ -38,7 +38,6 @@ The goal is to benchmark metrics of differently configured Ethereum networks.
 - Amazon CloudFormation Service Templates for automatic node startup with "scripts/sh/install_node.sh"
 - Visualization of benchmark results via Python (matplotlib)
 - ReadWrite scenario implementation
-- Increase Number of Open File Descriptors for EC2 Instances?
 
 ## AWS EC2 Startup Procedure
 

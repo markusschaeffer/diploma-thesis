@@ -6,29 +6,29 @@ set -x #echo on
 
 #Network Time Protocol for time sync
 sudo apt-get update
-sudo apt-get install ntp
+sudo apt-get install ntp -y
 sudo service ntp start
 
 #GNU C COmpiler
-sudo apt-get install gcc
+sudo apt-get install gcc -y
 
 #G++
-sudo apt-get install g++
+sudo apt-get install g++ -y
 
 #Ethereum(Geth-Client)
-sudo apt-get install software-properties-common
-sudo add-apt-repository -y ppa:ethereum/ethereum
-sudo apt-get update
-sudo apt-get install ethereum
+sudo apt-get install software-properties-common -y
+sudo add-apt-repository -y ppa:ethereum/ethereum -y
+sudo apt-get update -y
+sudo apt-get install ethereum -y
 
 #NodeJS and NPM (do not use apt-get install npm)
-sudo apt-get install curl
+sudo apt-get install curl -y
 curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
 sudo apt-get install -y nodejs # npm is installed with nodejs
 
 #Docker and Docker-Compose
-sudo apt-get install docker
-sudo apt-get install docker-compose
+sudo apt-get install docker -y
+sudo apt-get install docker-compose -y
 
 #FIX FOR NPM EACCESS Error (required for global npm installations)
 #https://docs.npmjs.com/getting-started/fixing-npm-permissions

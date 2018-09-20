@@ -58,9 +58,15 @@ module.exports = {
 
     readFileSync_lines: function (filePath) {
         try {
-
             var text = fs.readFileSync(filePath, 'utf8');
-            return text.split(os.EOL);
+            var text_splitted = text.split(os.EOL);
+            
+            //remove last line if blank
+            if (text_splitted[text_splitted.length - 1] == "") {
+                text_splitted = text_splitted.slice(0, -1);
+            }
+
+            return text_splitted;
         } catch (e) {
             throw new Error("Error at reading file " + filePath + "\n " + e);
         }

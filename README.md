@@ -34,20 +34,14 @@ The goal is to benchmark metrics of differently configured Ethereum networks.
 
 ![Architecture](architecture_overview.png)
 
-## TODO
-- Amazon CloudFormation Service Templates for automatic node startup with "scripts/sh/install_node.sh"
-- Visualization of benchmark results via Python (matplotlib)
-- ReadWrite scenario implementation
-
 ## AWS EC2 Startup Procedure
 
-- Start REST API and mongoDB on master
-- Start REST API on bootnode/netstats
-- Start bootnode and netstats via REST command (send from master to bootnode/netstats)
-- Start REST API on nodes
-- Start Geth on nodes via REST command
-- Deploy smart contract scenario on a node (from master via REST communication)
-- Start benchmarks from master node (via REST)
+- Start REST API and mongoDB on master (via "make master_start")
+- Use One of the provided templates for AWS to startup a stack (required software is installed and REST APIs are automatically started on instance startup)
+- Start bootnode and netstats (via REST: "node startBootnodeAndNetstats.js")
+- Start Geth on nodes (via REST: "node startGethOnNodes.js")
+- Deploy smart contract scenario on a node (via REST: e.g. "node deployContracts.js account" or "node deployContracts.js ballot")
+- Start benchmarks from master node (via REST: "node startBenchmark.js account" or "node startBenchmark.js ballot")
 - Benchmark results are stored on the master DB (send via REST from nodes to master)
 
 ## Local MongoDB

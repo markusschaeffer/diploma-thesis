@@ -116,9 +116,8 @@ exports.deployContract = (req, res) => {
                         // attach listeners to the stdout and stderr.
                         exports.attachListeners(child);
 
-                        res.end(JSON.stringify("Contract deployment for scenario" + scenario + " initianted"));
+                        res.end(JSON.stringify("Contract deployment for scenario " + scenario + " initianted"));
                     }).then(function () {
-                        util.printFormatedMessage("HHHEEERRRRREEEEE");
                         //get contract addresses from storage folder of server
                         var filePath = pathToRootFolder + "storage/contract_addresses_node/account.txt";
                         var addresses = util.readFileSync_lines(filePath);
@@ -143,15 +142,14 @@ exports.deployContract = (req, res) => {
                         // attach listeners to the stdout and stderr.
                         exports.attachListeners(child);
 
-                        res.end(JSON.stringify("Contract deployment for scenario" + scenario + " initianted"));
+                        res.end(JSON.stringify("Contract deployment for scenario " + scenario + " initianted"));
 
                     }).then(function () {
                         //get contract addresses from storage folder of server
                         var filePath = pathToRootFolder + "storage/contract_addresses_node/ballot.txt";
                         var address = util.readFileSync_lines(filePath)[0];
-
                         //send addresses to master
-                        client.sendContractAddresses(scenario, address[0]);
+                        client.sendContractAddresses(scenario, address);
                     })
                     .catch(error => {
                         res.end(JSON.stringify(ip + ": NOK - " + error));

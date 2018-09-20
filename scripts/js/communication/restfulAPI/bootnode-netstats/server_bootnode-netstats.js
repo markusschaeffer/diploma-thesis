@@ -12,6 +12,8 @@ const publicIp = require('public-ip');
 
 const pathToRootFolder = __dirname + "/../../../../../";
 const serverPort = Number(util.readFileSync_lines(pathToRootFolder + "storage/ports/bootnode_port.txt")[0]);
+const localIP = util.readFileSync_lines(pathToRootFolder + "storage/ips/local_ip.txt")[0];
+const mode = process.argv[2];
 
 // handle incoming requests
 app.use(bodyParser.urlencoded({
@@ -28,8 +30,13 @@ var server = app.listen(serverPort, function () {
     console.log("Bootnode-Netstats REST server listening at http://%s:%s", host, port);
 
     //send bootnode and netstats ip to master
-    publicIp.v4().then(function (_ip) {
-        client.sendBootnodeIP(_ip);
-        client.sendNetstatsIP(_ip);
-    });
+    if (mode != "local") {
+        publicIp.v4().then(function (_ip) {
+            client.sendBootnodeIP(_ip);
+            client.sendNetstatsIP(_ip);
+        });
+    } else {
+        client.sendBootnodeIP(localIP);
+        client.sendNetstatsIP(localIP);
+    }
 })

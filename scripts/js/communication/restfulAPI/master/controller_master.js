@@ -13,9 +13,6 @@ const pathToRootFolder = __dirname + "/../../../../../";
 exports.logBenchmark = (req, res) => {
 
     util.printFormatedMessage("RECEIVED logBenchmark REQUEST");
-    var jsonRequest = req.body;
-    console.log(jsonRequest);
-
     let newBenchmarkLog = new BenchmarkLog(req.body);
     util.printFormatedMessage("TRYING TO SAVE BENCHMARK LOG RESULT TO DB");
     newBenchmarkLog.save((err, result) => {

@@ -43,13 +43,13 @@ echo "$genesis_name" > current_genesis.txt
 cd $ETH_DIR
 
 #NETSTATS
-netstats_address='node-'$nodeIndex:$WSSECRET@$netstats_ip:$NETSTATS_PORT
+netstats_address='node-'$WANIP'-'$nodeIndex:$WSSECRET@$netstats_ip:$NETSTATS_PORT
 
 #BOOTNODE
 bootnode_address=`cat $BOOTNODE_ENODE_ADDRESS`@$bootnode_ip:$BOOTNODE_PORT
 
 #IPC-Path
-node_ipcpath=$ETH_DIR/node-$nodeIndex/geth.ipc
+node_ipcpath=$ETH_DIR/node-$WANIP-$nodeIndex/geth.ipc
 
 #Network listening port (--port)
 #node 0-9 at port 30310-30319
@@ -78,7 +78,7 @@ else
 fi
 
 #Logfile TODO FIX
-log_addr=$ETH_DIR/node-$nodeIndex
+log_addr=$ETH_DIR/node-$WANIP-$nodeIndex
 logfile=$log_addr/log_node$nodeIndex.txt
 if [ ! -e "$logfile" ] ; then
     touch "$logfile"
@@ -121,8 +121,8 @@ sudo fuser -k $portValue/tcp #kill a possibly running process on the tcp geth po
 #with inlcuded ethstats (without eth-net-intelligence-api)
 if [ "$mining" = true ]; then
     geth \
-        --datadir $ETH_DIR/node-$nodeIndex/ \
-        --identity 'node-'$nodeIndex \
+        --datadir $ETH_DIR/node-$WANIP-$nodeIndex/ \
+        --identity 'node-'$WANIP'-'$nodeIndex \
         --networkid "$NETWORK_ID" \
         --ipcpath $node_ipcpath \
         --port $portValue \
@@ -141,15 +141,15 @@ if [ "$mining" = true ]; then
         --gasprice $GAS_PRICE \
         --targetgaslimit $target_gas_limit \
         --unlock 0 \
-        --password $ETH_DIR/node-$nodeIndex/password.txt \
+        --password $ETH_DIR/node-$WANIP-$nodeIndex/password.txt \
         --etherbase 0 \
         --mine \
         --metrics \
         --minerthreads 8 &
 else
     geth \
-        --datadir $ETH_DIR/node-$nodeIndex/ \
-        --identity 'node-'$nodeIndex \
+        --datadir $ETH_DIR/node-$WANIP-$nodeIndex/ \
+        --identity 'node-'$WANIP'-'$nodeIndex \
         --networkid "$NETWORK_ID" \
         --ipcpath $node_ipcpath \
         --port $portValue \
@@ -168,7 +168,7 @@ else
         --gasprice $GAS_PRICE \
         --targetgaslimit $target_gas_limit \
         --unlock 0 \
-        --password $ETH_DIR/node-$nodeIndex/password.txt \
+        --password $ETH_DIR/node-$WANIP-$nodeIndex/password.txt \
         --etherbase 0 &
 fi
     

@@ -9,6 +9,7 @@ FOLDERNAME=testnet
 ETH_DIR=$ROOT_DIR/$FOLDERNAME
 DATA_DIR=$ETH_DIR/datadir
 STORAGEFOLDER=$ROOT_DIR/storage
+WANIP=`dig +short myip.opendns.com @resolver1.opendns.com`
 
 #GETH
 NETWORK_ID=1515 # custom network id to distinguish between several networks

@@ -9,7 +9,7 @@ set -x #echo on
 
 node_number=$1
 
-cd $ETH_DIR/node-$node_number/
+cd $ETH_DIR/node-$WANIP-$node_number/
 
 touch node_account_address.txt
 chmod 777 node_account_address.txt
@@ -23,6 +23,6 @@ echo "iloveethereum" > password.txt
 
 #copy already existing private keys (keystore folder)
 cd $ETH_DIR/../storage/staticAccount_keystore
-cp -r keystore $ETH_DIR/node-$node_number/
-cd $ETH_DIR/node-$node_number/
+cp -r keystore $ETH_DIR/node-$WANIP-$node_number/
+cd $ETH_DIR/node-$WANIP-$node_number/
 chmod 777 keystore

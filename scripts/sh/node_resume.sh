@@ -7,4 +7,4 @@ set -x #echo on
 
 id=$1
 
-sudo geth attach $ETH_DIR/node-$id/geth.ipc --exec 'miner.start()'
+sudo geth attach $ETH_DIR/node-$WANIP-$id/geth.ipc --exec 'miner.start()'

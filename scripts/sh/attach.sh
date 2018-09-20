@@ -7,4 +7,4 @@ set -x #echo on
 
 nodeIndex=$1
 
-sudo geth attach $ETH_DIR/node-$nodeIndex/geth.ipc console
+sudo geth attach $ETH_DIR/node-$WANIP-$nodeIndex/geth.ipc console

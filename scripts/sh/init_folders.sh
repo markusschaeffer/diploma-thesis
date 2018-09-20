@@ -12,5 +12,5 @@ mkdir -p $FOLDERNAME
 chmod 777 $FOLDERNAME
 
 cd $FOLDERNAME
-mkdir -p node-$node_index
-chmod 777 node-$node$node_index
+mkdir -p node-$WANIP-$node_index
+chmod 777 node-$WANIP-$node$node_index

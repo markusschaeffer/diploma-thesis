@@ -32,7 +32,7 @@ sudo apt-get install docker-compose -y
 
 ###NPM INSTALLATIONS###
 
-cd $(ROOT_DIR)
+cd "$ROOT_DIR"
 
 #Express Framework and body-parser
 npm install express

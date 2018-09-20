@@ -40,7 +40,7 @@ sudo apt-get install -y mongodb-org
 
 ###NPM INSTALLATIONS###
 
-cd $(ROOT_DIR)
+cd "$ROOT_DIR"
 
 #Express Framework and body-parser
 npm install express

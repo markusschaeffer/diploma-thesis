@@ -19,8 +19,14 @@ sudo rm -rf eth-netstats #delete eth-netstats folder if existing
 #1	FRONTEND (eth-netstats)
 git clone https://github.com/cubedro/eth-netstats $ROOT_DIR/eth-netstats	
 cd eth-netstats;
+mkdir ~/.npm-global
+npm config set prefix '~/.npm-global'
 npm install;
 sudo npm install -g grunt-cli
+sudo rm ~/.profile
+touch ~/.profile
+echo " export PATH=~/.npm-global/bin:$PATH" >> ~/.profile
+source ~/.profile
 grunt
 WS_SECRET=$WSSECRET npm start &
 echo "##########ETH-NETSTATS FRONTEND STARTED##########"

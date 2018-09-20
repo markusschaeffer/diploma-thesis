@@ -2,3 +2,4 @@
 testnet/
 eth-netstats/
 node_modules/
+package-lock.json

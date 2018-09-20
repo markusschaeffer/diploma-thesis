@@ -38,38 +38,29 @@ echo "deb http://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.2 multiverse" 
 sudo apt-get update -y
 sudo apt-get install -y mongodb-org
 
-#FIX FOR NPM EACCESS Error (required for global npm installations)
-#https://docs.npmjs.com/getting-started/fixing-npm-permissions
-mkdir ~/.npm-global # Make a directory for global installations:
-npm config set prefix '~/.npm-global' # Configure npm to use the new directory path:
-export PATH=~/.npm-global/:$PATH Open or create a ~/.profile file and add this line:
-
 ###NPM INSTALLATIONS###
 
+cd $(ROOT_DIR)
+
 #Express Framework and body-parser
-npm install -g express
-npm install -g body-parser
+npm install express
+npm install body-parser
 
 #Mongoose for MongoDB interaction
-npm install -g mongoose
+npm install mongoose
 
 #web3
-npm install -g web3
+npm install web3
 
 #time-stamp for node scripts
-npm install -g time-stamp
+npm install time-stamp
 
 #request and request-promise for RESTful client
-npm install -g request
-npm install -g request-promise
+npm install request
+npm install request-promise
 
 #read-last-N-lines of files
-npm install -g read-last-lines
+npm install read-last-lines
 
 #public ip
-#https://www.npmjs.com/package/public-ip
-npm install -g public-ip
-
-#make npm links to global packages in the project directory
-cd scripts/sh
-bash install_master_npm_links.sh
+npm install public-ip

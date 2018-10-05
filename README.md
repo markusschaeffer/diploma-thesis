@@ -28,7 +28,6 @@ The goal is to benchmark metrics of differently configured Ethereum networks.
 ## Scenarios
 - Simple transfer of ETH between two smart contracts
 - Voting (ballot.sol)
-- Reading and writing from/to a simple contract consisting mainly of getter and setter methods
 
 # Architecture
 
@@ -47,3 +46,8 @@ The goal is to benchmark metrics of differently configured Ethereum networks.
 ## Local MongoDB
 - start via "mongo" 
 - select last entries descending on startTime: "db.benchmarklogs.find().pretty().sort({"startTime":-1})"
+
+# TODO
+
+- Sealers/Miners in the network via textfile (true/false)
+- Docker for Bootnode+Netstats and Nodes

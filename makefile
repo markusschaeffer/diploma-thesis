@@ -28,7 +28,7 @@ geth_httpPort_node1=`cat $(current_dir)/storage/ports/geth_http_port_node1.txt`
 ####################AGGREGATED MAKE RULES####################
 
 bootnode_start: 	start_rest_server_bootnode_netstats
-master_start:		start_mongodb clearIPs start_rest_server_master
+master_start:		start_mongodb clear_IPs clear_mining_settings clear_benchmark_settings start_rest_server_master
 node_start: 		start_rest_server_node
 
 geth_start:			prepare geth_node0_startup 
@@ -121,7 +121,7 @@ sc_run_ballot_node1:
 
 ####################COMMUNICATION####################
 start_rest_server_master:
-	cd scripts/js/communication/restfulAPI/master/; node server_master.js $(mode)
+	cd scripts/js/communication/restfulAPI/master/; node server_master.js
 
 start_rest_server_node:
 	cd scripts/js/communication/restfulAPI/node/; node server_node.js $(mode)
@@ -149,7 +149,13 @@ kill_running_bootnode:
 kill_running_node:
 	cd scripts/sh; sudo ./kill_running_node.sh;  
 
-clearIPs:
+clear_IPs:
 	cd storage/ips; sudo rm nodes_ip.txt; touch nodes_ip.txt;
 	cd storage/ips; sudo rm bootnode_ip.txt; touch bootnode_ip.txt;
 	cd storage/ips; sudo rm netstats_ip.txt; touch netstats_ip.txt;
+
+clear_mining_settings:
+	cd storage/mining_settings; sudo rm mining.txt; touch mining.txt;
+
+clear_benchmark_settings:
+	cd storage/benchmark_settings; sudo rm benchmark_start.txt.txt; touch benchmark_start.txt.txt;

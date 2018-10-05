@@ -33,7 +33,7 @@ The goal is to benchmark metrics of differently configured Ethereum networks.
 
 ![Architecture](architecture_overview.png)
 
-## AWS EC2 Startup Procedure
+## Startup Procedure for Benchmarks on AWS EC2 instances
 
 - Start REST API and mongoDB on master (via "make master_start")
 - Use One of the provided templates for AWS to startup a stack (required software is installed and REST APIs are automatically started on instance startup)
@@ -43,11 +43,12 @@ The goal is to benchmark metrics of differently configured Ethereum networks.
 - Start benchmarks from master node (via REST: "node startBenchmark.js account" or "node startBenchmark.js ballot")
 - Benchmark results are stored on the master DB (send via REST from nodes to master)
 
+## Startup Procedure for Benchmarks on a Local Machine
+
+
 ## Local MongoDB
 - start via "mongo" 
 - select last entries descending on startTime: "db.benchmarklogs.find().pretty().sort({"startTime":-1})"
 
 # TODO
-
-- Sealers/Miners in the network via textfile (true/false)
 - Docker for Bootnode+Netstats and Nodes

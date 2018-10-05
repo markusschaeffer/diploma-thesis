@@ -6,6 +6,8 @@ const mongoose = require("mongoose");
 const BenchmarkLog = mongoose.model("BenchmarkLog");
 const util = require('./../../../util/util.js');
 const pathToRootFolder = __dirname + "/../../../../../";
+const ips = util.readFileSync_lines(pathToRootFolder + "storage/ips/nodes_ip.txt");
+const miningSettings = util.readFileSync_lines(pathToRootFolder + "storage/mining_settings/mining.txt");
 
 /**
  * stores a benchmark-log-result to the database
@@ -13,7 +15,41 @@ const pathToRootFolder = __dirname + "/../../../../../";
 exports.logBenchmark = (req, res) => {
 
     util.printFormatedMessage("RECEIVED logBenchmark REQUEST");
-    let newBenchmarkLog = new BenchmarkLog(req.body);
+
+    //get amount of nodes and miners in the network from storage
+    var nodes = 0;
+    var miners = 0;
+
+    nodes = ips.length;
+    for (var i = 0; i <= miningSettings.length - 1; i++) {
+        if (miningSettings[i] == "true")
+            miners++;
+    }
+
+    let newBenchmarkLog = new BenchmarkLog({
+        ip: req.body.ip,
+        benchmarkID: req.body.benchmarkID,
+        scenario: req.body.scenario,
+        approach: req.body.approach,
+        instanceType: req.body.instanceType,
+        nodes: nodes,
+        peerCount: req.body.peerCount,
+        hashRate: req.body.hashRate,
+        usedGenesisJson: req.body.usedGenesisJson,
+        targetGasLimit: req.body.targetGasLimit,
+        miners: miners,
+        mining: req.body.mining,
+        startTime: req.body.startTime,
+        maxRuntime: req.body.maxRuntime,
+        runtime: req.body.runtime,
+        maxRuntimeReached: req.body.maxRuntimeReached,
+        maxTransactions: req.body.maxTransactions,
+        maxTransactionsReached: req.body.maxTransactionsReached,
+        successfulTransactions: req.body.successfulTransactions,
+        txPerSecond: req.body.txPerSecond,
+        averageDelay: req.body.averageDelay,
+    });
+
     util.printFormatedMessage("TRYING TO SAVE BENCHMARK LOG RESULT TO DB");
     newBenchmarkLog.save((err, result) => {
         if (err)
@@ -69,8 +105,18 @@ exports.storeNodeIP = (req, res) => {
     console.log(jsonRequest);
 
     try {
-        var filePath = pathToRootFolder + "storage/ips/nodes_ip.txt";
-        util.appendToFile(filePath, jsonRequest.ip);
+        //add IP of node to local list of node IPs
+        const filePathNodesIP = pathToRootFolder + "storage/ips/nodes_ip.txt";
+        util.appendToFile(filePathNodesIP, jsonRequest.ip);
+
+        //set default mining/sealing configuration for node
+        const filePathMiningSetting = pathToRootFolder + "storage/mining_settings/mining.txt";
+        util.appendToFile(filePathMiningSetting, "true");
+
+        //set default benchmark setting (start benchmark on node)
+        const filePathBenchmarkStartSetting = pathToRootFolder + "storage/benchmark_settings/benchmark_start.txt";
+        util.appendToFile(filePathBenchmarkStartSetting, "true");
+
         res.end(JSON.stringify("OK"));
     } catch (error) {
         console.log(error);

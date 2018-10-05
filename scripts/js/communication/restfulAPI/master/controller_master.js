@@ -14,19 +14,59 @@ exports.logBenchmark = (req, res) => {
 
     util.printFormatedMessage("RECEIVED logBenchmark REQUEST");
 
-    //get amount of nodes and miners in the network from storage
+    //get amount of nodes in the network from storage
     var nodes = 0;
-    var miners = 0;
-
     const ips = util.readFileSync_lines(pathToRootFolder + "storage/ips/nodes_ip.txt");
-    const miningSettings = util.readFileSync_lines(pathToRootFolder + "storage/mining_settings/mining.txt");
-
     nodes = ips.length;
+
+    //get amount of miners in the network from storage
+    var miners = 0;
+    const miningSettings = util.readFileSync_lines(pathToRootFolder + "storage/mining_settings/mining.txt");
     for (var i = 0; i <= miningSettings.length - 1; i++) {
         if (miningSettings[i] == "true")
             miners++;
     }
-    
+
+    //read parameters from usedGenesisJson
+    var genesisJson = require(pathToRootFolder + "genesis_json_files/" + req.body.usedGenesisJson);
+    var clique = false;
+    var clique_period = 0;
+    var ethash = false;
+    var difficulty_string_hex = "";
+    var difficulty_int_dec = 0;
+    var gasLimit_string_hex = "";
+    var gasLimit_int_dec = 0;
+
+    for (var key in genesisJson) {
+        
+        if (key == "config") {
+            for (var keykey in genesisJson[key]) {
+                if (keykey == "ethash") {
+                    ethash = true;
+                    clique = false;
+                }
+                if (keykey == "clique") {
+                    ethash = false;
+                    clique = true;
+                    for (var keykeykey in genesisJson[key][keykey]) {
+                        if (keykeykey == "period")
+                            clique_period = parseInt(genesisJson[key][keykey][keykeykey], 10);
+                    }
+                }
+            }
+        }
+        
+        if (key == "gasLimit") {
+            gasLimit_string_hex = genesisJson[key];
+            gasLimit_int_dec = parseInt(gasLimit_string_hex, 16);
+        }
+
+        if (key == "difficulty") {
+            difficulty_string_hex = genesisJson[key];
+            difficulty_int_dec = parseInt(difficulty_string_hex, 16);
+        }
+    }
+
     let newBenchmarkLog = new BenchmarkLog({
         ip: req.body.ip,
         benchmarkID: req.body.benchmarkID,
@@ -37,6 +77,13 @@ exports.logBenchmark = (req, res) => {
         peerCount: req.body.peerCount,
         hashRate: req.body.hashRate,
         usedGenesisJson: req.body.usedGenesisJson,
+        clique: clique,
+        clique_period: clique_period,
+        ethash: ethash,
+        difficulty_hex: difficulty_string_hex,
+        difficulty_dec: difficulty_int_dec,
+        gasLimit_hex: gasLimit_string_hex,
+        gasLimit_dec: gasLimit_int_dec,
         targetGasLimit: req.body.targetGasLimit,
         miners: miners,
         mining: req.body.mining,

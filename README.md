@@ -12,11 +12,11 @@ The goal is to benchmark metrics of differently configured Ethereum networks.
 - Consensus Algorithm
     - Proof of Work (Ethash)
         - Mining difficulty
-        - Number of miners in the network
     - Proof of Authority (Clique)
         - Period
-        - Number of sealers in the network    
-- Block gas limit
+- Number of miners (Ethash) or sealers (Clique) in the network
+- Block gasLimit (genesis.json)
+- Block targetGasLimit (geth)
 - Number of nodes in the network
 - Power of nodes in the network (CPU, RAM) 
 

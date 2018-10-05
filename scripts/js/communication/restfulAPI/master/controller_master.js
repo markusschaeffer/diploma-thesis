@@ -6,8 +6,6 @@ const mongoose = require("mongoose");
 const BenchmarkLog = mongoose.model("BenchmarkLog");
 const util = require('./../../../util/util.js');
 const pathToRootFolder = __dirname + "/../../../../../";
-const ips = util.readFileSync_lines(pathToRootFolder + "storage/ips/nodes_ip.txt");
-const miningSettings = util.readFileSync_lines(pathToRootFolder + "storage/mining_settings/mining.txt");
 
 /**
  * stores a benchmark-log-result to the database
@@ -20,12 +18,15 @@ exports.logBenchmark = (req, res) => {
     var nodes = 0;
     var miners = 0;
 
+    const ips = util.readFileSync_lines(pathToRootFolder + "storage/ips/nodes_ip.txt");
+    const miningSettings = util.readFileSync_lines(pathToRootFolder + "storage/mining_settings/mining.txt");
+
     nodes = ips.length;
     for (var i = 0; i <= miningSettings.length - 1; i++) {
         if (miningSettings[i] == "true")
             miners++;
     }
-
+    
     let newBenchmarkLog = new BenchmarkLog({
         ip: req.body.ip,
         benchmarkID: req.body.benchmarkID,

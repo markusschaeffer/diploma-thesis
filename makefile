@@ -158,4 +158,4 @@ clear_mining_settings:
 	cd storage/mining_settings; sudo rm mining.txt; touch mining.txt;
 
 clear_benchmark_settings:
-	cd storage/benchmark_settings; sudo rm benchmark_start.txt.txt; touch benchmark_start.txt.txt;
+	cd storage/benchmark_settings; sudo rm benchmark_start.txt; touch benchmark_start.txt;

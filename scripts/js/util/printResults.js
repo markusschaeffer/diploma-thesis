@@ -1,7 +1,7 @@
 /**
  * Prints results of different scenarios
  * 
- * Note: can only e used at a eth node (NO REST COMMUNICATION)
+ * Note: can only be used at a eth node (NO REST COMMUNICATION)
  * 
  * argv[2] : scenario (account, ballot or readWrite)
  */

@@ -27,40 +27,67 @@ module.exports = {
             maxRuntimeReached, maxTransactions, maxTransactionsReached,
             successfulTransactions, transactionsTimestampMapStart, transactionsTimestampMapEnd) {
 
+            //calculate averageTxDelay and tsPerSecond
             var runtime = Math.abs((new Date() - startTime) / 1000);
-            var averageTxDelay = module.exports.caculateAverageDelayOfTransactions(transactionsTimestampMapStart, transactionsTimestampMapEnd, successfulTransactions);
+            var averageTxDelay = module.exports.caculateAverageDelayOfTransactions(transactionsTimestampMapStart,
+                transactionsTimestampMapEnd, successfulTransactions);
             var txPerSecond = successfulTransactions / runtime;
-            var ip;
-            var peerCount;
-            var hashRate;
+
             const usedGenesisJson = util.readFileSync_lines(pathToRootFolder + "storage/current_genesis_node/current_genesis.txt")[0];
             const targetGasLimit = util.readFileSync_lines(pathToRootFolder + "storage/mining_settings/target_gas_limit.txt")[0];
             const mining = util.readFileSync_lines(pathToRootFolder + "storage/mining_settings/mining.txt")[0];
             const instanceType = util.readFileSync_lines(pathToRootFolder + "storage/instance_settings/instance_type.txt")[0];
 
+            var ip;
+            var peerCount;
+            var hashRate;
+            var difficulty;
+            var gasLimit;
+
             //query public ip
             publicIp.v4().then(function (_ip) {
                 ip = _ip;
             }).then(function () {
-                //query web3 peerCount
-                web3.eth.net.getPeerCount().then(function (_peerCount) {
-                    peerCount = _peerCount;
-                }).then(function () {
+                return new Promise((resolve, reject) => {
+                    //query web3 peerCount
+                    web3.eth.net.getPeerCount().then(function (_peerCount) {
+                        peerCount = _peerCount;
+                        resolve();
+                    });
+                });
+            }).then(function () {
+                return new Promise((resolve, reject) => {
                     //query current hash rate
                     web3.eth.getHashrate().then(function (_hashRate) {
                         hashRate = _hashRate;
-                    }).then(function () {
-                        //print and send BenchmarkResults
-                        module.exports.printBenchmarkResults(ip, peerCount, hashRate, instanceType, scenario, approach, benchmarkID, usedGenesisJson, targetGasLimit, mining, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay);
+                        resolve();
+                    });
+                });
+            }).then(function () {
+                return new Promise((resolve, reject) => {
+                    //query mining difficulty and gasLimit of latest block
+                    web3.eth.getBlock("latest").then(function (_block) {
+                        difficulty = parseInt(_block.difficulty, 10);
+                        gasLimit = parseInt(_block.gasLimit, 10);
+                        resolve();
+                    });
+                });
+            }).then(function () {
+                //print and send BenchmarkResults
+                module.exports.printBenchmarkResults(ip, peerCount, hashRate, instanceType, scenario, approach,
+                    benchmarkID, usedGenesisJson, difficulty, gasLimit, targetGasLimit, mining, startTime,
+                    maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached,
+                    successfulTransactions, txPerSecond, averageTxDelay);
 
-                        module.exports.sendBenchmarkResults(ip, peerCount, hashRate, instanceType, scenario, approach, benchmarkID, usedGenesisJson, targetGasLimit, mining, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay)
-                            .then(function () {
-                                util.printFormatedMessage("KILLING PROCESS");
-                                process.exit(0);
-                            });
-                    })
-                })
-            });
+                module.exports.sendBenchmarkResults(ip, peerCount, hashRate, instanceType, scenario, approach,
+                        benchmarkID, usedGenesisJson, difficulty, gasLimit, targetGasLimit, mining, startTime,
+                        maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached,
+                        successfulTransactions, txPerSecond, averageTxDelay)
+                    .then(function () {
+                        util.printFormatedMessage("KILLING PROCESS");
+                        process.exit(0);
+                    });
+            })
         },
 
         /**
@@ -86,7 +113,7 @@ module.exports = {
          * Print result of benchmark to stdout
          */
         printBenchmarkResults: function (ip, peerCount, hashRate, instanceType, scenario, approach, benchmarkID, usedGenesisJson,
-            targetGasLimit, mining, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions,
+            difficulty, gasLimit, targetGasLimit, mining, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions,
             maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay) {
 
             console.log("\n");
@@ -101,6 +128,8 @@ module.exports = {
             console.log("BenchmarkID: " + benchmarkID);
             console.log("-----------------------------");
             console.log("Genesis.json: " + usedGenesisJson);
+            console.log("difficulty: " + difficulty);
+            console.log("gasLimit: " + gasLimit);
             console.log("TargetGasLimit: " + targetGasLimit);
             console.log("Mining: " + mining);
             console.log("-----------------------------");
@@ -123,10 +152,12 @@ module.exports = {
          * Send benchmark result via REST interface
          */
         sendBenchmarkResults: async function (ip, peerCount, hashRate, instanceType, scenario, approach, benchmarkID,
-                usedGenesisJson, targetGasLimit, mining, startTime, maxRuntime, runtime, maxRuntimeReached,
-                maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay) {
+                usedGenesisJson, difficulty, gasLimit, targetGasLimit, mining, startTime, maxRuntime, runtime,
+                maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay) {
 
-                await restClient.logBenchmarkResult(ip, peerCount, hashRate, instanceType, scenario, approach, benchmarkID, usedGenesisJson, targetGasLimit, mining, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay);
+                await restClient.logBenchmarkResult(ip, peerCount, hashRate, instanceType, scenario, approach, benchmarkID,
+                    usedGenesisJson, difficulty, gasLimit, targetGasLimit, mining, startTime, maxRuntime, runtime,
+                    maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay);
             },
 
             /**

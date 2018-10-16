@@ -2,7 +2,7 @@
 # Framework for Benchmarking the Performance of Differently Configured Private Ethereum Networks (using Geth)
 
 This is the repository for my diploma-thesis, which is related to Ethereum performance and scalability measurements.
-The goal is to benchmark metrics of differently configured Ethereum networks.
+The aim is to benchmark metrics of differently configured Ethereum networks.
 
 # Attention: This is still WORK IN PROGRESS!
 
@@ -11,14 +11,15 @@ The goal is to benchmark metrics of differently configured Ethereum networks.
 ## Ethereum Network Parameters
 - Consensus Algorithm
     - Proof of Work (Ethash)
-        - Mining difficulty
+        - Block frequncy: mining difficulty
     - Proof of Authority (Clique)
-        - Period
+        - Block frequency: period
+- Block size: gasLimit (genesis.json) and targetGasLimit (geth)
+- Size of workload: amount of transactions
+- Type of workload: smart contract scenario
+- Blockchain network size: amount of nodes in the network
+- Configuration of nodes in the network (CPU, RAM)
 - Number of miners (Ethash) or sealers (Clique) in the network
-- Block gasLimit (genesis.json)
-- Block targetGasLimit (geth)
-- Number of nodes in the network
-- Power of nodes in the network (CPU, RAM) 
 
 ## Metrics
 - Throughput: the number of successful transactions per second.

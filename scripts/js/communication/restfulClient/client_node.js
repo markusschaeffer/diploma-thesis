@@ -11,7 +11,10 @@ const port = util.readFileSync_lines(pathToRootFolder + "storage/ports/master_po
 
 module.exports = {
 
-    logBenchmarkResult: async function (ip, peerCount, hashRate, instanceType, scenario, approach, benchmarkID, usedGenesisJson, targetGasLimit, mining, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageDelay) {
+    logBenchmarkResult: async function (ip, peerCount, hashRate, instanceType, scenario, approach, benchmarkID,
+            usedGenesisJson, difficulty, gasLimit, targetGasLimit, mining, startTime, maxRuntime, runtime, maxRuntimeReached,
+            maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageDelay) {
+
             util.printFormatedMessage("SENDING logBenchmarkResult REQUEST");
 
             let options = {
@@ -26,6 +29,8 @@ module.exports = {
                     approach: approach,
                     benchmarkID: benchmarkID,
                     usedGenesisJson: usedGenesisJson,
+                    difficulty: difficulty,
+                    gasLimit: gasLimit,
                     targetGasLimit: targetGasLimit,
                     mining: mining,
                     startTime: startTime,
@@ -45,33 +50,33 @@ module.exports = {
         },
 
         sendContractAddresses: async function (scenario, address) {
-            util.printFormatedMessage("SENDING sendContractAddresses REQUEST");
+                util.printFormatedMessage("SENDING sendContractAddresses REQUEST");
 
-            let options = {
-                method: 'POST',
-                uri: 'http://' + masterIP + ':' + port + '/master-contract-address-receive',
-                body: {
-                    scenario: scenario,
-                    address: address
-                },
-                json: true
-            };
+                let options = {
+                    method: 'POST',
+                    uri: 'http://' + masterIP + ':' + port + '/master-contract-address-receive',
+                    body: {
+                        scenario: scenario,
+                        address: address
+                    },
+                    json: true
+                };
 
-            await clientUtil.sendRequest(options);
-        },
+                await clientUtil.sendRequest(options);
+            },
 
-        sendNodeIP: async function (ip) {
-            util.printFormatedMessage("SENDING sendNodeIP REQUEST");
+            sendNodeIP: async function (ip) {
+                util.printFormatedMessage("SENDING sendNodeIP REQUEST");
 
-            let options = {
-                method: 'POST',
-                uri: 'http://' + masterIP + ':' + port + '/master-store-ip-node',
-                body: {
-                    ip: ip
-                },
-                json: true
-            };
+                let options = {
+                    method: 'POST',
+                    uri: 'http://' + masterIP + ':' + port + '/master-store-ip-node',
+                    body: {
+                        ip: ip
+                    },
+                    json: true
+                };
 
-            await clientUtil.sendRequest(options);
-        }
+                await clientUtil.sendRequest(options);
+            }
 }

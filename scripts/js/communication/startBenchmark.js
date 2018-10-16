@@ -8,7 +8,7 @@
  * process.argv[3]: approach (1-3)
  * process.argv[4]: broadcastBenchmark (true    = benchmark will be started on each node, 
  *                                      false   = benchmark will be started on nodes specified in storage/benchmark_settings/benchmark_start.txt)
- * process.argv[5]: maxTransactions (e.g. 1-100000)
+ * process.argv[5]: maxTransactions (e.g. 1-10000)
  * process.argv[6]: maxRuntime (maxRuntime in minutes, e.g. 10)
  */
 

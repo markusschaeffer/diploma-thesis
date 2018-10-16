@@ -11,14 +11,14 @@ The aim is to benchmark metrics of differently configured Ethereum networks.
 ## Ethereum Network Parameters
 - Consensus Algorithm
     - Proof of Work (Ethash)
-        - Block frequncy: mining difficulty
+        - Block frequency: mining difficulty
     - Proof of Authority (Clique)
         - Block frequency: period
 - Block size: gasLimit (genesis.json) and targetGasLimit (geth)
-- Size of workload: amount of transactions
-- Type of workload: smart contract scenario
-- Blockchain network size: amount of nodes in the network
-- Configuration of nodes in the network (CPU, RAM)
+- Size of workload: amount of transactions (1-10000)
+- Type of workload: smart contract scenario (account,voting)
+- Blockchain network size: amount of nodes in the network (1-20)
+- Configuration of nodes in the network (CPU, RAM) (different AWS EC2 instances)
 - Number of miners (Ethash) or sealers (Clique) in the network
 
 ## Metrics

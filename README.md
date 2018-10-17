@@ -16,7 +16,7 @@ The aim is to benchmark metrics of differently configured Ethereum networks.
         - Block frequency: period
 - Block size: gasLimit (genesis.json) and targetGasLimit (geth)
 - Size of workload: amount of transactions (1-10000)
-- Type of workload: smart contract scenario (account,voting)
+- Type of workload: smart contract scenario (account, voting)
 - Blockchain network size: amount of nodes in the network (1-20)
 - Configuration of nodes in the network (CPU, RAM) (different AWS EC2 instances)
 - Number of miners (Ethash) or sealers (Clique) in the network
@@ -27,8 +27,8 @@ The aim is to benchmark metrics of differently configured Ethereum networks.
 - Scalability: measured as the changes in throughput and latency when increasing number and size of nodes
 
 ## Scenarios
-- Simple transfer of ETH between two smart contracts
-- Voting (ballot.sol)
+- Account (transfer of ETH between two smart contracts)
+- Voting (modified ballot.sol)
 
 # Architecture
 

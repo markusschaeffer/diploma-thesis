@@ -6,8 +6,8 @@
  * 
  * process.argv[2]: scenario (account, ballot, readWrite)
  * process.argv[3]: approach (1-3)
- * process.argv[4]: broadcastBenchmark (true    = benchmark will be started on each node, 
- *                                      false   = benchmark will be started on nodes specified in storage/benchmark_settings/benchmark_start.txt)
+ * process.argv[4]: startBenchmarkOnFirstNode ( true    = benchmark will be started on the first node, 
+ *                                              false   = benchmark will be started on nodes specified in storage/benchmark_settings/benchmark_start.txt)
  * process.argv[5]: maxTransactions (e.g. 1-10000)
  * process.argv[6]: maxRuntime (maxRuntime in minutes, e.g. 10)
  */
@@ -21,14 +21,14 @@ const model_master = require('./restfulAPI/master/model_master');
 
 var scenario = process.argv[2];
 var approach = process.argv[3];
-var broadcastBenchmark = process.argv[4];
+var startBenchmarkOnFirstNode = process.argv[4];
 var maxTransactions = process.argv[5];
 var maxRuntime = process.argv[6];
 
 //default values for cli arguments
 if (scenario == undefined) scenario = "account";
 if (approach == undefined) approach = 3;
-if (broadcastBenchmark == undefined) broadcastBenchmark = true;
+if (startBenchmarkOnFirstNode == undefined) startBenchmarkOnFirstNode = true;
 if (maxTransactions == undefined) maxTransactions = 1000;
 if (maxRuntime == undefined) maxRuntime = 10;
 
@@ -60,7 +60,7 @@ try {
     util.printFormatedMessage("");
     console.log("scenario: " + scenario);
     console.log("approach: " + approach);
-    console.log("broadcastBenchmark: " + broadcastBenchmark);
+    console.log("startBenchmarkOnFirstNode: " + startBenchmarkOnFirstNode);
     console.log("maxTransactions: " + maxTransactions);
     console.log("maxRuntime: " + maxRuntime);
     util.printFormatedMessage("");
@@ -99,12 +99,10 @@ try {
 }
 
 function sendStartBenchmarkRequests() {
-    if (broadcastBenchmark == true) {
-        //start benchmark on each node of storage/ips/nodes_ip.txt
-        for (var i = 0; i <= ips.length - 1; i++) {
-            client.startBenchmark(ips[i], port, scenario, approach, benchmarkId, maxTransactions, maxRuntime, smartContractAddresses);
-            benchmarkId++;
-        }
+    if (startBenchmarkOnFirstNode == true) {
+        //start benchmark on first node of storage/ips/nodes_ip.txt
+        client.startBenchmark(ips[0], port, scenario, approach, benchmarkId, maxTransactions, maxRuntime, smartContractAddresses);
+        benchmarkId++;
     } else {
         //start benchmark on nodes specified in benchmark_start.txt
         for (var i = 0; i <= ips.length - 1; i++) {

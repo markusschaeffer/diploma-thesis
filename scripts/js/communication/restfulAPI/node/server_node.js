@@ -28,7 +28,7 @@ var server = app.listen(serverPort, function () {
     var host = server.address().address
     var port = server.address().port
     console.log("Benchmark recording app listening at http://%s:%s", host, port)
-
+    
     //send node ip to master
     if (mode != "local") {
         publicIp.v4().then(function (_ip) {

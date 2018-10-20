@@ -91,9 +91,9 @@ module.exports = {
         return new Promise(resolve => setTimeout(resolve, ms));
     },
 
-    writeToFile: function (filePath, genesisName) {
+    writeToFile: function (filePath, text) {
         try {
-            fs.writeFileSync(filePath, genesisName);
+            fs.writeFileSync(filePath, text);
         } catch (e) {
             throw new Error("Error at writing to file " + filePath + "\n " + e);
         }

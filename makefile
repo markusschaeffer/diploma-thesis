@@ -121,7 +121,7 @@ sc_run_ballot_node1:
 
 ####################COMMUNICATION####################
 start_rest_server_master:
-	cd scripts/js/communication/restfulAPI/master/; node server_master.js
+	cd scripts/js/communication/restfulAPI/master/; node server_master.js $(mode)
 
 start_rest_server_node:
 	cd scripts/js/communication/restfulAPI/node/; node server_node.js $(mode)

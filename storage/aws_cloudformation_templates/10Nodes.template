@@ -29,7 +29,7 @@
 		  "Description" : "Nodes running GETH and the REST API ",
 		  "Type" : "String",
 		  "Default" : "t2.small",
-		  "AllowedValues" : [ "t2.small", "t2.medium", "t2.large", "t2.xlarge", "c5.large", "c5.xlarge", "c5.2xlarge", "c5.4xlarge"]
+		  "AllowedValues" : [ "t2.xlarge", "c5.large", "c5.xlarge", "c5.2xlarge", "c5.4xlarge"]
 		},
 		
 		"InstanceTypeBootnodeAndNetstats" : 
@@ -37,7 +37,7 @@
 		  "Description" : "Node running the Bootnode and Netstats",
 		  "Type" : "String",
 		  "Default" : "t2.small",
-		  "AllowedValues" : [ "t2.small", "t2.medium"]
+		  "AllowedValues" : [ "c5.xlarge" ]
 		}
 	},
 

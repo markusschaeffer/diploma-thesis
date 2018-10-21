@@ -17,7 +17,9 @@ const serverPort = Number(util.readFileSync_lines(pathToRootFolder + "storage/po
 
 mongoose.Promise = global.Promise;
 // connect to local MongoDB
-mongoose.connect("mongodb://localhost:27017/test")
+mongoose.connect("mongodb://localhost:27017/test", {
+        useNewUrlParser: true
+    })
     .then(() => console.log("connected to mongoDB"))
     .catch(err => console.log(err));
 

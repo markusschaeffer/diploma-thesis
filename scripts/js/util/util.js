@@ -19,7 +19,7 @@ module.exports = {
                 if (err) {
                     return console.log(err);
                 }
-                console.log("Contract address was saved to file " + filePath);
+                console.log(address + " was saved to file " + filePath);
             });
         } catch (error) {
             console.log(error);
@@ -60,7 +60,7 @@ module.exports = {
         try {
             var text = fs.readFileSync(filePath, 'utf8');
             var text_splitted = text.split(os.EOL);
-            
+
             //remove last line if blank
             if (text_splitted[text_splitted.length - 1] == "") {
                 text_splitted = text_splitted.slice(0, -1);

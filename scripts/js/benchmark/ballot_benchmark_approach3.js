@@ -19,16 +19,19 @@ var web3 = new Web3();
 
 const ip = "localhost";
 //get CLI parameters
-const httpPort = process.argv[2];
-const maxTransactions = process.argv[3];
-const maxRuntime = process.argv[4] * 1000 * 60;
-const benchmarkID = process.argv[6];
+var httpPort = process.argv[2];
+var maxTransactions = process.argv[3];
+var maxRuntime = process.argv[4];
+var benchmarkID = process.argv[6];
 
 //default values
 if (httpPort == undefined) httpPort = util.readFileSync_full(pathToRootFolder + "storage/ports/geth_http_port_node0.txt");
 if (maxTransactions == undefined) maxTransactions = 1000;
-if (maxRuntime == undefined) maxRuntime = 10 * 1000 * 60;
+if (maxRuntime == undefined) maxRuntime = 10;
 if (benchmarkID == undefined) benchmarkID = 0;
+
+const maxRuntimeInSeconds = maxRuntime * 60;
+const maxRuntimeInMilliseconds = maxRuntimeInSeconds * 1000;
 
 //set providers from Web3.providers
 const httpProviderString = "http://" + ip + ":" + httpPort;
@@ -71,7 +74,7 @@ var contract = new web3.eth.Contract(abiArray, contractAddress, {
 contract.options.address = contractAddress;
 
 //run benchmark
-runBenchmark(maxTransactions, maxRuntime);
+runBenchmark(maxTransactions, maxRuntimeInSeconds);
 
 async function runBenchmark(maxTransactions, maxRuntime) {
 
@@ -84,7 +87,7 @@ async function runBenchmark(maxTransactions, maxRuntime) {
 
   setTimeout(function () {
     benchmarkLib.logBenchmarkResult(scenario, approach, benchmarkID, startTime, maxRuntime, true, maxTransactions, false, successfulTransactions, transactionsTimestampMapStart, transactionsTimestampMapEnd);
-  }, maxRuntime);
+  }, maxRuntimeInMilliseconds);
 
   for (var i = 1; i <= maxTransactions; i++) {
     promises.push(handleTransaction(i));

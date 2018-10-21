@@ -44,6 +44,11 @@ const myContract = new web3.eth.Contract(abiArray);
 const _numProposals = util.readFileSync_lines(pathToRootFolder + "storage/ips/nodes_ip.txt").length;
 console.log("number of proposals: " + _numProposals);
 
+util.printFormatedMessage("INITIALISING BENCHMARK QUEUE");
+//initialize benchmark queue in temp folder with benchmark_settings/benchmark_size.txt
+const benchmark_size = util.readFileSync_lines(pathToRootFolder + "storage/benchmark_settings/benchmark_size.txt")[0];
+util.writeToFile(pathToRootFolder + "storage/temp/benchmark_queue.txt", benchmark_size);
+
 //deploy the contract to the blockchain
 util.printFormatedMessage("DEPLOYING CONTRACT");
 myContract.deploy({

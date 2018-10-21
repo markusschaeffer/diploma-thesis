@@ -4,8 +4,10 @@
 
 const mongoose = require("mongoose");
 const BenchmarkLog = mongoose.model("BenchmarkLog");
-const util = require('./../../../util/util.js');
 const pathToRootFolder = __dirname + "/../../../../../";
+const util = require('./../../../util/util.js');
+const exec = require('child_process').exec;
+const commLib = require(pathToRootFolder + "scripts/js/communication/communication-lib.js");
 
 /**
  * stores a benchmark-log-result to the database
@@ -38,7 +40,7 @@ exports.logBenchmark = (req, res) => {
     var gasLimit_int_dec = 0;
 
     for (var key in genesisJson) {
-        
+
         if (key == "config") {
             for (var keykey in genesisJson[key]) {
                 if (keykey == "ethash") {
@@ -55,7 +57,7 @@ exports.logBenchmark = (req, res) => {
                 }
             }
         }
-        
+
         if (key == "gasLimit") {
             gasLimit_string_hex = genesisJson[key];
             gasLimit_int_dec = parseInt(gasLimit_string_hex, 16);
@@ -106,6 +108,9 @@ exports.logBenchmark = (req, res) => {
             res.send(err);
         console.log("Result:" + result);
         res.end(JSON.stringify("OK"));
+
+        //initiate next Benchmark if there is any left in the queue
+        module.exports.initiateNextBenchmark(req.body.scenario, req.body.approach, req.body.maxTransactions, (req.body.maxRuntime / 60));
     });
 };
 
@@ -193,7 +198,6 @@ exports.storeBootnodeIP = (req, res) => {
     }
 };
 
-
 /**
  * stores netstats IP to the storage folder
  */
@@ -211,4 +215,43 @@ exports.storeNetstatsIP = (req, res) => {
         console.log(error);
         res.end(JSON.stringify("NOT OKAY - IP could not be stored"));
     }
+};
+
+/**
+ * initiate next benchmark if there is any left in the storage/temp/benchmark_queue.txt
+ */
+exports.initiateNextBenchmark = function (scenario, approach, maxTransactions, maxRuntime) {
+    try {
+        //read amount of benchmarks left from benchmark queue from storage/temp
+        benchmarkQueue = parseInt(util.readFileSync_lines(pathToRootFolder + "storage/temp/benchmark_queue.txt")[0], 10);
+        if (benchmarkQueue != 0) {
+            new Promise(function (resolve, reject) {
+                //startBenchmark
+                var child = exec("cd " + pathToRootFolder + "scripts/js/communication; node startBenchmark.js " +
+                    scenario + " " + approach + " " + maxTransactions + " " + maxRuntime,
+                    function (error, stdout, stderr) {
+                        resolve(stdout);
+                        if (error !== null)
+                            reject(error);
+                    });
+                // attach listeners to the stdout and stderr.
+                exports.attachListeners(child);
+            });
+        }
+    } catch (err) {
+        console.error(err);
+        console.error("Error at starting next benchmark")
+    }
+}
+
+exports.attachListeners = function (child) {
+    child.stdout.on('data', function (data) {
+        console.log(data);
+    });
+    child.stderr.on('data', function (data) {
+        console.log(data);
+    });
+    child.on('close', function (close) {
+        console.log(close);
+    });
 };

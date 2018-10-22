@@ -224,7 +224,7 @@ exports.initiateNextBenchmark = function (scenario, approach, maxTransactions, m
     try {
         //read amount of benchmarks left from benchmark queue from storage/temp
         benchmarkQueue = parseInt(util.readFileSync_lines(pathToRootFolder + "storage/temp/benchmark_queue.txt")[0], 10);
-        if (benchmarkQueue != 0) {
+        if (benchmarkQueue > 0) {
             new Promise(function (resolve, reject) {
                 //startBenchmark
                 var child = exec("cd " + pathToRootFolder + "scripts/js/communication; node startBenchmark.js " +

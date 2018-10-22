@@ -18,6 +18,11 @@ const port = util.readFileSync_lines(pathToRootFolder + "storage/ports/node_port
 var scenario = process.argv[2];
 if (scenario == undefined) scenario = "account";
 
+util.printFormatedMessage("INITIALISING BENCHMARK QUEUE");
+//initialize benchmark queue in temp folder with benchmark_settings/benchmark_size.txt
+const benchmark_size = util.readFileSync_lines(pathToRootFolder + "storage/benchmark_settings/benchmark_size.txt")[0];
+util.writeToFile(pathToRootFolder + "storage/temp/benchmark_queue.txt", benchmark_size);
+
 switch (scenario) {
     case 'account':
         client.deployContract(ip, port, "account");

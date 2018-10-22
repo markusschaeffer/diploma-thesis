@@ -43,11 +43,6 @@ const myContract = new web3.eth.Contract(abiArray);
 //deploy the contract to the blockchain and send some ether from account[0] to the smart contract
 const amount = web3.utils.toWei('1000000', "ether");
 
-util.printFormatedMessage("INITIALISING BENCHMARK QUEUE");
-//initialize benchmark queue in temp folder with benchmark_settings/benchmark_size.txt
-const benchmark_size = util.readFileSync_lines(pathToRootFolder + "storage/benchmark_settings/benchmark_size.txt")[0];
-util.writeToFile(pathToRootFolder + "storage/temp/benchmark_queue.txt", benchmark_size);
-
 //deploy the contract to the blockchain
 util.printFormatedMessage("DEPLOYING CONTRACT");
 myContract.deploy({

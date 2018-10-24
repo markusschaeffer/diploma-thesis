@@ -22,7 +22,7 @@ var maxRuntime = process.argv[5];
 if (scenario == undefined) scenario = "account";
 if (approach == undefined) approach = 3;
 if (maxTransactions == undefined) maxTransactions = 1000;
-if (maxRuntime == undefined) maxRuntime = 10;
+if (maxRuntime == undefined) maxRuntime = 5;
 
 //startBenchmark
 commLib.startBenchmark(scenario, approach, maxTransactions, maxRuntime);

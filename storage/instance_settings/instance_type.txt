@@ -1,1 +1,1 @@
-c5.large
+c5.xlarge

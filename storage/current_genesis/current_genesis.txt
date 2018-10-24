@@ -1,1 +1,1 @@
-genesis_poa_max_performance.json
+genesis_pow_max_performance.json

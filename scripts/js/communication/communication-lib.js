@@ -1,7 +1,7 @@
 /**
  * Communication - lib
  * 
- * Note:    storage/ips/nodes_ip.txt and storage/ports/nodes_port.txt 
+ * Note:    config/ips/nodes_ip.txt and config/ports/nodes_port.txt 
  *          holds information of IPs and port of the nodes
  * 
  */
@@ -14,12 +14,12 @@ const util = require('./../util/util');
 const client = require('./restfulClient/client_master');
 
 const pathToRootFolder = __dirname + "/../../../";
-const benchmarkStartNodes = util.readFileSync_lines(pathToRootFolder + "storage/benchmark_settings/benchmark_start_nodes.txt");
-const dbname = util.readFileSync_lines(pathToRootFolder + "storage/db_settings/db_name.txt")[0];
-const dbIP = util.readFileSync_lines(pathToRootFolder + "storage/db_settings/db_ip.txt")[0];
-const dbPort = util.readFileSync_lines(pathToRootFolder + "storage/db_settings/db_port.txt")[0];
-const ips = util.readFileSync_lines(pathToRootFolder + "storage/ips/nodes_ip.txt");
-const port = util.readFileSync_lines(pathToRootFolder + "storage/ports/node_port.txt")[0];
+const benchmarkStartNodes = util.readFileSync_lines(pathToRootFolder + "config/benchmark_settings/benchmark_start_nodes.txt");
+const dbname = util.readFileSync_lines(pathToRootFolder + "config/db_settings/db_name.txt")[0];
+const dbIP = util.readFileSync_lines(pathToRootFolder + "config/db_settings/db_ip.txt")[0];
+const dbPort = util.readFileSync_lines(pathToRootFolder + "config/db_settings/db_port.txt")[0];
+const ips = util.readFileSync_lines(pathToRootFolder + "config/ips/nodes_ip.txt");
+const port = util.readFileSync_lines(pathToRootFolder + "config/ports/node_port.txt")[0];
 
 module.exports = {
 

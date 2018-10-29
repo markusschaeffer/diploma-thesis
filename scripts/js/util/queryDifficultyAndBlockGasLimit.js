@@ -14,7 +14,7 @@ var web3 = new Web3();
 
 const ip = "localhost";
 //get CLI parameters
-const gethHttpPort = util.readFileSync_full(pathToRootFolder + "storage/ports/geth_http_port_node0.txt");
+const gethHttpPort = util.readFileSync_full(pathToRootFolder + "config/ports/geth_http_port_node0.txt");
 const gasPrice = '20000000000';
 
 //set providers from Web3.providers

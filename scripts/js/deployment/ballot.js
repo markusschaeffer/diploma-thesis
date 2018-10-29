@@ -10,7 +10,7 @@ const pathToRootFolder = __dirname + "/../../../";
 //specify which account to use for contract deployment (pays the gas cost)
 const accountAddress = util.readFileSync_full(pathToRootFolder + "storage/staticAccount_address/address.txt"); 
 const accountPassword = util.readFileSync_full(pathToRootFolder + "storage/staticAccount_password/password.txt");
-const gethHttpPort = util.readFileSync_full(pathToRootFolder + "storage/ports/geth_http_port_node0.txt");
+const gethHttpPort = util.readFileSync_full(pathToRootFolder + "config/ports/geth_http_port_node0.txt");
 
 // instantiate web3
 const Web3 = require('web3');
@@ -41,7 +41,7 @@ const contractBytecode = "0x" + bytecode;
 const myContract = new web3.eth.Contract(abiArray);
 
 //number of different proposals to vote for = amount of nodes in the network
-const _numProposals = util.readFileSync_lines(pathToRootFolder + "storage/ips/nodes_ip.txt").length;
+const _numProposals = util.readFileSync_lines(pathToRootFolder + "config/ips/nodes_ip.txt").length;
 console.log("number of proposals: " + _numProposals);
 
 //deploy the contract to the blockchain

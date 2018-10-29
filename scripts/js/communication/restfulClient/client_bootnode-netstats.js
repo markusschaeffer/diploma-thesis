@@ -6,8 +6,8 @@ var util = require('./../../util/util');
 var clientUtil = require('./clientUtil');
 
 const pathToRootFolder = __dirname + "/../../../../";
-const masterIP = util.readFileSync_lines(pathToRootFolder + "storage/ips/master_ip.txt")[0];
-const port = util.readFileSync_lines(pathToRootFolder + "storage/ports/master_port.txt")[0];
+const masterIP = util.readFileSync_lines(pathToRootFolder + "config/ips/master_ip.txt")[0];
+const port = util.readFileSync_lines(pathToRootFolder + "config/ports/master_port.txt")[0];
 
 module.exports = {
 

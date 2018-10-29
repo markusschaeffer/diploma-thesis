@@ -13,7 +13,7 @@ const Web3 = require('web3');
 var web3 = new Web3();
 //set providers from Web3.providers
 const ip = "localhost";
-const httpPort = util.readFileSync_full(pathToRootFolder + "storage/ports/geth_http_port_node0.txt");
+const httpPort = util.readFileSync_full(pathToRootFolder + "config/ports/geth_http_port_node0.txt");
 const httpProviderString = "http://" + ip + ":" + httpPort;
 //http provider (node-0 PORT 8100, node-1 PORT 8101)
 web3 = new Web3(new Web3.providers.HttpProvider(httpProviderString));
@@ -34,9 +34,9 @@ module.exports = {
             var txPerSecond = successfulTransactions / runtime;
 
             const usedGenesisJson = util.readFileSync_lines(pathToRootFolder + "storage/current_genesis_node/current_genesis.txt")[0];
-            const targetGasLimit = util.readFileSync_lines(pathToRootFolder + "storage/mining_settings/target_gas_limit.txt")[0];
-            const mining = util.readFileSync_lines(pathToRootFolder + "storage/mining_settings/mining.txt")[0];
-            const instanceType = util.readFileSync_lines(pathToRootFolder + "storage/instance_settings/instance_type.txt")[0];
+            const targetGasLimit = util.readFileSync_lines(pathToRootFolder + "config/mining_settings/target_gas_limit.txt")[0];
+            const mining = util.readFileSync_lines(pathToRootFolder + "config/mining_settings/mining.txt")[0];
+            const instanceType = util.readFileSync_lines(pathToRootFolder + "config/instance_settings/instance_type.txt")[0];
 
             var ip;
             var peerCount;

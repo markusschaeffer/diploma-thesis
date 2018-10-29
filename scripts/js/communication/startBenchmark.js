@@ -1,7 +1,7 @@
 /**
  * Script for starting benchmarks via REST API
  * 
- * Note:    storage/ips/nodes_ip.txt and storage/ports/nodes_port.txt 
+ * Note:    config/ips/nodes_ip.txt and config/ports/nodes_port.txt 
  *          holds information of IPs and port of the nodes
  * 
  * process.argv[2]: scenario (account, ballot, readWrite)

@@ -16,14 +16,14 @@ exports.logBenchmark = (req, res) => {
 
     util.printFormatedMessage("RECEIVED logBenchmark REQUEST");
 
-    //get amount of nodes in the network from storage
+    //get amount of nodes in the network from config
     var nodes = 0;
-    const ips = util.readFileSync_lines(pathToRootFolder + "storage/ips/nodes_ip.txt");
+    const ips = util.readFileSync_lines(pathToRootFolder + "config/ips/nodes_ip.txt");
     nodes = ips.length;
 
-    //get amount of miners in the network from storage
+    //get amount of miners in the network from config
     var miners = 0;
-    const miningSettings = util.readFileSync_lines(pathToRootFolder + "storage/mining_settings/mining.txt");
+    const miningSettings = util.readFileSync_lines(pathToRootFolder + "config/mining_settings/mining.txt");
     for (var i = 0; i <= miningSettings.length - 1; i++) {
         if (miningSettings[i] == "true")
             miners++;
@@ -161,15 +161,15 @@ exports.storeNodeIP = (req, res) => {
 
     try {
         //add IP of node to local list of node IPs
-        const filePathNodesIP = pathToRootFolder + "storage/ips/nodes_ip.txt";
+        const filePathNodesIP = pathToRootFolder + "config/ips/nodes_ip.txt";
         util.appendToFile(filePathNodesIP, jsonRequest.ip);
 
         //set default mining/sealing configuration for node
-        const filePathMiningSetting = pathToRootFolder + "storage/mining_settings/mining.txt";
+        const filePathMiningSetting = pathToRootFolder + "config/mining_settings/mining.txt";
         util.appendToFile(filePathMiningSetting, "true");
 
         //set default benchmark setting (start benchmark on node)
-        const filePathBenchmarkStartSetting = pathToRootFolder + "storage/benchmark_settings/benchmark_start.txt";
+        const filePathBenchmarkStartSetting = pathToRootFolder + "config/benchmark_settings/benchmark_start.txt";
         util.appendToFile(filePathBenchmarkStartSetting, "true");
 
         res.end(JSON.stringify("OK"));
@@ -189,7 +189,7 @@ exports.storeBootnodeIP = (req, res) => {
     console.log(jsonRequest);
 
     try {
-        var filePath = pathToRootFolder + "storage/ips/bootnode_ip.txt";
+        var filePath = pathToRootFolder + "config/ips/bootnode_ip.txt";
         util.appendToFile(filePath, jsonRequest.ip);
         res.end(JSON.stringify("OK"));
     } catch (error) {
@@ -208,7 +208,7 @@ exports.storeNetstatsIP = (req, res) => {
     console.log(jsonRequest);
 
     try {
-        var filePath = pathToRootFolder + "storage/ips/netstats_ip.txt";
+        var filePath = pathToRootFolder + "config/ips/netstats_ip.txt";
         util.appendToFile(filePath, jsonRequest.ip);
         res.end(JSON.stringify("OK"));
     } catch (error) {

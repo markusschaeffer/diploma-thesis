@@ -11,8 +11,8 @@ const client = require("./../../restfulClient/client_node")
 const publicIp = require('public-ip');
 
 const pathToRootFolder = __dirname + "/../../../../../";
-const serverPort = Number(util.readFileSync_lines(pathToRootFolder + "storage/ports/node_port.txt")[0]);
-const localIP = util.readFileSync_lines(pathToRootFolder + "storage/ips/local_ip.txt")[0];
+const serverPort = Number(util.readFileSync_lines(pathToRootFolder + "config/ports/node_port.txt")[0]);
+const localIP = util.readFileSync_lines(pathToRootFolder + "config/ips/local_ip.txt")[0];
 const mode = process.argv[2];
 
 // handle incoming requests

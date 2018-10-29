@@ -34,18 +34,18 @@ exports.startGeth = (req, res) => {
         //update current_genesis.txt
         util.writeToFile(pathToRootFolder + "storage/current_genesis_node/current_genesis.txt", jsonRequest.genesis);
         //update target_gas_limit.txt
-        util.writeToFile(pathToRootFolder + "storage/mining_settings/target_gas_limit.txt", jsonRequest.targetGasLimit);
+        util.writeToFile(pathToRootFolder + "config/mining_settings/target_gas_limit.txt", jsonRequest.targetGasLimit);
         //update mining.txt
-        util.writeToFile(pathToRootFolder + "storage/mining_settings/mining.txt", jsonRequest.mining);
+        util.writeToFile(pathToRootFolder + "config/mining_settings/mining.txt", jsonRequest.mining);
         //update instance_settings.txt
-        util.writeToFile(pathToRootFolder + "storage/instance_settings/instance_type.txt", jsonRequest.instanceType);
+        util.writeToFile(pathToRootFolder + "config/instance_settings/instance_type.txt", jsonRequest.instanceType);
 
         //update master_ip.txt
-        util.writeToFile(pathToRootFolder + "storage/ips/master_ip.txt", jsonRequest.masterIP);
+        util.writeToFile(pathToRootFolder + "config/ips/master_ip.txt", jsonRequest.masterIP);
         //update bootnode_ip.txt
-        util.writeToFile(pathToRootFolder + "storage/ips/bootnode_ip.txt", jsonRequest.bootnodeIP);
+        util.writeToFile(pathToRootFolder + "config/ips/bootnode_ip.txt", jsonRequest.bootnodeIP);
         //update netstats_ip.txt
-        util.writeToFile(pathToRootFolder + "storage/ips/netstats_ip.txt", jsonRequest.netstatsIP);
+        util.writeToFile(pathToRootFolder + "config/ips/netstats_ip.txt", jsonRequest.netstatsIP);
 
         //start geth client
         var child = spawn("cd " + pathToRootFolder + "; make geth_start;", {

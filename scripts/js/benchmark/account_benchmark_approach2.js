@@ -26,7 +26,7 @@ var maxRuntime = process.argv[4];
 var benchmarkID = process.argv[7];
 
 //default values
-if (httpPort == undefined) httpPort = util.readFileSync_full(pathToRootFolder + "storage/ports/geth_http_port_node0.txt");
+if (httpPort == undefined) httpPort = util.readFileSync_full(pathToRootFolder + "config/ports/geth_http_port_node0.txt");
 if (maxTransactions == undefined) maxTransactions = 1000;
 if (maxRuntime == undefined) maxRuntime = 10;
 if (benchmarkID == undefined) benchmarkID = 0;

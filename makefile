@@ -1,7 +1,7 @@
 # Root file initiating bash scripts/processes
 
 # Startup sequence:
-# 0) Specify IPs of bootnode, eth-netstats, master and geth-nodes in storage/ips/
+# 0) Specify IPs of bootnode, eth-netstats, master and geth-nodes in config/ips/
 # 1) Start all REST APIs: 
 #	make bootnode_start; make master_start; make node_start
 # 2) Start GETH clients on nodes
@@ -18,12 +18,12 @@
 
 current_dir = $(shell pwd)
 genesisFile=`cat $(current_dir)/storage/current_genesis_node/current_genesis.txt`
-target_gas_limit=`cat $(current_dir)/storage/mining_settings/target_gas_limit.txt`
-mining=`cat $(current_dir)/storage/mining_settings/mining.txt`
-bootnode_ip=`cat $(current_dir)/storage/ips/bootnode_ip.txt`
-netstats_ip=`cat $(current_dir)/storage/ips/netstats_ip.txt`
-geth_httpPort_node0=`cat $(current_dir)/storage/ports/geth_http_port_node0.txt`
-geth_httpPort_node1=`cat $(current_dir)/storage/ports/geth_http_port_node1.txt`
+target_gas_limit=`cat $(current_dir)/config/mining_settings/target_gas_limit.txt`
+mining=`cat $(current_dir)/config/mining_settings/mining.txt`
+bootnode_ip=`cat $(current_dir)/config/ips/bootnode_ip.txt`
+netstats_ip=`cat $(current_dir)/config/ips/netstats_ip.txt`
+geth_httpPort_node0=`cat $(current_dir)/config/ports/geth_http_port_node0.txt`
+geth_httpPort_node1=`cat $(current_dir)/config/ports/geth_http_port_node1.txt`
 
 ####################AGGREGATED MAKE RULES####################
 
@@ -150,12 +150,12 @@ kill_running_node:
 	cd scripts/sh; sudo ./kill_running_node.sh;  
 
 clear_IPs:
-	cd storage/ips; sudo rm nodes_ip.txt; touch nodes_ip.txt;
-	cd storage/ips; sudo rm bootnode_ip.txt; touch bootnode_ip.txt;
-	cd storage/ips; sudo rm netstats_ip.txt; touch netstats_ip.txt;
+	cd config/ips; sudo rm nodes_ip.txt; touch nodes_ip.txt;
+	cd config/ips; sudo rm bootnode_ip.txt; touch bootnode_ip.txt;
+	cd config/ips; sudo rm netstats_ip.txt; touch netstats_ip.txt;
 
 clear_mining_settings:
-	cd storage/mining_settings; sudo rm mining.txt; touch mining.txt;
+	cd config/mining_settings; sudo rm mining.txt; touch mining.txt;
 
 clear_benchmark_settings:
-	cd storage/benchmark_settings; sudo rm benchmark_start.txt; touch benchmark_start.txt;
+	cd config/benchmark_settings; sudo rm benchmark_start.txt; touch benchmark_start.txt;

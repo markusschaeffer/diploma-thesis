@@ -13,7 +13,7 @@ const BenchmarkLog = require("./model_master");
 const mode = process.argv[2];
 
 const pathToRootFolder = __dirname + "/../../../../../";
-const serverPort = Number(util.readFileSync_lines(pathToRootFolder + "storage/ports/master_port.txt")[0]);
+const serverPort = Number(util.readFileSync_lines(pathToRootFolder + "config/ports/master_port.txt")[0]);
 
 mongoose.Promise = global.Promise;
 // connect to local MongoDB
@@ -38,14 +38,14 @@ var server = app.listen(serverPort, function () {
     console.log("Master REST server listening at http://%s:%s", host, port)
 })
 
-//write ip to master_ip in storage depending on the mode
+//write ip to master_ip in config depending on the mode
 if (mode != "local") {
     //non-local mode; get public IP and write it to master_ip.txt
     publicIp.v4().then(function (_ip) {
-        util.writeToFile(pathToRootFolder + "storage/ips/master_ip.txt", _ip);
+        util.writeToFile(pathToRootFolder + "config/ips/master_ip.txt", _ip);
     });
 } else {
     //local mode; write ip of local_ip.txt to master_ip.txt
-    const localIP = util.readFileSync_lines(pathToRootFolder + "storage/ips/local_ip.txt")[0];
-    util.writeToFile(pathToRootFolder + "storage/ips/master_ip.txt", localIP);
+    const localIP = util.readFileSync_lines(pathToRootFolder + "config/ips/local_ip.txt")[0];
+    util.writeToFile(pathToRootFolder + "config/ips/master_ip.txt", localIP);
 }

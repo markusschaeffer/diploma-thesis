@@ -3,7 +3,7 @@
  * 
  * Note: can only be used at a eth node (NO REST COMMUNICATION)
  * 
- * argv[2] : scenario (account, ballot or readWrite)
+ * argv[2] : scenario (account or ballot)
  */
 
 const util = require('./util.js');
@@ -33,11 +33,8 @@ switch (scenario) {
     case 'ballot':
         filePath_abi = pathToRootFolder + "smart_contracts/ballot/target/Ballot.abi";
         break;
-    case 'readWrite':
-        //TODO----------------------------------------
-        break;
     default:
-        throw new Error("Unknown Scenario - use account, ballot or readWrite");
+        throw new Error("Unknown Scenario - use account or ballot");
 
 }
 //get contract ABI from local .abi file
@@ -100,9 +97,6 @@ switch (scenario) {
             });
         }
         break;
-    case 'readWrite':
-        //TODO----------------------------------------
-        break;
     default:
-        throw new Error("Unknown scenario - use account, ballot or readWrite");
+        throw new Error("Unknown scenario - use account or ballot");
 }

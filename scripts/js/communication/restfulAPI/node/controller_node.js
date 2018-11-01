@@ -155,10 +155,6 @@ exports.deployContract = (req, res) => {
                         res.end(JSON.stringify(ip + ": NOK - " + error));
                     });
                 break;
-            case 'readWrite':
-                scenario = "readWrite";
-                //TODO------------------------------------------------------------------------------------------------
-                break;
             default:
                 res.end(JSON.stringify(ip + ": NOK - could not match specified scenario"));
         }
@@ -235,9 +231,6 @@ exports.startBenchmark = (req, res) => {
                     .catch(error => {
                         res.end(JSON.stringify(ip + ": NOK - " + error));
                     });
-                break;
-            case 'readWrite':
-                //TODO------------------------------------------------------------------------------------------------------------------------
                 break;
             default:
                 res.end(JSON.stringify(ip + ": NOK - could not match specified scenario"));

@@ -76,8 +76,6 @@ module.exports = {
                             module.exports.sendStartBenchmarkRequests(scenario, approach, benchmarkId, maxTransactions, maxRuntime, smartContractAddresses);
                         });
                     break;
-                case "readWrite":
-                    break;
                 default:
                     throw new Error("Scenario not found");
             }

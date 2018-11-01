@@ -4,7 +4,7 @@
  * Note:    The first node specified in /config/ips/nodes_ip acts 
  *          as provider for the deployment of the smart contracts
  * 
- * process.argv[2]: scenario-name (e.g. account, ballot or readWrite)
+ * process.argv[2]: scenario-name (e.g. account or ballot)
  * 
  */
 
@@ -30,9 +30,6 @@ switch (scenario) {
     case 'ballot':
         client.deployContract(ip, port, "ballot");
         break;
-    case 'readWrite':
-        client.deployContract(ip, port, "readWrite");
-        break;
     default:
-        throw new Error("Unknown Scenario - use account, ballot or readWrite");
+        throw new Error("Unknown Scenario - use account or ballot");
 }

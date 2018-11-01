@@ -135,12 +135,8 @@ exports.storeContractAddress = (req, res) => {
                     filePath = pathToRootFolder + "storage/contract_addresses_local/ballot.txt";
                     util.saveContractAddress(filePath, jsonRequest.address);
                     break;
-                case 'readWrite':
-                    filePath = pathToRootFolder + "storage/contract_addresses_local/readWrite.txt";
-                    util.saveContractAddress(filePath, jsonRequest.address);
-                    break;
                 default:
-                    new Error("Scenario could not be matched -  use account, ballot or readWrite");
+                    new Error("Scenario could not be matched -  use account or ballot");
             }
         }
         res.end(JSON.stringify("OK"));

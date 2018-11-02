@@ -59,7 +59,7 @@ myContract.deploy({
   })
   .on('transactionHash', function (transactionHash) {})
   .on('receipt', function (receipt) {
-    console.log("contract address is " + receipt.contractAddress)
+    util.printFormatedMessage("Contract address is " + receipt.contractAddress)
   })
   .then(function (newContractInstance) {
     util.printFormatedMessage("CONTRACT DEPLOYED");
@@ -72,7 +72,7 @@ myContract.deploy({
 
     //check the balance of the Smart Contract
     myContract.methods.getBalance().call(function (error, result) {
-        console.log("Balance is: " + web3.utils.fromWei(result, 'ether') + " ether");
+      util.printFormatedMessage("Balance is: " + web3.utils.fromWei(result, 'ether') + " ether");
       })
       .then(function () {
         util.printFormatedMessage("FUNDING CONTRACT");
@@ -89,7 +89,7 @@ myContract.deploy({
           .then(function () {
             //check again the balance of the Smart Contract
             myContract.methods.getBalance().call(function (error, result) {
-              console.log("New balance is: " + web3.utils.fromWei(result, 'ether') + " ether");
+              util.printFormatedMessage("New balance is: " + web3.utils.fromWei(result, 'ether') + " ether");
             })
           })
       })

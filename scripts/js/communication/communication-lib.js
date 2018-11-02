@@ -42,50 +42,44 @@ module.exports = {
             )
             .then(() => mongoose.connection.close())
             .then(() => console.log("mongoDB connection closed"))
+            .then(function () {
+                try {
+
+                    switch (scenario) {
+                        case "account":
+                            //get deployed smart contract addresses from local storage folder
+                            //read the two last lines
+                            readLastLines.read(pathToSmartContractAddresses, 2)
+                                .then(function (lines) {
+                                    smartContractAddresses = lines.split("\n").splice(0, 2);
+                                })
+                                .then(function () {
+                                    module.exports.sendStartBenchmarkRequests(scenario, approach, benchmarkId, maxTransactions, maxRuntime, smartContractAddresses);
+                                });
+                            break;
+                        case "ballot":
+                            //get the deployed smart contract address from local storage folder
+                            //read the last line
+                            readLastLines.read(pathToSmartContractAddresses, 1)
+                                .then(function (lines) {
+                                    smartContractAddresses = lines.split("\n").splice(0, 2);
+                                })
+                                .then(function () {
+                                    module.exports.sendStartBenchmarkRequests(scenario, approach, benchmarkId, maxTransactions, maxRuntime, smartContractAddresses);
+                                });
+                            break;
+                        default:
+                            throw new Error("Scenario not found");
+                    }
+                } catch (error) {
+                    console.log(error);
+                }
+            })
             .catch(err => console.log(err));
-
-        try {
-
-            util.printFormatedMessage("");
-            console.log("scenario: " + scenario);
-            console.log("approach: " + approach);
-            console.log("maxTransactions: " + maxTransactions);
-            console.log("maxRuntime: " + maxRuntime);
-            util.printFormatedMessage("");
-
-            switch (scenario) {
-                case "account":
-                    //get deployed smart contract addresses from local storage folder
-                    //read the two last lines
-                    readLastLines.read(pathToSmartContractAddresses, 2)
-                        .then(function (lines) {
-                            smartContractAddresses = lines.split("\n").splice(0, 2);
-                        })
-                        .then(function () {
-                            module.exports.sendStartBenchmarkRequests(scenario, approach, benchmarkId, maxTransactions, maxRuntime, smartContractAddresses);
-                        });
-                    break;
-                case "ballot":
-                    //get the deployed smart contract address from local storage folder
-                    //read the last line
-                    readLastLines.read(pathToSmartContractAddresses, 1)
-                        .then(function (lines) {
-                            smartContractAddresses = lines.split("\n").splice(0, 2);
-                        })
-                        .then(function () {
-                            module.exports.sendStartBenchmarkRequests(scenario, approach, benchmarkId, maxTransactions, maxRuntime, smartContractAddresses);
-                        });
-                    break;
-                default:
-                    throw new Error("Scenario not found");
-            }
-        } catch (error) {
-            console.log(error);
-        }
     },
 
     sendStartBenchmarkRequests: function (scenario, approach, benchmarkId, maxTransactions, maxRuntime, smartContractAddresses) {
-        
+
         if (benchmarkStartNodes.length == 0) {
             //start benchmark on first node of storage/ips/nodes_ip.txt
             client.startBenchmark(ips[0], port, scenario, approach, benchmarkId, maxTransactions, maxRuntime, smartContractAddresses);

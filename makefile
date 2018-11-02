@@ -22,11 +22,12 @@ geth_httpPort_node1=`cat $(current_dir)/config/ports/geth_http_port_node1.txt`
 ####################AGGREGATED MAKE RULES####################
 
 bootnode_start: 	start_rest_server_bootnode_netstats
-master_start:		start_mongodb clear_IPs clear_mining_settings clear_benchmark_settings start_rest_server_master
+master_start:		start_mongodb clear start_rest_server_master
 node_start: 		start_rest_server_node
 
-geth_start:			prepare geth_node0_startup 
+geth_start:			prepare geth_node0_startup
 
+clear: clear_IPs clear_contract_addresses_local clear_mining_settings clear_benchmark_settings
 prepare: kill_running_geth delete_root_folder init_folders delete_contract_addresses_storage_node
 
 kill_running: kill_running_geth kill_running_bootnode kill_running_node
@@ -147,6 +148,10 @@ clear_IPs:
 	cd storage/ips; sudo rm nodes_ip.txt; touch nodes_ip.txt;
 	cd storage/ips; sudo rm bootnode_ip.txt; touch bootnode_ip.txt;
 	cd storage/ips; sudo rm netstats_ip.txt; touch netstats_ip.txt;
+
+clear_contract_addresses_local:
+	cd storage/contract_addresses_local; sudo rm account.txt; touch account.txt;
+	cd storage/contract_addresses_local; sudo rm ballot.txt; touch ballot.txt;
 
 clear_mining_settings:
 	cd config/mining_settings; sudo rm mining.txt; touch mining.txt;

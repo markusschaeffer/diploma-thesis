@@ -164,11 +164,7 @@ exports.storeNodeIP = (req, res) => {
         //set default mining/sealing configuration for node
         const filePathMiningSetting = pathToRootFolder + "storage/mining_settings/mining.txt";
         util.appendToFile(filePathMiningSetting, "true");
-
-        //set default benchmark setting (start benchmark on node)
-        const filePathBenchmarkStartSetting = pathToRootFolder + "storage/benchmark_settings/benchmark_start.txt";
-        util.appendToFile(filePathBenchmarkStartSetting, "true");
-
+        
         res.end(JSON.stringify("OK"));
     } catch (error) {
         console.log(error);

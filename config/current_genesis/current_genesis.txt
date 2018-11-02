@@ -1,1 +1,1 @@
-genesis_pow_gasLimit_8.json
+genesis_pow_default.json

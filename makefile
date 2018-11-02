@@ -27,7 +27,7 @@ node_start: 		start_rest_server_node
 
 geth_start:			prepare geth_node0_startup
 
-clear: clear_IPs clear_contract_addresses_local clear_mining_settings clear_benchmark_settings
+clear: clear_IPs clear_contract_addresses_local clear_mining_settings
 prepare: kill_running_geth delete_root_folder init_folders delete_contract_addresses_storage_node
 
 kill_running: kill_running_geth kill_running_bootnode kill_running_node
@@ -156,6 +156,3 @@ clear_contract_addresses_local:
 clear_mining_settings:
 	cd storage/mining_settings; sudo rm mining.txt; touch mining.txt;
 	cd storage/mining_settings; sudo rm target_gas_limit.txt; touch target_gas_limit.txt;
-	
-clear_benchmark_settings:
-	cd storage/benchmark_settings; sudo rm benchmark_start.txt; touch benchmark_start.txt;

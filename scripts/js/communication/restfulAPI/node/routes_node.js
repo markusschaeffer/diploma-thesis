@@ -1,6 +1,7 @@
 /**
  * REST routes (node)
  */
+
 module.exports = (app) => {
     let controller = require('./controller_node');
 

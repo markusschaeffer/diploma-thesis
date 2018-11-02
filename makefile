@@ -1,18 +1,12 @@
 # Root file initiating bash scripts/processes
 
 # Startup sequence:
-# 0) Specify IPs of bootnode, eth-netstats, master and geth-nodes in config/ips/
 # 1) Start all REST APIs: 
-#	make bootnode_start; make master_start; make node_start
-# 2) Start GETH clients on nodes
-# 	e.g. via geth_start
-# 	or start clients via REST communication in folder scripts/js/
-# 3) Deploy desired smart contract scenario: 
-#	e.g. via "sudo make deploy_accounts"
-# 	or deploy via REST communication in folder scripts/js/
-# 4) Start benchmark: 
-#	e.g. via "sudo make sc_run_accounts_without_deploy_node0 $(maxTransactions) $(maxRuntime) $(address1) $(address2) $(benchmarkID)" 
-#	or start via REST communication in folder scripts/js/
+#		make master_start; make bootnode_start master_ip=IP; ; make node_start master_ip=IP
+# 2) Start Bootnode and Netstats via startBootnodeAndNetstats.js in scripts/js/communication
+# 3) Start GETH clients via startGethOnNodes.js in scripts/js/communication
+# 4) Deploy desired smart contract scenario via deployContract.js in scripts/js/communication
+# 5) Start benchmark via startBenchmark.js in scripts/js/communication
 
 ####################VARIABLES####################
 
@@ -20,8 +14,8 @@ current_dir = $(shell pwd)
 genesisFile=`cat $(current_dir)/storage/current_genesis_node/current_genesis.txt`
 target_gas_limit=`cat $(current_dir)/config/mining_settings/target_gas_limit.txt`
 mining=`cat $(current_dir)/config/mining_settings/mining.txt`
-bootnode_ip=`cat $(current_dir)/config/ips/bootnode_ip.txt`
-netstats_ip=`cat $(current_dir)/config/ips/netstats_ip.txt`
+bootnode_ip=`cat $(current_dir)/storage/ips/bootnode_ip.txt`
+netstats_ip=`cat $(current_dir)/storage/ips/netstats_ip.txt`
 geth_httpPort_node0=`cat $(current_dir)/config/ports/geth_http_port_node0.txt`
 geth_httpPort_node1=`cat $(current_dir)/config/ports/geth_http_port_node1.txt`
 
@@ -121,13 +115,13 @@ sc_run_ballot_node1:
 
 ####################COMMUNICATION####################
 start_rest_server_master:
-	cd scripts/js/communication/restfulAPI/master/; node server_master.js $(mode)
+	cd scripts/js/communication/restfulAPI/master/; node server_master.js
 
 start_rest_server_node:
-	cd scripts/js/communication/restfulAPI/node/; node server_node.js $(mode)
+	cd scripts/js/communication/restfulAPI/node/; node server_node.js $(master_ip) $(mode)
 
 start_rest_server_bootnode_netstats:
-	cd scripts/js/communication/restfulAPI/bootnode-netstats/; node server_bootnode-netstats.js $(mode)
+	cd scripts/js/communication/restfulAPI/bootnode-netstats/; node server_bootnode-netstats.js $(master_ip) $(mode)
 
 ####################DATABASE####################
 start_mongodb:
@@ -150,9 +144,9 @@ kill_running_node:
 	cd scripts/sh; sudo ./kill_running_node.sh;  
 
 clear_IPs:
-	cd config/ips; sudo rm nodes_ip.txt; touch nodes_ip.txt;
-	cd config/ips; sudo rm bootnode_ip.txt; touch bootnode_ip.txt;
-	cd config/ips; sudo rm netstats_ip.txt; touch netstats_ip.txt;
+	cd storage/ips; sudo rm nodes_ip.txt; touch nodes_ip.txt;
+	cd storage/ips; sudo rm bootnode_ip.txt; touch bootnode_ip.txt;
+	cd storage/ips; sudo rm netstats_ip.txt; touch netstats_ip.txt;
 
 clear_mining_settings:
 	cd config/mining_settings; sudo rm mining.txt; touch mining.txt;

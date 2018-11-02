@@ -80,7 +80,7 @@ switch (scenario) {
         });
         contract.options.address = contractAddress;
 
-        const _numProposals = util.readFileSync_lines(pathToRootFolder + "config/ips/nodes_ip.txt").length;
+        const _numProposals = util.readFileSync_lines(pathToRootFolder + "storage/ips/nodes_ip.txt").length;
         console.log("number of proposals: " + _numProposals);
 
         for (var i = 0; i <= _numProposals - 1; i++) {

@@ -1,6 +1,7 @@
 /**
  * REST routes (master)
  */
+
 module.exports = (app) => {
     let controller = require('./controller_master');
 

@@ -41,11 +41,11 @@ exports.startGeth = (req, res) => {
         util.writeToFile(pathToRootFolder + "config/instance_settings/instance_type.txt", jsonRequest.instanceType);
 
         //update master_ip.txt
-        util.writeToFile(pathToRootFolder + "config/ips/master_ip.txt", jsonRequest.masterIP);
+        util.writeToFile(pathToRootFolder + "storage/ips/master_ip.txt", jsonRequest.masterIP);
         //update bootnode_ip.txt
-        util.writeToFile(pathToRootFolder + "config/ips/bootnode_ip.txt", jsonRequest.bootnodeIP);
+        util.writeToFile(pathToRootFolder + "storage/ips/bootnode_ip.txt", jsonRequest.bootnodeIP);
         //update netstats_ip.txt
-        util.writeToFile(pathToRootFolder + "config/ips/netstats_ip.txt", jsonRequest.netstatsIP);
+        util.writeToFile(pathToRootFolder + "storage/ips/netstats_ip.txt", jsonRequest.netstatsIP);
 
         //start geth client
         var child = spawn("cd " + pathToRootFolder + "; make geth_start;", {

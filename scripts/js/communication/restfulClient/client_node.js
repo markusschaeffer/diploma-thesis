@@ -2,12 +2,13 @@
  * Client (node) for REST communication
  */
 
+const pathToRootFolder = __dirname + "/../../../../";
+
 var util = require('./../../util/util');
 var clientUtil = require('./clientUtil');
 
-const pathToRootFolder = __dirname + "/../../../../";
-const masterIP = util.readFileSync_lines(pathToRootFolder + "config/ips/master_ip.txt")[0];
-const port = util.readFileSync_lines(pathToRootFolder + "config/ports/master_port.txt")[0];
+const masterIP = util.readFileSync_lines(pathToRootFolder + "storage/ips/master_ip.txt")[0];
+const masterRestPort = util.readFileSync_lines(pathToRootFolder + "config/ports/master_port.txt")[0];
 
 module.exports = {
 
@@ -19,7 +20,7 @@ module.exports = {
 
             let options = {
                 method: 'POST',
-                uri: 'http://' + masterIP + ':' + port + '/master-benchmark-log',
+                uri: 'http://' + masterIP + ':' + masterRestPort + '/master-benchmark-log',
                 body: {
                     ip: ip,
                     peerCount: peerCount,
@@ -54,7 +55,7 @@ module.exports = {
 
                 let options = {
                     method: 'POST',
-                    uri: 'http://' + masterIP + ':' + port + '/master-contract-address-receive',
+                    uri: 'http://' + masterIP + ':' + masterRestPort + '/master-contract-address-receive',
                     body: {
                         scenario: scenario,
                         address: address
@@ -65,14 +66,14 @@ module.exports = {
                 await clientUtil.sendRequest(options);
             },
 
-            sendNodeIP: async function (ip) {
+            sendNodeIP: async function (master_IP, own_IP) {
                 util.printFormatedMessage("SENDING sendNodeIP REQUEST");
 
                 let options = {
                     method: 'POST',
-                    uri: 'http://' + masterIP + ':' + port + '/master-store-ip-node',
+                    uri: 'http://' + master_IP + ':' + masterRestPort + '/master-store-ip-node',
                     body: {
-                        ip: ip
+                        ip: own_IP
                     },
                     json: true
                 };

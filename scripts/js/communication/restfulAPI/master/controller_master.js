@@ -4,9 +4,10 @@
 
 const mongoose = require("mongoose");
 const BenchmarkLog = mongoose.model("BenchmarkLog");
+const exec = require('child_process').exec;
+
 const pathToRootFolder = __dirname + "/../../../../../";
 const util = require('./../../../util/util.js');
-const exec = require('child_process').exec;
 const commLib = require(pathToRootFolder + "scripts/js/communication/communication-lib.js");
 
 /**
@@ -16,9 +17,9 @@ exports.logBenchmark = (req, res) => {
 
     util.printFormatedMessage("RECEIVED logBenchmark REQUEST");
 
-    //get amount of nodes in the network from config
+    //get amount of nodes in the network from storage
     var nodes = 0;
-    const ips = util.readFileSync_lines(pathToRootFolder + "config/ips/nodes_ip.txt");
+    const ips = util.readFileSync_lines(pathToRootFolder + "storage/ips/nodes_ip.txt");
     nodes = ips.length;
 
     //get amount of miners in the network from config
@@ -157,7 +158,7 @@ exports.storeNodeIP = (req, res) => {
 
     try {
         //add IP of node to local list of node IPs
-        const filePathNodesIP = pathToRootFolder + "config/ips/nodes_ip.txt";
+        const filePathNodesIP = pathToRootFolder + "storage/ips/nodes_ip.txt";
         util.appendToFile(filePathNodesIP, jsonRequest.ip);
 
         //set default mining/sealing configuration for node
@@ -185,7 +186,7 @@ exports.storeBootnodeIP = (req, res) => {
     console.log(jsonRequest);
 
     try {
-        var filePath = pathToRootFolder + "config/ips/bootnode_ip.txt";
+        var filePath = pathToRootFolder + "storage/ips/bootnode_ip.txt";
         util.appendToFile(filePath, jsonRequest.ip);
         res.end(JSON.stringify("OK"));
     } catch (error) {
@@ -204,7 +205,7 @@ exports.storeNetstatsIP = (req, res) => {
     console.log(jsonRequest);
 
     try {
-        var filePath = pathToRootFolder + "config/ips/netstats_ip.txt";
+        var filePath = pathToRootFolder + "storage/ips/netstats_ip.txt";
         util.appendToFile(filePath, jsonRequest.ip);
         res.end(JSON.stringify("OK"));
     } catch (error) {
@@ -214,12 +215,12 @@ exports.storeNetstatsIP = (req, res) => {
 };
 
 /**
- * initiate next benchmark if there is any left in the storage/temp/benchmark_queue.txt
+ * initiate next benchmark if there is any left in storage/benchmark_queue/benchmark_queue.txt
  */
 exports.initiateNextBenchmark = function (scenario, approach, maxTransactions, maxRuntime) {
     try {
-        //read amount of benchmarks left from benchmark queue from storage/temp
-        benchmarkQueue = parseInt(util.readFileSync_lines(pathToRootFolder + "storage/temp/benchmark_queue.txt")[0], 10);
+        //read amount of benchmarks left from benchmark queue from storage/benchmark_queue/
+        benchmarkQueue = parseInt(util.readFileSync_lines(pathToRootFolder + "storage/benchmark_queue/benchmark_queue.txt")[0], 10);
         if (benchmarkQueue > 0) {
             new Promise(function (resolve, reject) {
                 //startBenchmark

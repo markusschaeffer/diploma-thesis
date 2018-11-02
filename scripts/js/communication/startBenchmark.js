@@ -1,13 +1,13 @@
 /**
  * Script for starting benchmarks via REST API
  * 
- * Note:    config/ips/nodes_ip.txt and config/ports/nodes_port.txt 
+ * Note:    storage/ips/nodes_ip.txt and config/ports/nodes_port.txt 
  *          holds information of IPs and port of the nodes
  * 
  * process.argv[2]: scenario (account, ballot)
  * process.argv[3]: approach (1-3)
- * process.argv[4]: maxTransactions (e.g. 1-10000)
- * process.argv[5]: maxRuntime (maxRuntime in minutes, e.g. 10)
+ * process.argv[4]: maxTransactions (e.g. 1-5000)
+ * process.argv[5]: maxRuntime (maxRuntime in minutes, e.g. 5 minutes)
  */
 const commLib = require('./communication-lib');
 const util = require('./../util/util');
@@ -22,11 +22,11 @@ var maxRuntime = process.argv[5];
 if (scenario == undefined) scenario = "account";
 if (approach == undefined) approach = 3;
 if (maxTransactions == undefined) maxTransactions = 1000;
-if (maxRuntime == undefined) maxRuntime = 5;
+if (maxRuntime == undefined) maxRuntime = 3;
 
 //startBenchmark
 commLib.startBenchmark(scenario, approach, maxTransactions, maxRuntime);
 
 //decrease benchmark queue
-util.writeToFile(pathToRootFolder + "storage/temp/benchmark_queue.txt",
-    parseInt(util.readFileSync_lines(pathToRootFolder + "storage/temp/benchmark_queue.txt")[0]) - 1);
+util.writeToFile(pathToRootFolder + "storage/benchmark_queue/benchmark_queue.txt",
+    parseInt(util.readFileSync_lines(pathToRootFolder + "storage/benchmark_queue/benchmark_queue.txt")[0]) - 1);

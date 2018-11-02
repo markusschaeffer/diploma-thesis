@@ -1,7 +1,7 @@
 /**
  * Communication - lib
  * 
- * Note:    config/ips/nodes_ip.txt and config/ports/nodes_port.txt 
+ * Note:    storage/ips/nodes_ip.txt and config/ports/nodes_port.txt 
  *          holds information of IPs and port of the nodes
  * 
  */
@@ -18,7 +18,7 @@ const benchmarkStartNodes = util.readFileSync_lines(pathToRootFolder + "config/b
 const dbname = util.readFileSync_lines(pathToRootFolder + "config/db_settings/db_name.txt")[0];
 const dbIP = util.readFileSync_lines(pathToRootFolder + "config/db_settings/db_ip.txt")[0];
 const dbPort = util.readFileSync_lines(pathToRootFolder + "config/db_settings/db_port.txt")[0];
-const ips = util.readFileSync_lines(pathToRootFolder + "config/ips/nodes_ip.txt");
+const ips = util.readFileSync_lines(pathToRootFolder + "storage/ips/nodes_ip.txt");
 const port = util.readFileSync_lines(pathToRootFolder + "config/ports/node_port.txt")[0];
 
 module.exports = {
@@ -67,7 +67,7 @@ module.exports = {
                     break;
                 case "ballot":
                     //get the deployed smart contract address from local storage folder
-                    //read the last line1
+                    //read the last line
                     readLastLines.read(pathToSmartContractAddresses, 1)
                         .then(function (lines) {
                             smartContractAddresses = lines.split("\n").splice(0, 2);

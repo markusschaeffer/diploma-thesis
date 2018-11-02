@@ -15,7 +15,7 @@ const genesis = util.readFileSync_lines(pathToRootFolder + "config/current_genes
 const instanceType = util.readFileSync_lines(pathToRootFolder + "config/instance_settings/instance_type.txt")[0];
 const bootnodeIP = util.readFileSync_lines(pathToRootFolder + "storage/ips/bootnode_ip.txt")[0];
 const netstatsIP = util.readFileSync_lines(pathToRootFolder + "storage/ips/netstats_ip.txt")[0];
-const miningSettings = util.readFileSync_lines(pathToRootFolder + "config/mining_settings/mining.txt");
+const miningSettings = util.readFileSync_lines(pathToRootFolder + "storage/mining_settings/mining.txt");
 
 /*
  * If targetGasLimit was not manually set in target_gas_limit.txt use the gasLimit set in the genesis.json
@@ -24,13 +24,19 @@ const manualtargetGasLimit = util.readFileSync_lines(pathToRootFolder + "config/
 var targetGasLimit = manualtargetGasLimit;
 var genesisJson = require(pathToRootFolder + "genesis_json_files/" + genesis);
 var genesisGasLimit;
-for (var key in genesisJson) {
-    if (key == "gasLimit")
-        genesisGasLimit = parseInt(genesisJson[key], 16); //convert hex to int
-}
-if (manualtargetGasLimit == null)
-    targetGasLimit = genesisGasLimit;
 
+for (var key in genesisJson) {
+    if (key == "gasLimit"){
+        genesisGasLimit = parseInt(genesisJson[key], 16); //convert hex to int
+    }
+}
+if (manualtargetGasLimit == null){
+    console.log("Geth targeGasLimit set to genesisGasLimit");
+    targetGasLimit = genesisGasLimit;
+}else{
+    console.log("Geth targeGasLimit manually set to value in target_gas_limit.txt");
+}
+    
 var masterIP;
 if (mode != "local") {
     publicIp.v4().then(function (masterIP) {

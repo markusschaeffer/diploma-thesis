@@ -24,7 +24,7 @@ exports.logBenchmark = (req, res) => {
 
     //get amount of miners in the network from config
     var miners = 0;
-    const miningSettings = util.readFileSync_lines(pathToRootFolder + "config/mining_settings/mining.txt");
+    const miningSettings = util.readFileSync_lines(pathToRootFolder + "storage/mining_settings/mining.txt");
     for (var i = 0; i <= miningSettings.length - 1; i++) {
         if (miningSettings[i] == "true")
             miners++;
@@ -162,11 +162,11 @@ exports.storeNodeIP = (req, res) => {
         util.appendToFile(filePathNodesIP, jsonRequest.ip);
 
         //set default mining/sealing configuration for node
-        const filePathMiningSetting = pathToRootFolder + "config/mining_settings/mining.txt";
+        const filePathMiningSetting = pathToRootFolder + "storage/mining_settings/mining.txt";
         util.appendToFile(filePathMiningSetting, "true");
 
         //set default benchmark setting (start benchmark on node)
-        const filePathBenchmarkStartSetting = pathToRootFolder + "config/benchmark_settings/benchmark_start.txt";
+        const filePathBenchmarkStartSetting = pathToRootFolder + "storage/benchmark_settings/benchmark_start.txt";
         util.appendToFile(filePathBenchmarkStartSetting, "true");
 
         res.end(JSON.stringify("OK"));

@@ -34,11 +34,11 @@ exports.startGeth = (req, res) => {
         //update current_genesis.txt
         util.writeToFile(pathToRootFolder + "storage/current_genesis_node/current_genesis.txt", jsonRequest.genesis);
         //update target_gas_limit.txt
-        util.writeToFile(pathToRootFolder + "config/mining_settings/target_gas_limit.txt", jsonRequest.targetGasLimit);
+        util.writeToFile(pathToRootFolder + "storage/mining_settings/target_gas_limit.txt", jsonRequest.targetGasLimit);
         //update mining.txt
-        util.writeToFile(pathToRootFolder + "config/mining_settings/mining.txt", jsonRequest.mining);
+        util.writeToFile(pathToRootFolder + "storage/mining_settings/mining.txt", jsonRequest.mining);
         //update instance_settings.txt
-        util.writeToFile(pathToRootFolder + "config/instance_settings/instance_type.txt", jsonRequest.instanceType);
+        util.writeToFile(pathToRootFolder + "storage/instance_settings/instance_type.txt", jsonRequest.instanceType);
 
         //update master_ip.txt
         util.writeToFile(pathToRootFolder + "storage/ips/master_ip.txt", jsonRequest.masterIP);
@@ -148,6 +148,10 @@ exports.deployContract = (req, res) => {
                         //get contract addresses from storage folder of server
                         var filePath = pathToRootFolder + "storage/contract_addresses_node/ballot.txt";
                         var address = util.readFileSync_lines(filePath)[0];
+
+                        util.printFormatedMessage("ADDRESS IN CONTROLLER_NODE is: " + address);
+
+
                         //send addresses to master
                         client.sendContractAddresses(scenario, address);
                     })

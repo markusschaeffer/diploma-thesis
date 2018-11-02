@@ -12,8 +12,8 @@
 
 current_dir = $(shell pwd)
 genesisFile=`cat $(current_dir)/storage/current_genesis_node/current_genesis.txt`
-target_gas_limit=`cat $(current_dir)/config/mining_settings/target_gas_limit.txt`
-mining=`cat $(current_dir)/config/mining_settings/mining.txt`
+target_gas_limit=`cat $(current_dir)/storage/mining_settings/target_gas_limit.txt`
+mining=`cat $(current_dir)/storage/mining_settings/mining.txt`
 bootnode_ip=`cat $(current_dir)/storage/ips/bootnode_ip.txt`
 netstats_ip=`cat $(current_dir)/storage/ips/netstats_ip.txt`
 geth_httpPort_node0=`cat $(current_dir)/config/ports/geth_http_port_node0.txt`
@@ -154,7 +154,8 @@ clear_contract_addresses_local:
 	cd storage/contract_addresses_local; sudo rm ballot.txt; touch ballot.txt;
 
 clear_mining_settings:
-	cd config/mining_settings; sudo rm mining.txt; touch mining.txt;
-
+	cd storage/mining_settings; sudo rm mining.txt; touch mining.txt;
+	cd storage/mining_settings; sudo rm target_gas_limit.txt; touch target_gas_limit.txt;
+	
 clear_benchmark_settings:
-	cd config/benchmark_settings; sudo rm benchmark_start.txt; touch benchmark_start.txt;
+	cd storage/benchmark_settings; sudo rm benchmark_start.txt; touch benchmark_start.txt;

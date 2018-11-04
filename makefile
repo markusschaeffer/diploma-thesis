@@ -42,7 +42,6 @@ install_master:
 ####################INIT NODE FOLDERS####################
 init_folders: delete_root_folder
 	cd scripts/sh; sudo ./init_folders.sh 0
-	cd scripts/sh; sudo ./init_folders.sh 1
 
 delete_contract_addresses_storage_node:
 	cd scripts/sh; sudo ./delete_contract_addresses_storage_node.sh 

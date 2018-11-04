@@ -9,6 +9,9 @@ sudo apt-get update
 sudo apt-get install ntp -y
 sudo service ntp start
 
+#DNSUTILS for dig
+sudo apt-get install -y dnsutils 
+
 #GNU C COmpiler
 sudo apt-get install gcc -y
 

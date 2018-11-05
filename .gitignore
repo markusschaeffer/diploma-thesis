@@ -3,8 +3,3 @@ eth-netstats/
 node_modules/
 package-lock.json
 .ipynb_checkpoints
-storage/contract_addresses_local/
-storage/current_genesis/
-storage/ips/
-storage/mining_settings/
-

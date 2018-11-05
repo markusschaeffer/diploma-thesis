@@ -14,6 +14,7 @@ let BenchmarkLogSchema = new Schema({
     scenario: {type: String},
     approach: {type: Number},
     instanceType: {type: String},
+    docker: {type: Boolean},
     nodes: {type: Number},
     peerCount: {type: Number},
     targetGasLimit: {type: Number},

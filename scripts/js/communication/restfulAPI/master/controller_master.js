@@ -30,6 +30,9 @@ exports.logBenchmark = (req, res) => {
             miners++;
     }
 
+    //get docker environment variable
+    const docker = util.readFileSync_lines(pathToRootFolder + "config/environment/docker.txt")[0];
+
     //read parameters from usedGenesisJson
     var genesisJson = require(pathToRootFolder + "genesis_json_files/" + req.body.usedGenesisJson);
     var clique = false;
@@ -76,6 +79,7 @@ exports.logBenchmark = (req, res) => {
         scenario: req.body.scenario,
         approach: req.body.approach,
         instanceType: req.body.instanceType,
+        docker: docker,
         nodes: nodes,
         peerCount: req.body.peerCount,
         targetGasLimit: req.body.targetGasLimit,
@@ -164,7 +168,7 @@ exports.storeNodeIP = (req, res) => {
         //set default mining/sealing configuration for node
         const filePathMiningSetting = pathToRootFolder + "storage/mining_settings/mining.txt";
         util.appendToFile(filePathMiningSetting, "true");
-        
+
         res.end(JSON.stringify("OK"));
     } catch (error) {
         console.log(error);

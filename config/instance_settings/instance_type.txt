@@ -1,1 +1,1 @@
-unknown
+c5.xlarge

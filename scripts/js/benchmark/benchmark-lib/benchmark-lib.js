@@ -36,7 +36,7 @@ module.exports = {
             const usedGenesisJson = util.readFileSync_lines(pathToRootFolder + "storage/current_genesis_node/current_genesis.txt")[0];
             const targetGasLimit = util.readFileSync_lines(pathToRootFolder + "storage/mining_settings/target_gas_limit.txt")[0];
             const mining = util.readFileSync_lines(pathToRootFolder + "storage/mining_settings/mining.txt")[0];
-            const instanceType = util.readFileSync_lines(pathToRootFolder + "config/instance_settings/instance_type.txt")[0];
+            const instanceType = util.readFileSync_lines(pathToRootFolder + "storage/instance_settings/instance_type.txt")[0];
 
             var ip;
             var peerCount;

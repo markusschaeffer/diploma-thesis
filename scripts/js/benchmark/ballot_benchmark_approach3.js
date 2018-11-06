@@ -112,8 +112,7 @@ function handleTransaction(transactionNumber) {
     transactionsTimestampMapStart.set(transactionNumber, new Date());
 
     contract.methods.vote(proposalId).send({
-        from: accountAddress,
-        gas: 10000000
+        from: accountAddress
       })
       .once('transactionHash', function (hash) {
         console.log(httpProviderString + ": received transaction hash " + transactionNumber + " at " + timestamp('HH:mm:ss:ms'));

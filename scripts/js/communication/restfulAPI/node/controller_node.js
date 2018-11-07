@@ -148,10 +148,7 @@ exports.deployContract = (req, res) => {
                         //get contract addresses from storage folder of server
                         var filePath = pathToRootFolder + "storage/contract_addresses_node/ballot.txt";
                         var address = util.readFileSync_lines(filePath)[0];
-
-                        util.printFormatedMessage("ADDRESS IN CONTROLLER_NODE is: " + address);
-
-
+                        
                         //send addresses to master
                         client.sendContractAddresses(scenario, address);
                     })

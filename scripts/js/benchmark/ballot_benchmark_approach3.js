@@ -79,7 +79,7 @@ runBenchmark(maxTransactions, maxRuntimeInSeconds);
 async function runBenchmark(maxTransactions, maxRuntime) {
 
   //vote for a random proposal
-  const numProposals = util.readFileSync_lines(pathToRootFolder + "storage/ips/nodes_ip.txt").length;
+  const numProposals = 20;
   proposalId = Math.floor(Math.random() * numProposals);
 
   startTime = new Date();

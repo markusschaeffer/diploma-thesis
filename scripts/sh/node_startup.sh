@@ -144,8 +144,7 @@ if [ "$mining" = true ]; then
         --password $ETH_DIR/node-$WANIP-$nodeIndex/password.txt \
         --etherbase 0 \
         --mine \
-        --metrics \
-        --minerthreads 8 &
+        --metrics &
 else
     geth \
         --datadir $ETH_DIR/node-$WANIP-$nodeIndex/ \

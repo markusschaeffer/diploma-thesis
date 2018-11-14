@@ -17,7 +17,6 @@ mining=`cat $(current_dir)/storage/mining_settings/mining.txt`
 bootnode_ip=`cat $(current_dir)/storage/ips/bootnode_ip.txt`
 netstats_ip=`cat $(current_dir)/storage/ips/netstats_ip.txt`
 geth_httpPort_node0=`cat $(current_dir)/config/ports/geth_http_port_node0.txt`
-geth_httpPort_node1=`cat $(current_dir)/config/ports/geth_http_port_node1.txt`
 
 ####################AGGREGATED MAKE RULES####################
 
@@ -78,20 +77,11 @@ geth_node0_stop:
 geth_node0_resume:
 	cd scripts/sh; sudo ./node_resume.sh 0
 
-geth_node1_startup:
-	cd scripts/sh; sudo ./node_startup.sh 1 $(netstats_ip) $(bootnode_ip) $(current_dir)/genesis_json_files/$(genesisFile) $(genesisFile) $(target_gas_limit) $(mining)
+geth_nodes_startup: geth_node0_startup
 
-geth_node1_stop:
-	cd scripts/sh; sudo ./node_stop.sh 1
+geth_nodes_stop: geth_node0_stop
 
-geth_node1_resume:
-	cd scripts/sh; sudo ./node_resume.sh 1
-
-geth_nodes_startup: geth_node0_startup geth_node1_startup
-
-geth_nodes_stop: geth_node0_stop geth_node1_stop
-
-geth_nodes_resume: geth_node0_resume geth_node1_resume
+geth_nodes_resume: geth_node0_resume
 
 ####################SMART CONTRACTS DEPLOYMENT & BENCHMARK####################
 sc_deploy_accounts: delete_contract_addresses_storage_node
@@ -101,17 +91,14 @@ sc_deploy_accounts: delete_contract_addresses_storage_node
 sc_run_accounts_node0:
 	cd scripts/js/benchmark; sudo node account_benchmark_approach3.js $(geth_httpPort_node0) $(maxTransactions) $(maxRuntime) $(address1) $(address2) $(benchmarkID)
 
-sc_run_accounts_node1:
-	cd scripts/js/benchmark; node account_benchmark_approach3.js $(geth_httpPort_node1) $(maxTransactions) $(maxRuntime) $(address1) $(address2) $(benchmarkID)
+sc_run_accounts_node0_approach_1:
+	cd scripts/js/benchmark; sudo node account_benchmark_approach1.js $(geth_httpPort_node0) $(maxTransactions) $(maxRuntime) $(address1) $(address2) $(benchmarkID)
 
 sc_deploy_ballot: delete_contract_addresses_storage_node
 	cd scripts/js/deployment; node ballot.js
 
 sc_run_ballot_node0:
 	cd scripts/js/benchmark; sudo node ballot_benchmark_approach3.js $(geth_httpPort_node0) $(maxTransactions) $(maxRuntime) $(address) $(benchmarkID)
-
-sc_run_ballot_node1:
-	cd scripts/js/benchmark; node ballot_benchmark_approach3.js $(geth_httpPort_node1) $(maxTransactions) $(maxRuntime) $(address) $(benchmarkID)
 
 ####################COMMUNICATION####################
 start_rest_server_master:
@@ -130,9 +117,6 @@ start_mongodb:
 ####################UTIL####################
 attach_cli_node0:
 	cd scripts/sh; sudo ./attach.sh 0
-
-attach_cli_node1:
-	cd scripts/sh; sudo ./attach.sh 1
 	
 kill_running_geth:
 	cd scripts/sh; sudo ./kill_running_geth.sh;

@@ -148,7 +148,7 @@ exports.deployContract = (req, res) => {
                         //get contract addresses from storage folder of server
                         var filePath = pathToRootFolder + "storage/contract_addresses_node/ballot.txt";
                         var address = util.readFileSync_lines(filePath)[0];
-                        
+
                         //send addresses to master
                         client.sendContractAddresses(scenario, address);
                     })
@@ -183,20 +183,41 @@ exports.startBenchmark = (req, res) => {
             case 'account':
                 new Promise(function (resolve, reject) {
                         //start account scenario benchmark
-                        var child = exec("cd " + pathToRootFolder + "; make sc_run_accounts_node0" +
-                            " maxTransactions=" + jsonRequest.maxTransactions +
-                            " maxRuntime=" + jsonRequest.maxRuntime +
-                            " address1=" + jsonRequest.smartContractAddresses[0] +
-                            " address2=" + jsonRequest.smartContractAddresses[1] +
-                            " benchmarkID=" + jsonRequest.benchmarkID +
-                            ";",
-                            function (error, stdout, stderr) {
-                                resolve(stdout);
-                                if (error !== null)
-                                    reject(error);
-                            });
-                        // attach listeners to the stdout and stderr.
-                        exports.attachListeners(child);
+
+                        if (jsonRequest.approach == 3) {
+                            var child = exec("cd " + pathToRootFolder + "; make sc_run_accounts_node0" +
+                                " maxTransactions=" + jsonRequest.maxTransactions +
+                                " maxRuntime=" + jsonRequest.maxRuntime +
+                                " address1=" + jsonRequest.smartContractAddresses[0] +
+                                " address2=" + jsonRequest.smartContractAddresses[1] +
+                                " benchmarkID=" + jsonRequest.benchmarkID +
+                                ";",
+                                function (error, stdout, stderr) {
+                                    resolve(stdout);
+                                    if (error !== null)
+                                        reject(error);
+                                });
+                            // attach listeners to the stdout and stderr.
+                            exports.attachListeners(child);
+                        } else if (jsonRequest.approach == 1) {
+                            var child = exec("cd " + pathToRootFolder + "; make sc_run_accounts_node0_approach_1" +
+                                " maxTransactions=" + jsonRequest.maxTransactions +
+                                " maxRuntime=" + jsonRequest.maxRuntime +
+                                " address1=" + jsonRequest.smartContractAddresses[0] +
+                                " address2=" + jsonRequest.smartContractAddresses[1] +
+                                " benchmarkID=" + jsonRequest.benchmarkID +
+                                ";",
+                                function (error, stdout, stderr) {
+                                    resolve(stdout);
+                                    if (error !== null)
+                                        reject(error);
+                                });
+                            // attach listeners to the stdout and stderr.
+                            exports.attachListeners(child);
+                        } else {
+                            res.end(JSON.stringify(ip + ": NOK - could not match specified approach"));
+                            throw new Error("could not match specified approach");
+                        }
 
                         res.end(JSON.stringify(ip + ": benchmark with benchmarkID " + jsonRequest.benchmarkID + " started"));
                     })

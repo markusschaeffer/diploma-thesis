@@ -1,10 +1,7 @@
 
 # Framework for Benchmarking the Performance of Differently Configured Private Ethereum Networks (using Geth)
 
-This is the repository for my diploma-thesis, which is related to Ethereum performance and scalability measurements.
-The aim is to benchmark metrics of differently configured Ethereum networks.
-
-# Attention: This is still WORK IN PROGRESS!
+This is the repository for my diploma-thesis, which is related to Ethereum performance and scalability measurements. The aim is to benchmark metrics of differently configured Ethereum networks.
 
 # Concept
 
@@ -13,9 +10,9 @@ The aim is to benchmark metrics of differently configured Ethereum networks.
     - Proof of Work (Ethash): mining difficulty
     - Proof of Authority (Clique): period
 - Block size: gasLimit (genesis.json) and targetGasLimit (geth)
-- Type of workload: smart contract scenario (account, voting)
-- Blockchain network size: amount of nodes in the network (1-20)
+- Type of workload: smart contract (account, voting)
 - Configuration of nodes in the network (CPU, RAM) (different AWS EC2 instances)
+- Blockchain network size: amount of nodes in the network (1-20)
 
 ## Metrics
 - Throughput: the number of successful transactions per second.
@@ -30,14 +27,14 @@ The aim is to benchmark metrics of differently configured Ethereum networks.
 
 ![Architecture](architecture_overview.png)
 
-## Startup Procedure for Benchmarks on AWS EC2 instances
+## Startup Procedure for Measurements on AWS EC2 Instances
+- Start a AWS Cloudformation Stack (use a template in aws_cloudformation_templates; Docker image https://hub.docker.com/r/markusschaeffer3011/diploma-thesis/ is executed)
 - Start REST API and mongoDB on master (via "make master_start")
-- Use One of the provided templates for AWS to startup a stack (required software is installed and REST APIs are automatically started on instance startup)
 - Start bootnode and netstats (via REST: "node startBootnodeAndNetstats.js")
 - Start Geth on nodes (via REST: "node startGethOnNodes.js")
-- Deploy smart contract scenario on a node (via REST: e.g. "node deployContracts.js account" or "node deployContracts.js ballot")
+- Deploy smart contract scenario (via REST: e.g. "node deployContracts.js account" or "node deployContracts.js ballot")
 - Start benchmarks from master node (via REST: "node startBenchmark.js account" or "node startBenchmark.js ballot")
-- Benchmark results are stored on the master DB (send via REST from nodes to master)
+- Benchmark results are stored on the master DB (send via REST from nodes to master, mongo service needs to be running)
 
 ## Startup Procedure for Benchmarks on a Local Machine
 - Start REST API and mongoDB on master (via "make master_start")
@@ -47,8 +44,5 @@ The aim is to benchmark metrics of differently configured Ethereum networks.
 - Start Geth on nodes (via REST: "node startGethOnNodes.js")
 - Deploy smart contract scenario on a node (via REST: e.g. "node deployContracts.js account" or "node deployContracts.js ballot")
 - Start benchmarks from master node (via REST: "node startBenchmark.js account" or "node startBenchmark.js ballot")
-- Benchmark results are stored on the master DB (send via REST from nodes to master)
+- Benchmark results are stored on the master DB (send via REST from nodes to master; mongo service needs to be running)
 
-## Local MongoDB
-- start via "mongo" 
-- select last entries descending on startTime: "db.benchmarklogs.find().pretty().sort({"startTime":-1})"

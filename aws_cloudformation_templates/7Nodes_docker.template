@@ -1,0 +1,282 @@
+{
+	"AWSTemplateFormatVersion" : "2010-09-09",
+
+	"Description" : "Creates EC2 instances for nodes and bootnode/netstats. Starts REST servers for nodes and bootnode/netstats via docker container start-up. Github: https://github.com/markusschaeffer/diploma-thesis Docker-Hub: https://hub.docker.com/r/markusschaeffer3011/diploma-thesis-image/",
+
+	"Metadata" : 
+	{
+		"AWS::CloudFormation::Interface" : 
+		{
+			"ParameterGroups" : [
+			{
+				"Label" : { "default" : "Master IP Configuration" },
+				"Parameters" : [ "MasterIP"]
+			},
+			{
+				"Label" : { "default" : "EC2InstanceType Configuration" },
+				"Parameters" : [ "EC2InstanceTypeGethNode","EC2InstanceTypeBootnodeAndNetstats"]
+			},
+			{
+				"Label" : { "default" : "Docker Image Configuration" },
+				"Parameters" : [ "DockerImageName"]
+			},
+			{
+				"Label" : { "default": "AWS Security Configuration" },
+				"Parameters" : [ "KeyName", "SSHLocation" ]
+			}]
+		}
+	},
+
+	"Parameters" : 
+	{
+		"MasterIP": 
+		{
+		  "Description" : "Public IP of the Master Node running the Logging Service",
+		  "Type": "String",
+		  "Default" : "84.113.198.166"
+		},
+		
+		"DockerImageName" : 
+		{
+		  "Description" : "Docker Image to be run",
+		  "Type" : "String",
+		  "Default" : "markusschaeffer3011/diploma-thesis"
+		},
+
+		"EC2InstanceTypeGethNode" : 
+		{
+		  "Description" : "Nodes running GETH and the REST API ",
+		  "Type" : "String",
+		  "Default" : "c5.xlarge",
+		  "AllowedValues" : [ "t2.xlarge", "c5.large", "c5.xlarge", "c5.2xlarge", "c5.4xlarge"]
+		},
+		
+		"EC2InstanceTypeBootnodeAndNetstats" : 
+		{
+		  "Description" : "Node running the Bootnode and Netstats",
+		  "Type" : "String",
+		  "Default" : "c5.xlarge",
+		  "AllowedValues" : [ "t2.xlarge", "c5.large", "c5.xlarge", "c5.2xlarge", "c5.4xlarge" ]
+		},
+
+		"KeyName": 
+		{
+		  "Description" : "Name of an existing EC2 KeyPair to enable SSH access to the instance",
+		  "Type": "AWS::EC2::KeyPair::KeyName",
+		  "Default" : "keypair",
+		  "ConstraintDescription" : "must be the name of an existing EC2 KeyPair."
+		},
+		
+		"SSHLocation" : 
+		{
+            "Description" : "The IP address range that can be used to SSH to the EC2 instances",
+            "Type": "String",
+            "MinLength": "9",
+            "MaxLength": "18",
+            "Default": "0.0.0.0/0",
+            "AllowedPattern": "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})",
+            "ConstraintDescription": "Must be a valid IP CIDR range of the form x.x.x.x/x"
+        }
+	},
+
+	"Resources" : 
+	{
+		"Node1" : 
+		{
+			"Type" : "AWS::EC2::Instance",
+			"Properties" : 
+			{
+				"Tags" : [ {"Key" : "Name", "Value" : "Node1"} ],
+				"InstanceType" : { "Ref" : "EC2InstanceTypeGethNode" },
+				"KeyName" : { "Ref" : "KeyName" },
+				"ImageId" : "ami-027583e616ca104df",
+				"AvailabilityZone": "eu-central-1a",
+				"SecurityGroups" : [ { "Ref" : "InstanceSecurityGroup" } ],
+				"UserData" :	{	"Fn::Base64" : { "Fn::Join" : ["",[
+												"#!/bin/bash \n",
+												"sudo apt-get update \n",
+												"sudo apt-get install -y docker.io \n",
+												"sudo docker run --net=host ",{"Ref":"DockerImageName"}," /bin/bash -c \"cd ~/diploma-thesis; make node_start master_ip=",{"Ref":"MasterIP"},"\" "
+												]]}
+								}		
+			}
+		},
+		
+		"Node2" : 
+		{
+			"Type" : "AWS::EC2::Instance",
+			"Properties" : 
+			{
+				"Tags" : [ {"Key" : "Name", "Value" : "Node2"} ],
+				"InstanceType" : { "Ref" : "EC2InstanceTypeGethNode" },
+				"KeyName" : { "Ref" : "KeyName" },
+				"ImageId" : "ami-027583e616ca104df",
+				"AvailabilityZone": "eu-central-1a",
+				"SecurityGroups" : [ { "Ref" : "InstanceSecurityGroup" } ],
+				"UserData" :	{	"Fn::Base64" : { "Fn::Join" : ["",[
+												"#!/bin/bash \n",
+												"sudo apt-get update \n",
+												"sudo apt-get install -y docker.io \n",
+												"sudo docker run --net=host ",{"Ref":"DockerImageName"}," /bin/bash -c \"cd ~/diploma-thesis; make node_start master_ip=",{"Ref":"MasterIP"},"\" "
+												]]}
+								}		
+			}
+		},
+		
+		"Node3" : 
+		{
+			"Type" : "AWS::EC2::Instance",
+			"Properties" : 
+			{
+				"Tags" : [ {"Key" : "Name", "Value" : "Node3"} ],
+				"InstanceType" : { "Ref" : "EC2InstanceTypeGethNode" },
+				"KeyName" : { "Ref" : "KeyName" },
+				"ImageId" : "ami-027583e616ca104df",
+				"AvailabilityZone": "eu-central-1a",
+				"SecurityGroups" : [ { "Ref" : "InstanceSecurityGroup" } ],
+				"UserData" :	{	"Fn::Base64" : { "Fn::Join" : ["",[
+												"#!/bin/bash \n",
+												"sudo apt-get update \n",
+												"sudo apt-get install -y docker.io \n",
+												"sudo docker run --net=host ",{"Ref":"DockerImageName"}," /bin/bash -c \"cd ~/diploma-thesis; make node_start master_ip=",{"Ref":"MasterIP"},"\" "
+												]]}
+								}		
+			}
+		},
+		
+		"Node4" : 
+		{
+			"Type" : "AWS::EC2::Instance",
+			"Properties" : 
+			{
+				"Tags" : [ {"Key" : "Name", "Value" : "Node4"} ],
+				"InstanceType" : { "Ref" : "EC2InstanceTypeGethNode" },
+				"KeyName" : { "Ref" : "KeyName" },
+				"ImageId" : "ami-027583e616ca104df",
+				"AvailabilityZone": "eu-central-1a",
+				"SecurityGroups" : [ { "Ref" : "InstanceSecurityGroup" } ],
+				"UserData" :	{	"Fn::Base64" : { "Fn::Join" : ["",[
+												"#!/bin/bash \n",
+												"sudo apt-get update \n",
+												"sudo apt-get install -y docker.io \n",
+												"sudo docker run --net=host ",{"Ref":"DockerImageName"}," /bin/bash -c \"cd ~/diploma-thesis; make node_start master_ip=",{"Ref":"MasterIP"},"\" "
+												]]}
+								}		
+			}
+		},
+		
+		"Node5" : 
+		{
+			"Type" : "AWS::EC2::Instance",
+			"Properties" : 
+			{
+				"Tags" : [ {"Key" : "Name", "Value" : "Node5"} ],
+				"InstanceType" : { "Ref" : "EC2InstanceTypeGethNode" },
+				"KeyName" : { "Ref" : "KeyName" },
+				"ImageId" : "ami-027583e616ca104df",
+				"AvailabilityZone": "eu-central-1a",
+				"SecurityGroups" : [ { "Ref" : "InstanceSecurityGroup" } ],
+				"UserData" :	{	"Fn::Base64" : { "Fn::Join" : ["",[
+												"#!/bin/bash \n",
+												"sudo apt-get update \n",
+												"sudo apt-get install -y docker.io \n",
+												"sudo docker run --net=host ",{"Ref":"DockerImageName"}," /bin/bash -c \"cd ~/diploma-thesis; make node_start master_ip=",{"Ref":"MasterIP"},"\" "
+												]]}
+								}		
+			}
+		},
+		
+		"Node6" : 
+		{
+			"Type" : "AWS::EC2::Instance",
+			"Properties" : 
+			{
+				"Tags" : [ {"Key" : "Name", "Value" : "Node6"} ],
+				"InstanceType" : { "Ref" : "EC2InstanceTypeGethNode" },
+				"KeyName" : { "Ref" : "KeyName" },
+				"ImageId" : "ami-027583e616ca104df",
+				"AvailabilityZone": "eu-central-1a",
+				"SecurityGroups" : [ { "Ref" : "InstanceSecurityGroup" } ],
+				"UserData" :	{	"Fn::Base64" : { "Fn::Join" : ["",[
+												"#!/bin/bash \n",
+												"sudo apt-get update \n",
+												"sudo apt-get install -y docker.io \n",
+												"sudo docker run --net=host ",{"Ref":"DockerImageName"}," /bin/bash -c \"cd ~/diploma-thesis; make node_start master_ip=",{"Ref":"MasterIP"},"\" "
+												]]}
+								}		
+			}
+		},
+		
+		"Node7" : 
+		{
+			"Type" : "AWS::EC2::Instance",
+			"Properties" : 
+			{
+				"Tags" : [ {"Key" : "Name", "Value" : "Node7"} ],
+				"InstanceType" : { "Ref" : "EC2InstanceTypeGethNode" },
+				"KeyName" : { "Ref" : "KeyName" },
+				"ImageId" : "ami-027583e616ca104df",
+				"AvailabilityZone": "eu-central-1a",
+				"SecurityGroups" : [ { "Ref" : "InstanceSecurityGroup" } ],
+				"UserData" :	{	"Fn::Base64" : { "Fn::Join" : ["",[
+												"#!/bin/bash \n",
+												"sudo apt-get update \n",
+												"sudo apt-get install -y docker.io \n",
+												"sudo docker run --net=host ",{"Ref":"DockerImageName"}," /bin/bash -c \"cd ~/diploma-thesis; make node_start master_ip=",{"Ref":"MasterIP"},"\" "
+												]]}
+								}		
+			}
+		},
+		
+		"BootnodeAndNetstats" : 
+		{
+			"Type" : "AWS::EC2::Instance",
+			"Properties" : 
+			{
+				"Tags" : [ {"Key" : "Name", "Value" : "BootnodeAndNetstats"} ],
+				"InstanceType" : { "Ref" : "EC2InstanceTypeBootnodeAndNetstats" },
+				"KeyName" : { "Ref" : "KeyName" },
+				"ImageId" : "ami-027583e616ca104df",
+				"AvailabilityZone": "eu-central-1a",
+				"SecurityGroups" : [ { "Ref" : "InstanceSecurityGroup" } ],
+				"UserData" :	{	"Fn::Base64" : { "Fn::Join" : ["",[
+												"#!/bin/bash \n",
+												"sudo apt-get update \n",
+												"sudo apt-get install -y docker.io \n",
+												"sudo docker run --net=host ",{"Ref":"DockerImageName"}," /bin/bash -c \"cd ~/diploma-thesis; make bootnode_start master_ip=",{"Ref":"MasterIP"},"\" "
+												]]}
+								}		
+			}
+		},
+	
+		"InstanceSecurityGroup" : {
+			"Type" : "AWS::EC2::SecurityGroup",
+			"Properties" : 
+			{
+				"GroupName" : "SecurityGroupAnywhere",
+				"GroupDescription" : "SSH, TCP, UDP from anywhere",
+				"SecurityGroupIngress" :	
+				[
+					{
+						"IpProtocol" : "tcp",
+						"FromPort" : "22",
+						"ToPort" : "22",
+						"CidrIp" : { "Ref" : "SSHLocation"}
+					},
+					{
+						"IpProtocol" : "tcp",
+						"FromPort" : "0",
+						"ToPort" : "65535",
+						"CidrIp" : "0.0.0.0/0"
+					},
+					{
+						"IpProtocol" : "udp",
+						"FromPort" : "0",
+						"ToPort" : "65535",
+						"CidrIp" : "0.0.0.0/0"
+					}										
+				]
+			}
+		}
+	}
+}

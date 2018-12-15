@@ -1,6 +1,7 @@
 /**
  * Script for starting geth client on nodes via REST API
  * 
+ * process.argv[2]=mode (i.e. local or not)
  */
 
 const util = require('./../util/util');
@@ -39,6 +40,7 @@ if (manualtargetGasLimit == null){
     
 var masterIP;
 if (mode != "local") {
+    console.log("mode!=local")
     publicIp.v4().then(function (masterIP) {
         for (var i = 0; i <= ips.length - 1; i++) {
             try {
@@ -53,7 +55,8 @@ if (mode != "local") {
         }
     })
 } else {
-    masterIP = util.readFileSync_lines(pathToRootFolder + "storage/ips/local_ip.txt")[0];
+    console.log("mode = local")
+    masterIP = util.readFileSync_lines(pathToRootFolder + "config/ips/local_ip.txt")[0];
     for (var i = 0; i <= ips.length - 1; i++) {
         var mining = true;
         client.startGeth(ips[i], port, genesis, targetGasLimit, mining, instanceType, masterIP, bootnodeIP, netstatsIP);

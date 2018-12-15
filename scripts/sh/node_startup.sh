@@ -24,7 +24,7 @@ target_gas_limit=$6
 mining=$7
 
 #if target_gas_limit or mining_enable not set assing default values
-target_gas_limit="${target_gas_limit:-4712388}"
+target_gas_limit="${target_gas_limit:-47000000}"
 mining="${mining:-true}"
 
 ##########1) create account for node##########

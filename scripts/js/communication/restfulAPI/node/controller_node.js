@@ -32,21 +32,29 @@ exports.startGeth = (req, res) => {
         const jsonRequest = req.body;
 
         //update current_genesis.txt
+        console.log("updating current_genesis.txt");
         util.writeToFile(pathToRootFolder + "storage/current_genesis_node/current_genesis.txt", jsonRequest.genesis);
         //update target_gas_limit.txt
+        console.log("updating target_gas_limit.txt");
         util.writeToFile(pathToRootFolder + "storage/mining_settings/target_gas_limit.txt", jsonRequest.targetGasLimit);
         //update mining.txt
+        console.log("updating mining.txt");
         util.writeToFile(pathToRootFolder + "storage/mining_settings/mining.txt", jsonRequest.mining);
         //update instance_settings.txt
+        console.log("updating instance_type.txt");
         util.writeToFile(pathToRootFolder + "storage/instance_settings/instance_type.txt", jsonRequest.instanceType);
 
         //update master_ip.txt
+        console.log("updating master_ip.txt");
         util.writeToFile(pathToRootFolder + "storage/ips/master_ip.txt", jsonRequest.masterIP);
         //update bootnode_ip.txt
+        console.log("updating bootnode_ip.txt");
         util.writeToFile(pathToRootFolder + "storage/ips/bootnode_ip.txt", jsonRequest.bootnodeIP);
         //update netstats_ip.txt
+        console.log("updating netstats_ip.txt");
         util.writeToFile(pathToRootFolder + "storage/ips/netstats_ip.txt", jsonRequest.netstatsIP);
 
+        console.log("starting Geth");
         //start geth client
         var child = spawn("cd " + pathToRootFolder + "; make geth_start;", {
             stdio: 'inherit',

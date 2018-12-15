@@ -7,7 +7,7 @@ const pathToRootFolder = __dirname + "/../../../../";
 var util = require('./../../util/util');
 var clientUtil = require('./clientUtil');
 
-const masterIP = util.readFileSync_lines(pathToRootFolder + "storage/ips/master_ip.txt")[0];
+var masterIP = util.readFileSync_lines(pathToRootFolder + "storage/ips/master_ip.txt")[0];
 const masterRestPort = util.readFileSync_lines(pathToRootFolder + "config/ports/master_port.txt")[0];
 
 module.exports = {
@@ -15,9 +15,10 @@ module.exports = {
     logBenchmarkResult: async function (ip, peerCount, hashRate, instanceType, scenario, approach, benchmarkID,
             usedGenesisJson, difficulty, gasLimit, targetGasLimit, mining, startTime, maxRuntime, runtime, maxRuntimeReached,
             maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageDelay) {
-
+            
             util.printFormatedMessage("SENDING logBenchmarkResult REQUEST");
-
+            masterIP = util.readFileSync_lines(pathToRootFolder + "storage/ips/master_ip.txt")[0];
+            
             let options = {
                 method: 'POST',
                 uri: 'http://' + masterIP + ':' + masterRestPort + '/master-benchmark-log',
@@ -52,7 +53,8 @@ module.exports = {
 
         sendContractAddresses: async function (scenario, address) {
                 util.printFormatedMessage("SENDING sendContractAddresses REQUEST");
-
+                masterIP = util.readFileSync_lines(pathToRootFolder + "storage/ips/master_ip.txt")[0];
+                
                 let options = {
                     method: 'POST',
                     uri: 'http://' + masterIP + ':' + masterRestPort + '/master-contract-address-receive',

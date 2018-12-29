@@ -26,6 +26,7 @@ let BenchmarkLogSchema = new Schema({
     clique_period: {type: Number},
     ethash: {type: Boolean},
     mining: {type: Boolean},
+    miningOnFullWorkload: {type: Boolean},
     hashRate: {type: Number},
     miners: {type: Number},
     difficulty: {type: Number},

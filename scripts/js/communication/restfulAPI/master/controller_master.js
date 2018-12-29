@@ -91,6 +91,7 @@ exports.logBenchmark = (req, res) => {
         clique_period: clique_period,
         ethash: ethash,
         mining: req.body.mining,
+        miningOnFullWorkload: req.body.miningOnFullWorkload,
         hashRate: req.body.hashRate,
         miners: miners,
         difficulty: req.body.difficulty,

@@ -17,6 +17,7 @@ const instanceType = util.readFileSync_lines(pathToRootFolder + "config/instance
 const bootnodeIP = util.readFileSync_lines(pathToRootFolder + "storage/ips/bootnode_ip.txt")[0];
 const netstatsIP = util.readFileSync_lines(pathToRootFolder + "storage/ips/netstats_ip.txt")[0];
 const miningSettings = util.readFileSync_lines(pathToRootFolder + "storage/mining_settings/mining.txt");
+const miningOnFullWorkload = util.readFileSync_lines(pathToRootFolder + "config/mining_settings/mining_on_full_workload.txt")[0];
 
 /*
  * If targetGasLimit was not manually set in target_gas_limit.txt use the gasLimit set in the genesis.json
@@ -27,17 +28,17 @@ var genesisJson = require(pathToRootFolder + "genesis_json_files/" + genesis);
 var genesisGasLimit;
 
 for (var key in genesisJson) {
-    if (key == "gasLimit"){
+    if (key == "gasLimit") {
         genesisGasLimit = parseInt(genesisJson[key], 16); //convert hex to int
     }
 }
-if (manualtargetGasLimit == null){
+if (manualtargetGasLimit == null) {
     console.log("Geth targeGasLimit set to genesisGasLimit");
     targetGasLimit = genesisGasLimit;
-}else{
+} else {
     console.log("Geth targeGasLimit manually set to value in target_gas_limit.txt");
 }
-    
+
 var masterIP;
 if (mode != "local") {
     console.log("mode!=local")
@@ -47,7 +48,7 @@ if (mode != "local") {
                 //get mining setting for the particular node
                 var mining = miningSettings[i];
                 //start Geth on node
-                client.startGeth(ips[i], port, genesis, targetGasLimit, mining, instanceType, masterIP, bootnodeIP, netstatsIP);
+                client.startGeth(ips[i], port, genesis, targetGasLimit, mining, miningOnFullWorkload, instanceType, masterIP, bootnodeIP, netstatsIP);
             } catch (e) {
                 console.error("Error at starting Geth on node");
                 console.error(e);
@@ -59,6 +60,6 @@ if (mode != "local") {
     masterIP = util.readFileSync_lines(pathToRootFolder + "config/ips/local_ip.txt")[0];
     for (var i = 0; i <= ips.length - 1; i++) {
         var mining = true;
-        client.startGeth(ips[i], port, genesis, targetGasLimit, mining, instanceType, masterIP, bootnodeIP, netstatsIP);
+        client.startGeth(ips[i], port, genesis, targetGasLimit, mining, miningOnFullWorkload, instanceType, masterIP, bootnodeIP, netstatsIP);
     }
 }

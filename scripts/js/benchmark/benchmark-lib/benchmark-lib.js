@@ -36,6 +36,7 @@ module.exports = {
             const usedGenesisJson = util.readFileSync_lines(pathToRootFolder + "storage/current_genesis_node/current_genesis.txt")[0];
             const targetGasLimit = util.readFileSync_lines(pathToRootFolder + "storage/mining_settings/target_gas_limit.txt")[0];
             const mining = util.readFileSync_lines(pathToRootFolder + "storage/mining_settings/mining.txt")[0];
+            const miningOnFullWorkload = util.readFileSync_lines(pathToRootFolder + "storage/mining_settings/mining_on_full_workload.txt")[0];
             const instanceType = util.readFileSync_lines(pathToRootFolder + "storage/instance_settings/instance_type.txt")[0];
 
             var ip;
@@ -75,13 +76,13 @@ module.exports = {
             }).then(function () {
                 //print and send BenchmarkResults
                 module.exports.printBenchmarkResults(ip, peerCount, hashRate, instanceType, scenario, approach,
-                    benchmarkID, usedGenesisJson, difficulty, gasLimit, targetGasLimit, mining, startTime,
-                    maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached,
+                    benchmarkID, usedGenesisJson, difficulty, gasLimit, targetGasLimit, mining, miningOnFullWorkload, 
+                    startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached,
                     successfulTransactions, txPerSecond, averageTxDelay);
 
                 module.exports.sendBenchmarkResults(ip, peerCount, hashRate, instanceType, scenario, approach,
-                        benchmarkID, usedGenesisJson, difficulty, gasLimit, targetGasLimit, mining, startTime,
-                        maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached,
+                        benchmarkID, usedGenesisJson, difficulty, gasLimit, targetGasLimit, mining, miningOnFullWorkload,
+                        startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions, maxTransactionsReached,
                         successfulTransactions, txPerSecond, averageTxDelay)
                     .then(function () {
                         util.printFormatedMessage("KILLING PROCESS");
@@ -113,8 +114,8 @@ module.exports = {
          * Print result of benchmark to stdout
          */
         printBenchmarkResults: function (ip, peerCount, hashRate, instanceType, scenario, approach, benchmarkID, usedGenesisJson,
-            difficulty, gasLimit, targetGasLimit, mining, startTime, maxRuntime, runtime, maxRuntimeReached, maxTransactions,
-            maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay) {
+            difficulty, gasLimit, targetGasLimit, mining, miningOnFullWorkload, startTime, maxRuntime, runtime, maxRuntimeReached,
+             maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay) {
 
             console.log("\n");
             console.log("----------BENCHMARK RESULT----------");
@@ -132,6 +133,7 @@ module.exports = {
             console.log("gasLimit: " + gasLimit);
             console.log("TargetGasLimit: " + targetGasLimit);
             console.log("Mining: " + mining);
+            console.log("MiningOnFullWorkload: " + miningOnFullWorkload);
             console.log("-----------------------------");
             console.log("Starttime: " + startTime);
             console.log("MaxRuntime: " + maxRuntime);
@@ -152,40 +154,40 @@ module.exports = {
          * Send benchmark result via REST interface
          */
         sendBenchmarkResults: async function (ip, peerCount, hashRate, instanceType, scenario, approach, benchmarkID,
-                usedGenesisJson, difficulty, gasLimit, targetGasLimit, mining, startTime, maxRuntime, runtime,
+                usedGenesisJson, difficulty, gasLimit, targetGasLimit, mining, miningOnFullWorkload, startTime, maxRuntime, runtime,
                 maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay) {
 
-                await restClient.logBenchmarkResult(ip, peerCount, hashRate, instanceType, scenario, approach, benchmarkID,
-                    usedGenesisJson, difficulty, gasLimit, targetGasLimit, mining, startTime, maxRuntime, runtime,
-                    maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay);
-            },
+            await restClient.logBenchmarkResult(ip, peerCount, hashRate, instanceType, scenario, approach, benchmarkID,
+                usedGenesisJson, difficulty, gasLimit, targetGasLimit, mining, miningOnFullWorkload, startTime, maxRuntime, runtime,
+                maxRuntimeReached, maxTransactions, maxTransactionsReached, successfulTransactions, txPerSecond, averageTxDelay);
+        },
 
-            /**
-             * Get the geth process id (implies a running geth process)
-             */
-            getGethProcessId: function () {
-                return new Promise(function (resolve, reject) {
-                    exec("pgrep geth", function (error, stdout, stderr) {
-                        var pid = stdout.split('\n')[0]; //get pid of geth process started first (node-0)
-                        resolve(pid);
-                        if (error !== null) {
-                            reject(error);
-                        }
-                    });
+        /**
+         * Get the geth process id (implies a running geth process)
+         */
+        getGethProcessId: function () {
+            return new Promise(function (resolve, reject) {
+                exec("pgrep geth", function (error, stdout, stderr) {
+                    var pid = stdout.split('\n')[0]; //get pid of geth process started first (node-0)
+                    resolve(pid);
+                    if (error !== null) {
+                        reject(error);
+                    }
                 });
-            },
+            });
+        },
 
-            /**
-             * Get the amount of open file descriptors of the system for a specifc process id
-             */
-            getAmountOfOpenFileDescriptorsForPID: function (gethPID) {
-                return new Promise(function (resolve, reject) {
-                    exec("sudo ls /proc/" + gethPID + "/fd | wc -l", function (error, stdout, stderr) {
-                        resolve(stdout);
-                        if (error !== null) {
-                            reject(error);
-                        }
-                    });
+        /**
+         * Get the amount of open file descriptors of the system for a specifc process id
+         */
+        getAmountOfOpenFileDescriptorsForPID: function (gethPID) {
+            return new Promise(function (resolve, reject) {
+                exec("sudo ls /proc/" + gethPID + "/fd | wc -l", function (error, stdout, stderr) {
+                    resolve(stdout);
+                    if (error !== null) {
+                        reject(error);
+                    }
                 });
-            }
+            });
+        }
 };

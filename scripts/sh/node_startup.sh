@@ -8,6 +8,7 @@
 # $5:genesis name
 # $6:target_gas_limit
 # $7:mining
+# $8:mining_on_full_workload
 
 #HTTP ports 8100-81** (--rpc)
 #WS ports 8500-85** (--ws)
@@ -22,6 +23,7 @@ path_to_genesis_file=$4
 genesis_name=$5
 target_gas_limit=$6
 mining=$7
+mining_on_full_workload=$8
 
 #if target_gas_limit or mining_enable not set assing default values
 target_gas_limit="${target_gas_limit:-47000000}"
@@ -108,7 +110,7 @@ sudo chmod 777 $logfile
 #--bootnodes value     	Comma separated enode URLs for P2P discovery bootstrap (set v4+v5 instead for light servers)
 #--ethstats value      	Reporting URL of a ethstats service (nodename:secret@host:port)
 #--gasprice 		    Minimal gas price to accept for mining a transactions
-#targetgaslimit  	    Target gas limit sets the artificial target gas floor for the blocks to mine (default: 4712388)
+#--targetgaslimit  	    Target gas limit sets the artificial target gas floor for the blocks to mine (default: 4712388)
 #--unlock value    	    Comma separated list of accounts to unlock
 #--password value  	    Password file to use for non-interactive password input
 #--etherbase 		    Public address for block mining rewards (default = first account created) (default: "0")
@@ -146,6 +148,10 @@ if [ "$mining" = true ]; then
         --mine \
         --metrics \
         --minerthreads 32 &
+    if [ "$mining_on_full_workload" = true ]; then
+        sleep 5
+        geth --preload "$ETH_DIR/../scripts/js/geth/mining_on_full_workload.js" attach "$node_ipcpath"
+    fi
 else
     geth \
         --datadir $ETH_DIR/node-$WANIP-$nodeIndex/ \
@@ -170,5 +176,9 @@ else
         --unlock 0 \
         --password $ETH_DIR/node-$WANIP-$nodeIndex/password.txt \
         --etherbase 0 &
+
+    if [ "$mining_on_full_workload" = true ]; then
+        sleep 5
+        geth --preload "$ETH_DIR/../scripts/js/geth/mining_on_full_workload.js" attach "$node_ipcpath"
+    fi
 fi
-    

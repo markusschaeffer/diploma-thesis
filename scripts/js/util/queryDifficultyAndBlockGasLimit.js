@@ -1,8 +1,6 @@
 /**
  * Prints difficulty and gasLimit of last block
  * 
- * Note: can only e used at a eth node (NO REST COMMUNICATION)
- * 
  */
 
 const util = require('./util.js');

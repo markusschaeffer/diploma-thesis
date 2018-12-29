@@ -14,6 +14,7 @@ current_dir = $(shell pwd)
 genesisFile=`cat $(current_dir)/storage/current_genesis_node/current_genesis.txt`
 target_gas_limit=`cat $(current_dir)/storage/mining_settings/target_gas_limit.txt`
 mining=`cat $(current_dir)/storage/mining_settings/mining.txt`
+mining_on_full_workload=`cat $(current_dir)/storage/mining_settings/mining_on_full_workload.txt`
 bootnode_ip=`cat $(current_dir)/storage/ips/bootnode_ip.txt`
 netstats_ip=`cat $(current_dir)/storage/ips/netstats_ip.txt`
 geth_httpPort_node0=`cat $(current_dir)/config/ports/geth_http_port_node0.txt`
@@ -61,15 +62,8 @@ genesis_create:
 	cd scripts/sh; sudo ./genesis_create.sh
 	
 ####################GETH NODES####################
-#node_startup.sh
-#$1: index of node
-#$2: ip of eth-netstats server
-#$3: ip of bootnode
-#$4: path to genesis.json file
-#$5: name of genesis.json
-
 geth_node0_startup:
-	cd scripts/sh; sudo ./node_startup.sh 0 $(netstats_ip) $(bootnode_ip) $(current_dir)/genesis_json_files/$(genesisFile) $(genesisFile) $(target_gas_limit) $(mining)
+	cd scripts/sh; sudo ./node_startup.sh 0 $(netstats_ip) $(bootnode_ip) $(current_dir)/genesis_json_files/$(genesisFile) $(genesisFile) $(target_gas_limit) $(mining) $(mining_on_full_workload)
 
 geth_node0_stop:
 	cd scripts/sh; sudo ./node_stop.sh 0
@@ -89,10 +83,10 @@ sc_deploy_accounts: delete_contract_addresses_storage_node
 	cd scripts/js/deployment; node account.js
 
 sc_run_accounts_node0:
-	cd scripts/js/benchmark; sudo node account_benchmark_approach3.js $(geth_httpPort_node0) $(maxTransactions) $(maxRuntime) $(address1) $(address2) $(benchmarkID)
+	cd scripts/js/benchmark; sudo node account_benchmark_approach3.js $(geth_httpPort_node0) $(maxTransactions) $(maxRuntime) $(address1) $(address2) $(benchmarkID) $(mining_on_full_workload)
 
 sc_run_accounts_node0_approach_1:
-	cd scripts/js/benchmark; sudo node account_benchmark_approach1.js $(geth_httpPort_node0) $(maxTransactions) $(maxRuntime) $(address1) $(address2) $(benchmarkID)
+	cd scripts/js/benchmark; sudo node account_benchmark_approach1.js $(geth_httpPort_node0) $(maxTransactions) $(maxRuntime) $(address1) $(address2) $(benchmarkID) $(mining_on_full_workload)
 
 sc_deploy_ballot: delete_contract_addresses_storage_node
 	cd scripts/js/deployment; node ballot.js

@@ -40,6 +40,9 @@ exports.startGeth = (req, res) => {
         //update mining.txt
         console.log("updating mining.txt");
         util.writeToFile(pathToRootFolder + "storage/mining_settings/mining.txt", jsonRequest.mining);
+        //update miningOnFullWorkload.txt
+        console.log("updating miningOnFullWorkload.txt");
+        util.writeToFile(pathToRootFolder + "storage/mining_settings/mining_on_full_workload.txt", jsonRequest.miningOnFullWorkload);
         //update instance_settings.txt
         console.log("updating instance_type.txt");
         util.writeToFile(pathToRootFolder + "storage/instance_settings/instance_type.txt", jsonRequest.instanceType);

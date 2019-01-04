@@ -12,19 +12,20 @@ var workload_size = 1000
 function checkWork() {
 
     //start mining
-    if (txpool.status.pending == workload_size || txpool.status.pending == 1) {
+    var txpoolQueue = txpool.status.pending;
+    if (txpoolQueue == workload_size || txpoolQueue == 1) {
         if (eth.mining) {
             //console.log("== Already Mining/Sealing");
             return;
         }
-        //console.log("== Full Queue ! Starting to Mine/Seal");
+        console.log("\n==mining/sealing started==\n");
         miner.start(mining_threads);
-    }
-
-    //stop mining
-    if (txpool.status.pending == 0) {
-        miner.stop();
-        //console.log("== No transactions! Mining stopped.");
+    } else {
+        //stop mining
+        if (eth.mining) {
+            miner.stop();
+            console.log("\n==mining/sealing stopped==\n");
+        }
     }
 }
 

@@ -88,7 +88,7 @@ contract2.options.address = contract2Address;
 runBenchmark(maxTransactions, maxRuntimeInSeconds);
 
 async function runBenchmark(maxTransactions, maxRuntime) {
-  if (miningOnFullWorkload != "True") {
+  if (miningOnFullWorkload != "true") {
     startTime = new Date();
     util.printFormatedMessage("BENCHMARK STARTED");
   } else {
@@ -122,7 +122,7 @@ function handleTransaction(transactionNumber) {
     sentTransactions++;
     console.log(httpProviderString + ": sending " + transactionNumber + " at " + timestamp('HH:mm:ss:ms'));
 
-    if (miningOnFullWorkload != "True") {
+    if (miningOnFullWorkload != "true") {
       transactionsTimestampMapStart.set(transactionNumber, new Date());
     }
 
@@ -133,16 +133,10 @@ function handleTransaction(transactionNumber) {
         transactionHashesCount++;
         console.log(httpProviderString + ": received transaction hash " + transactionNumber + " at " + timestamp('HH:mm:ss:ms'));
 
-        if (miningOnFullWorkload == "True") {
-          //set starting time if all transactions received a transactionHash
-          if (transactionHashesCount == maxTransactions) {
-            util.printFormatedMessage("RECEIVED TRANSACTIONHASHES FOR ALL TRANSACTIONS");
-            util.printFormatedMessage("STARTING BENCHMARK");
-            startTime = new Date();
-            for (var i = 1; i <= maxTransactions; i++) {
-              transactionsTimestampMapStart.set(i, startTime);
-            }
-          }
+        if (transactionHashesCount == maxTransactions) {
+          util.printFormatedMessage("RECEIVED TRANSACTIONHASHES FOR ALL TRANSACTIONS");
+          //check mining for miningOnFullWorkload
+          checkMining(miningOnFullWorkload);
         }
       })
       .on('receipt', function (receipt) {
@@ -156,4 +150,17 @@ function handleTransaction(transactionNumber) {
         return reject(error);
       });
   });
+}
+
+function checkMining(miningOnFullWorkload) {
+  if (miningOnFullWorkload == "true") {
+    //set starting time if all transactions received a transactionHash
+    startTime = new Date();
+    for (var i = 1; i <= maxTransactions; i++) {
+      transactionsTimestampMapStart.set(i, startTime);
+    }
+    util.printFormatedMessage("STARTING BENCHMARK");
+    //TODO: invoke geth checkWork script via exec?
+  
+  }
 }

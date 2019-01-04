@@ -1,7 +1,7 @@
 
 # Framework for Benchmarking the Performance of Differently Configured Private Ethereum Networks (using Geth)
 
-This is the repository for my diploma-thesis, which is related to Ethereum performance and scalability measurements. The aim is to benchmark metrics of differently configured Ethereum networks.
+This is the repository for my diploma-thesis, which is related to Ethereum performance and scalability measurements.
 
 # Concept
 

@@ -13,6 +13,7 @@ function checkWork() {
 
     //start mining
     var txpoolQueue = txpool.status.pending;
+
     if (txpoolQueue == workload_size || txpoolQueue == 1) {
         if (eth.mining) {
             //console.log("== Already Mining/Sealing");
@@ -20,7 +21,9 @@ function checkWork() {
         }
         console.log("\n==mining/sealing started==\n");
         miner.start(mining_threads);
-    } else {
+    }
+    
+    if (txpoolQueue == 0) {
         //stop mining
         if (eth.mining) {
             miner.stop();

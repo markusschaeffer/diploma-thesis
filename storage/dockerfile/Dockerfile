@@ -2,6 +2,7 @@ From ubuntu:16.04
 
 RUN 	apt-get update && \
 	apt-get install sudo && \
+	apt-get install -y vim && \
 	apt-get install -y make && \
 	apt-get install -y git
 
